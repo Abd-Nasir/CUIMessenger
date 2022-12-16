@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "975117575433",
+    "project_id": "cuimessenger",
+    "storage_bucket": "cuimessenger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975117575433:android:18ce0fdb6ba803f2c5dfd8",
+        "android_client_info": {
+          "package_name": "com.example.cui_messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975117575433-8pop45coonf6gcgjgeci8ghp880bjdec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8KYMdwW-mW5h12KveSpWCUv49-9QVecA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975117575433-8pop45coonf6gcgjgeci8ghp880bjdec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
