@@ -35,6 +35,9 @@ Color shadeColor(Color color, double factor) => Color.fromRGBO(
     1);
 
 class Palette {
+  static const Color cuiOffWhite = Color(0xE8FFFFFF);
+  static const Color cuiPurple = Color(0xFF4B2980);
+  static const Color cuiBlue = Color(0xFF115ea6);
   static const Color frenchBlue = Color(0xFF2A77B7);
   static const Color aeroBlue = Color(0xFF8BBCE5);
   static const Color aliceBlue = Color(0xFFEFF2FA);

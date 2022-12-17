@@ -2,8 +2,8 @@ import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginScreen2 extends StatelessWidget {
+  const LoginScreen2({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
           leading: IconButton(
             onPressed: (() {}),
             icon: const Icon(Icons.arrow_back_sharp),
-            color: const Color.fromARGB(255, 2, 77, 139),
+            color: Palette.cuiBlue,
           ),
           centerTitle: true,
           title: const Text(
@@ -34,7 +34,7 @@ class LoginScreen extends StatelessWidget {
                 Container(
                   height: mediaQuery.size.height,
                   decoration: const BoxDecoration(
-                    color: Palette.frenchBlue,
+                    color: Palette.cuiBlue,
                   ),
                 ),
                 Align(
@@ -42,23 +42,21 @@ class LoginScreen extends StatelessWidget {
                   child: Container(
                     height: mediaQuery.size.height * 0.7,
                     alignment: Alignment.bottomCenter,
-                    decoration: BoxDecoration(color: Colors.black),
+                    decoration: BoxDecoration(color: Colors.yellow),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Image.network(
-                          'https://seeklogo.com/images/C/comsats-university-islamabad-logo-B7C2E461B5-seeklogo.com.png',
-                          height: 160,
-                          width: 160,
-                          alignment: Alignment.topCenter,
-                        ),
+                        Image.asset('assets/images/logo.png',
+                            height: 160,
+                            width: 160,
+                            alignment: Alignment.topCenter),
                         const SizedBox(
                           height: 20,
                         ),
                         const Text(
                           "CUI Messenger",
                           style: TextStyle(
-                              color: Color.fromARGB(255, 2, 77, 139),
+                              color: Palette.cuiBlue,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
@@ -74,8 +72,7 @@ class LoginScreen extends StatelessWidget {
                               fillColor: Colors.white,
                               labelText: 'Email',
                               labelStyle: TextStyle(
-                                  color: Color.fromARGB(255, 2, 77, 139),
-                                  fontSize: 18),
+                                  color: Palette.cuiBlue, fontSize: 18),
                               hintText: 'Enter Email',
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
@@ -92,8 +89,7 @@ class LoginScreen extends StatelessWidget {
                               fillColor: Colors.white,
                               labelText: 'Password',
                               labelStyle: TextStyle(
-                                  color: Color.fromARGB(255, 2, 77, 139),
-                                  fontSize: 18),
+                                  color: Palette.cuiBlue, fontSize: 18),
                               hintText: 'Enter Password',
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
@@ -120,8 +116,8 @@ class LoginScreen extends StatelessWidget {
                             style: TextStyle(fontSize: 16),
                           ),
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromARGB(255, 2, 77, 139)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Palette.cuiBlue),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
@@ -137,8 +133,7 @@ class LoginScreen extends StatelessWidget {
                                   onPressed: (() {}),
                                   child: Text(
                                     "Sign up here",
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 2, 77, 139)),
+                                    style: TextStyle(color: Palette.cuiBlue),
                                   ))
                             ])
                       ],

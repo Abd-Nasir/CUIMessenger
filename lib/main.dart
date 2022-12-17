@@ -1,5 +1,6 @@
 import 'package:cui_messenger/home/homepage.dart';
-import 'package:cui_messenger/login/view/login_screen.dart';
+import 'package:cui_messenger/login/view/home_screen1.dart';
+import 'package:cui_messenger/login/view/login_screen2.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
+      home: const HomeScreen(),
     );
   }
 }
