@@ -1,5 +1,7 @@
+import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
+import 'package:cui_messenger/login/view/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class RouteGenerator {
@@ -7,6 +9,10 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
+      case loginScreenRoute:
+        return MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        );
       default:
         return _errorRoute();
     }

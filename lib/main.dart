@@ -1,6 +1,7 @@
+import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/home/homepage.dart';
-import 'package:cui_messenger/login/view/home_screen1.dart';
-import 'package:cui_messenger/login/view/login_screen2.dart';
+import 'package:cui_messenger/login/view/select_user_screen.dart';
+import 'package:cui_messenger/login/view/login_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +16,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
+      home: const SelectUserScreen(),
+      // initialRoute: splashRoute,
+      navigatorKey: RouteGenerator.navigatorKey,
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }

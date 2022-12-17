@@ -23,7 +23,6 @@ class _ChatHomeState extends State<ChatHome> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
