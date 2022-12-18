@@ -1,7 +1,8 @@
+import 'package:cui_messenger/authentication/signup/view/signup_screen.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
-import 'package:cui_messenger/login/view/login_screen.dart';
+import 'package:cui_messenger/authentication/login/view/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class RouteGenerator {
@@ -12,6 +13,10 @@ class RouteGenerator {
       case loginScreenRoute:
         return MaterialPageRoute(
           builder: (_) => const LoginScreen(),
+        );
+      case signupPageRoute:
+        return MaterialPageRoute(
+          builder: (_) => const SignupPage(),
         );
       default:
         return _errorRoute();

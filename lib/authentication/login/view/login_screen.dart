@@ -1,4 +1,5 @@
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
+import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
 import 'package:flutter/material.dart';
@@ -192,7 +193,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             const Text("Don't have an account?"),
                             TextButton(
-                                onPressed: (() {}),
+                                onPressed: (() {
+                                  RouteGenerator.navigatorKey.currentState!
+                                      .pushNamed(signupPageRoute);
+                                }),
                                 child: const Text(
                                   "Sign up here",
                                   style: TextStyle(color: Palette.cuiBlue),
