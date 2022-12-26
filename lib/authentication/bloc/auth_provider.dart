@@ -1,6 +1,5 @@
 import 'dart:convert';
 // import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,28 +15,32 @@ class AuthProvider {
   String code = "";
   String userPhone = "";
   String forgotPassword = "null";
-  AuthProvider({this.currentUser});
+  // AuthProvider({this.currentUser});
+
+  Future<void> initialize() async {
+    currentUser = FirebaseAuth.instance.currentUser;
+    return;
+    //await _storage.read(key: 'CurrentUser').then((value) async {
+    //  if (value != null) {
+    //    print("value = $value");
+
+    //  currentUser = User.fromJson(jsonDecode(value));
+    //  }
+    //});
+  }
 
   Future<User?> logInWithEmail({
     required String email,
     required String password,
   }) async {
-    // return await Api.instance
-    //     .loginWithMail(email: email, password: password)
-    //     .then((value) {
-    //   if (value != null) {
-    //     currentUser = value;
-    //     saveUser();
-    //     return currentUser;
-    //   } else {
-    //     return null;
-    //   }
-    // });
-
-    // Sign in with Email - Using Firebase:
     try {
-      fb.UserCredential userCredential = await fb.FirebaseAuth.instance
+      UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      if (userCredential.user != null) {
+        return userCredential.user;
+      }
+      return null;
+      // print(response);
     } catch (error) {
       print("Error Occured in login: $error");
       rethrow;
@@ -47,7 +50,7 @@ class AuthProvider {
   Future<User?> registerWithEmail(
       Map<String, dynamic> userData, XFile file) async {
     try {
-      fb.UserCredential userCredential = await fb.FirebaseAuth.instance
+      UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: userData['email'], password: userData['password']);
     } catch (error) {}

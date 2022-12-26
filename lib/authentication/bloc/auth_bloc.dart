@@ -18,7 +18,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // print("Auth Bloc Event Initialized");
       // Check Notifications and Exit App
       emit(const AuthStateLoading(null));
-      emit(const AuthStateNeedsVerification(null));
+      await provider.initialize().then((value) async {
+        final user = provider.currentUser;
+        print("Printing user in auth bloc initialization: \n$user");
+        if (user != null) {
+          if (user.emailVerified) {
+            emit(AuthStateLoggedIn(user));
+          } else if (!user.emailVerified) {
+            emit(AuthStateNeedsVerification(user));
+          }
+        } else {
+          emit(const AuthStateLoggedOut(null));
+        }
+      });
+
+      // emit(const AuthStateNeedsVerification(null));
       //    else {
       //   emit(const AuthStateNotificationError(null));
     });
@@ -32,10 +46,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await provider
               .logInWithEmail(email: event.email, password: event.password)
               .then((user) async {
+            // final user = provider.currentUser;
             print(user);
             if (user != null) {
-              if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                // print("\nEmitting Logged in user!\n");
+              if (user.emailVerified) {
+                print("\nEmitting Logged in user!\n");
                 emit(AuthStateLoggedIn(user));
               } else {
                 emit(AuthStateNeedsVerification(user));
@@ -43,6 +58,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 //     .pushNamedAndRemoveUntil(verifyMailRoute, (route) => false);
               }
             } else {
+              print("in else failure");
               emit(AuthStateLoginFailure(
                   Exception("Unknown error occurred. Please try again later!"),
                   null));
@@ -109,24 +125,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
     );
 
-    // on<AuthForgotPasswordSendOTPEvent>((event, emit) {
-    //   emit(const AuthStateLoading(null));
-
-    //   provider.sendPinCodeToPhone(event.phone).then((value) {
-    //     if (value) {
-    //       RouteGenerator.navigatorKey.currentState!.pushNamed(
-    //           forgotPasswordVerificationRoute,
-    //           arguments: event.phone);
-    //       showSimpleNotification(
-    //         Text(AppLocalizations.instance.tr('otp_sent')),
-    //         background: Palette.green.withOpacity(0.9),
-    //         duration: const Duration(seconds: 2),
-    //         slideDismissDirection: DismissDirection.horizontal,
-    //       );
-    //     }
-    //   });
-    // });
-
     // on<AuthForgotPasswordVerifyOTPEvent>((event, emit) async {
     //   emit(const AuthStateLoading(null));
 
@@ -170,72 +168,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //   }
     // });
 
-    // on<AuthLoggedInAndPaid>((event, emit) async {
-    //   await Purchases.logIn(provider.currentUser!.uid);
-    //   if (provider.currentUser!.payment == "trial") {
-    //     print("Trial");
-    //     await provider.saveUser();
-    //     // showSimpleNotification(
-    //     // slideDismissDirection: DismissDirection.horizontal,
-    //     //   Text(AppLocalizations.instance.tr('trial_success')),
-    //     //   background: Palette.green.withOpacity(0.9),
-    //     //   duration: const Duration(seconds: 2),
-
-    //     // );
-    //     // RouteGenerator.navigatorKey.currentState!
-    //     //     .pushNamedAndRemoveUntil(rootRoute, (route) => false);
-
-    //     // emit(AuthStateLoggedInAndPaid(provider.currentUser));
-    //     DateTime trialStartDate =
-    //         DateTime.parse(provider.currentUser!.trialStarted);
-    //     DateTime today = DateTime.now();
-    //     Duration dif = today.difference(trialStartDate);
-    //     print(
-    //         "Date: ${trialStartDate.toString()}\nDifference in time: ${dif.inSeconds}\nDays: ${dif.inDays}");
-    //     if (dif.inDays < 8) {
-    //       provider.currentUser!.isTrialCompleted = false;
-    //       emit(AuthStateLoggedInAndPaid(provider.currentUser));
-    //     } else {
-    //       provider.currentUser!.isTrialCompleted = true;
-    //       emit(AuthStateLoggedIn(provider.currentUser));
-    //     }
-    //   } else if (provider.currentUser!.payment == "yearly") {
-    //     print("Yearly Subscribed");
-    //     await provider.saveUser();
-    //     DateTime paymentDate =
-    //         DateTime.parse(provider.currentUser!.lastPaymentDate);
-    //     DateTime today = DateTime.now();
-    //     Duration dif = today.difference(paymentDate);
-    //     if (dif.inDays <= 365) {
-    //       RouteGenerator.navigatorKey.currentState!
-    //           .pushNamedAndRemoveUntil(rootRoute, (route) => false);
-    //       emit(AuthStateLoggedInAndPaid(provider.currentUser));
-    //     } else {
-    //       emit(AuthStateLoggedIn(provider.currentUser));
-    //     }
-    //   } else if (provider.currentUser!.payment == "monthly") {
-    //     print("Monthly Subscribed");
-    //     await provider.saveUser();
-    //     DateTime paymentDate =
-    //         DateTime.parse(provider.currentUser!.lastPaymentDate);
-    //     DateTime today = DateTime.now();
-    //     Duration dif = today.difference(paymentDate);
-    //     if (dif.inDays <= 30) {
-    //       emit(AuthStateLoggedIn(provider.currentUser));
-    //     } else {
-    //       RouteGenerator.navigatorKey.currentState!
-    //           .pushNamedAndRemoveUntil(rootRoute, (route) => false);
-    //       emit(AuthStateLoggedInAndPaid(provider.currentUser));
-    //     }
-    //   }
-    //   // print(
-    //   //     "Setting user to be on trial!\nState: ${provider.currentUser!.payment}");
-    // });
-
-    // on<AuthUploadUserProfilePictureEvent>((event, emit) async {
-    //   await provider.uploadProfilePicture(event.file, event.userID);
-    // });
-
     // on<AuthUpdateUserDataEvent>(
     //   (event, emit) async {
     //     var response = await provider.updateUserData(
@@ -266,7 +198,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
         emit(AuthStateLoggedIn(provider.currentUser));
         // RouteGenerator.navigatorKey.currentState!
-        //     .pushNamedAndRemoveUntil(paymentRoute, (route) => false);
+        //     .pushNamedAndRemoveUntil(chatHomeRoute, (route) => false);
         // add(const OnAuthNavigateAppEvent());
       } else {
         // Do nothing and stay on the same screen.

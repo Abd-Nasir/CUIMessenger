@@ -1,9 +1,12 @@
+import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
+import 'package:cui_messenger/authentication/bloc/auth_event.dart';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,6 +21,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   final _firebaseInstance = FirebaseAuth.instance;
+  void signIn() {
+    try {
+      if (formKey.currentState!.validate()) {
+        setState(() {});
+        BlocProvider.of<AuthBloc>(context).add(AuthMailLoginEvent(
+            email: _emailController.text, password: _passwordController.text));
+      }
+    } catch (e) {
+      print('catch  ---> $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,17 +184,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         alignment: Alignment.topRight,
                         child: TextButton(
                           onPressed: (() async {
-                            _firebaseInstance.currentUser!.reload();
-                            User currentUser = _firebaseInstance.currentUser!;
-                            print(_firebaseInstance.currentUser!);
-                            _firebaseInstance.currentUser!
-                                .updateDisplayName("Abdullah Nasir");
+                            // _firebaseInstance.currentUser!.reload();
+                            // User currentUser = _firebaseInstance.currentUser!;
+                            // print(_firebaseInstance.currentUser!);
+                            // _firebaseInstance.currentUser!
+                            //     .updateDisplayName("Abdullah Nasir");
                             // await currentUser.sendEmailVerification().then(
                             //     (value) => print(
                             //         "Email sent to: ${currentUser.email}"));
                             // _firebaseInstance.currentUser!
                             //     .sendEmailVerification();
                             // FirebaseAuth.instance.signOut();
+                            print({BlocProvider.of<AuthBloc>(context).state});
                           }),
                           child: const Text(
                             "Forgot Password?",
@@ -189,15 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: (() {
-                          if (formKey.currentState!.validate()) {
-                            _firebaseInstance.createUserWithEmailAndPassword(
-                                email: _emailController.text.trim(),
-                                password: _passwordController.text.trim());
-                            // FirebaseAuth.instance.currentUser!
-                            //     .sendEmailVerification();
-                          }
-                        }),
+                        onPressed: signIn,
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Palette.cuiBlue),

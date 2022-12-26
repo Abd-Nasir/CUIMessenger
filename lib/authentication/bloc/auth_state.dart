@@ -18,10 +18,6 @@ class AuthStateLoggedIn extends AuthState {
   const AuthStateLoggedIn(User? user) : super(user);
 }
 
-class AuthStateLoggedInAndPaid extends AuthState {
-  const AuthStateLoggedInAndPaid(User? user) : super(user);
-}
-
 class AuthStateLoggedOut extends AuthState {
   const AuthStateLoggedOut(User? user) : super(user);
 }

@@ -132,8 +132,8 @@ class _VerifyMailState extends State<VerifyMail> {
                   RouteGenerator.navigatorKey.currentState!
                       .pushNamedAndRemoveUntil(
                           loginScreenRoute, (route) => false);
-                  // BlocProvider.of<AuthBloc>(context)
-                  //     .add(const AuthLogoutEvent());
+                  BlocProvider.of<AuthBloc>(context)
+                      .add(const AuthLogoutEvent());
                 },
               ),
             ],
