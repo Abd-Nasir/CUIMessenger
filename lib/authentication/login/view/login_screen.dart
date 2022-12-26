@@ -2,6 +2,7 @@ import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,6 +14,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  final _firebaseInstance = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -90,13 +96,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       Container(
                         decoration: CustomWidgets.textInputDecoration,
                         padding: EdgeInsets.symmetric(
                             horizontal: mediaQuery.size.width * 0.04,
                             vertical: 4),
                         child: TextFormField(
+                          controller: _emailController,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
                             filled: true,
@@ -113,18 +120,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "Enter your email";
-                            } else if (!value.endsWith("@cuiwah.edu.pk")) {
-                              return "Enter your University provided email";
-                            } else if (!(value.startsWith("fa") ||
-                                value.startsWith("sp") ||
-                                value.startsWith("FA") ||
-                                value.startsWith("Fa") ||
-                                value.startsWith("SP") ||
-                                value.startsWith("Sp") ||
-                                value.startsWith("fA") ||
-                                value.startsWith("sP"))) {
-                              return "Enter valid Email";
                             }
+                            // else if (!value.endsWith("@cuiwah.edu.pk")) {
+                            //   return "Enter your University provided email";
+                            // } else if (!(value.startsWith("fa") ||
+                            //     value.startsWith("sp") ||
+                            //     value.startsWith("FA") ||
+                            //     value.startsWith("Fa") ||
+                            //     value.startsWith("SP") ||
+                            //     value.startsWith("Sp") ||
+                            //     value.startsWith("fA") ||
+                            //     value.startsWith("sP"))) {
+                            //   return "Enter valid Email";
+                            // }
                             return null;
                           },
                         ),
@@ -136,6 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             horizontal: mediaQuery.size.width * 0.04,
                             vertical: 4),
                         child: TextFormField(
+                          controller: _passwordController,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
                             filled: true,
@@ -160,7 +169,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         alignment: Alignment.topRight,
                         child: TextButton(
-                          onPressed: (() {}),
+                          onPressed: (() async {
+                            _firebaseInstance.currentUser!.reload();
+                            User currentUser = _firebaseInstance.currentUser!;
+                            print(_firebaseInstance.currentUser!);
+                            _firebaseInstance.currentUser!
+                                .updateDisplayName("Abdullah Nasir");
+                            // await currentUser.sendEmailVerification().then(
+                            //     (value) => print(
+                            //         "Email sent to: ${currentUser.email}"));
+                            // _firebaseInstance.currentUser!
+                            //     .sendEmailVerification();
+                            // FirebaseAuth.instance.signOut();
+                          }),
                           child: const Text(
                             "Forgot Password?",
                             style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -169,7 +190,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       ElevatedButton(
                         onPressed: (() {
-                          formKey.currentState!.validate();
+                          if (formKey.currentState!.validate()) {
+                            _firebaseInstance.createUserWithEmailAndPassword(
+                                email: _emailController.text.trim(),
+                                password: _passwordController.text.trim());
+                            // FirebaseAuth.instance.currentUser!
+                            //     .sendEmailVerification();
+                          }
                         }),
                         style: ButtonStyle(
                           backgroundColor:

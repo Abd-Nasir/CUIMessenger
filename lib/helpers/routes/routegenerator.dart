@@ -1,4 +1,5 @@
 import 'package:cui_messenger/authentication/signup/view/signup_screen.dart';
+import 'package:cui_messenger/authentication/verification/user_verification.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
@@ -17,6 +18,10 @@ class RouteGenerator {
       case signupPageRoute:
         return MaterialPageRoute(
           builder: (_) => const SignupPage(),
+        );
+      case verifyMailRoute:
+        return MaterialPageRoute(
+          builder: (_) => const VerifyMail(),
         );
       default:
         return _errorRoute();
