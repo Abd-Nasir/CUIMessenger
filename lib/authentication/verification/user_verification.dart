@@ -74,7 +74,7 @@ class _VerifyMailState extends State<VerifyMail> {
             children: [
               // SizedBox(height: mediaQuery.size.height * 0.08),
               SvgPicture.asset(
-                'assets/svg/mail_sent.svg',
+                'assets/images/email_icon.svg',
                 width: mediaQuery.size.width * 0.4,
               ),
               SizedBox(height: mediaQuery.size.height * 0.04),
@@ -131,7 +131,7 @@ class _VerifyMailState extends State<VerifyMail> {
                   RouteGenerator.navigatorKey.currentState!.pop('dialog');
                   RouteGenerator.navigatorKey.currentState!
                       .pushNamedAndRemoveUntil(
-                          loginScreenRoute, (route) => false);
+                          studentLoginScreenRoute, (route) => false);
                   BlocProvider.of<AuthBloc>(context)
                       .add(const AuthLogoutEvent());
                 },

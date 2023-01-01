@@ -1,5 +1,6 @@
 import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/authentication/bloc/auth_event.dart';
+import 'package:cui_messenger/authentication/login/view/select_user_screen.dart';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
@@ -8,14 +9,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class StudentLoginScreen extends StatefulWidget {
+  const StudentLoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<StudentLoginScreen> createState() => _StudentLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _StudentLoginScreenState extends State<StudentLoginScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -25,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       if (formKey.currentState!.validate()) {
         setState(() {});
-        BlocProvider.of<AuthBloc>(context).add(AuthMailLoginEvent(
+        BlocProvider.of<AuthBloc>(context).add(AuthStudentLoginEvent(
             email: _emailController.text, password: _passwordController.text));
       }
     } catch (e) {
@@ -60,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Container(
               color: Palette.cuiPurple.withOpacity(0.5),
               height: mediaQuery.size.height * 0.4,
-              padding: EdgeInsets.only(top: 30, bottom: 20),
+              padding: const EdgeInsets.only(top: 30, bottom: 20),
               // margin: EdgeInsets.only(top: 30, bottom: 20),
               child: Align(
                 alignment: Alignment.topCenter,
@@ -103,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Students Login",
+                        "Student Login",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             color: Palette.cuiBlue,
@@ -229,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextButton(
                                 onPressed: (() {
                                   RouteGenerator.navigatorKey.currentState!
-                                      .pushNamed(signupPageRoute);
+                                      .pushNamed(studentSignupPageRoute);
                                 }),
                                 child: const Text(
                                   "Sign up here",
@@ -252,6 +253,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   onPressed: () {
                     RouteGenerator.navigatorKey.currentState!.pop();
+                    // RouteGenerator.navigatorKey.currentState!
+                    //     .pushReplacementNamed(selectUserRoute);
                   },
                 ),
               ),

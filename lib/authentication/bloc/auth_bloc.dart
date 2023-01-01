@@ -31,20 +31,59 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(const AuthStateLoggedOut(null));
         }
       });
-
-      // emit(const AuthStateNeedsVerification(null));
-      //    else {
-      //   emit(const AuthStateNotificationError(null));
     });
 
-    on<AuthMailLoginEvent>(
+    on<AuthSelectStudentEvent>((event, emit) async {
+      // RouteGenerator.navigatorKey.currentState!
+      //     .pushNamed(studentLoginScreenRoute);
+      emit(const AuthStateStudentLogin(null));
+    });
+
+    on<AuthSelectTeacherEvent>((event, emit) async {
+      emit(const AuthStateTeacherLogin(null));
+    });
+
+    on<AuthStudentLoginEvent>(
+      (event, emit) async {
+        emit(const AuthStateLoading(null));
+
+        try {
+          await provider
+              .studentLogin(email: event.email, password: event.password)
+              .then((user) async {
+            print(user);
+            if (user != null) {
+              if (user.emailVerified) {
+                print("\nEmitting Logged in user!\n");
+                emit(AuthStateLoggedIn(user));
+              } else {
+                emit(AuthStateNeedsVerification(user));
+                // RouteGenerator.navigatorKey.currentState!
+                //     .pushNamedAndRemoveUntil(verifyMailRoute, (route) => false);
+              }
+            } else {
+              print("in else failure");
+              emit(AuthStateStudentLoginFailure(
+                  Exception("Unknown error occurred. Please try again later!"),
+                  null));
+            }
+          });
+        } catch (error) {
+          print("Here");
+          emit(AuthStateStudentLoginFailure(
+              Exception("Unknown error occurred"), null));
+        }
+      },
+    );
+
+    on<AuthTeacherLoginEvent>(
       (event, emit) async {
         emit(const AuthStateLoading(null));
 
         try {
           print("Inside log in");
           await provider
-              .logInWithEmail(email: event.email, password: event.password)
+              .teacherLogin(email: event.email, password: event.password)
               .then((user) async {
             // final user = provider.currentUser;
             print(user);
@@ -59,45 +98,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               }
             } else {
               print("in else failure");
-              emit(AuthStateLoginFailure(
+              emit(AuthStateFacultyLoginFailure(
                   Exception("Unknown error occurred. Please try again later!"),
                   null));
             }
           });
-        } on FirebaseAuthException catch (error) {
-          print("In Exception Here");
-          if (error.code == 'invalid-email') {
-            emit(AuthStateLoginFailure(
-                Exception("Invalid email entered!"), null));
-          } else if (error.code == 'user-disabled') {
-            emit(AuthStateLoginFailure(
-                Exception("User has been disabled!"), null));
-          } else if (error.code == 'user-not-found') {
-            emit(AuthStateLoginFailure(
-                Exception("User does not exist, please check your details!"),
-                null));
-          } else if (error.code == 'wrong-password') {
-            emit(AuthStateLoginFailure(
-                Exception("User does not exist, please check your details!"),
-                null));
-          } else {
-            emit(AuthStateLoginFailure(
-                Exception("Unknown error occurred"), null));
-          }
         } catch (error) {
           print("Here");
-          emit(
-              AuthStateLoginFailure(Exception("Unknown error occurred"), null));
+          emit(AuthStateFacultyLoginFailure(
+              Exception("Unknown error occurred"), null));
         }
       },
     );
 
-    on<AuthMailRegisterEvent>(
+    on<AuthStudentRegisterEvent>(
       (event, emit) async {
         emit(const AuthStateLoading(null));
 
         final user =
-            await provider.registerWithEmail(event.userData, event.file);
+            await provider.registerStudentWithEmail(event.userData, event.file);
         if (user != null) {
           if (FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateLoggedIn(user));
@@ -112,7 +131,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 verifyMailRoute, (route) => route.isFirst);
           }
         } else {
-          emit(AuthStateLoginFailure(Exception("Failed to login"), null));
+          // emit(AuthStateLoginFailure(Exception("Failed to login"), null));
+        }
+      },
+    );
+    on<AuthFacultyRegisterEvent>(
+      (event, emit) async {
+        emit(const AuthStateLoading(null));
+
+        final user =
+            await provider.registerFacultyWithEmail(event.userData, event.file);
+        if (user != null) {
+          if (FirebaseAuth.instance.currentUser!.emailVerified) {
+            emit(AuthStateLoggedIn(user));
+            // print("Pushing to home page!");]
+            //TODO: Push to homepage
+            // RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
+            //     home, (route) => route.isFirst);
+          } else {
+            FirebaseAuth.instance.currentUser!.sendEmailVerification();
+            emit(AuthStateNeedsVerification(user));
+            RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
+                verifyMailRoute, (route) => route.isFirst);
+          }
+        } else {
+          emit(
+              AuthStateFacultyLoginFailure(Exception("Failed to login"), null));
         }
       },
     );

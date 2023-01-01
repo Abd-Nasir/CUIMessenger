@@ -1,7 +1,10 @@
+import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
+import 'package:cui_messenger/authentication/bloc/auth_event.dart';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectUserScreen extends StatefulWidget {
   const SelectUserScreen({super.key});
@@ -153,9 +156,16 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
             ),
             TextButton(
                 onPressed: (() {
-                  if (isStudent == true || isTeacher == true) {
-                    RouteGenerator.navigatorKey.currentState!
-                        .pushNamed(loginScreenRoute);
+                  if (isStudent == true) {
+                    setState(() {});
+                    BlocProvider.of<AuthBloc>(context)
+                        .add(const AuthSelectStudentEvent());
+                  } else if (isTeacher == true) {
+                    setState(() {});
+                    BlocProvider.of<AuthBloc>(context)
+                        .add(const AuthSelectTeacherEvent());
+                    // RouteGenerator.navigatorKey.currentState!
+                    //     .pushNamed(teacherLoginScreenRoute);
                   }
                 }),
                 child: Row(

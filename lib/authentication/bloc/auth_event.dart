@@ -10,25 +10,44 @@ class AuthEventInitialize extends AuthEvent {
   const AuthEventInitialize();
 }
 
-class AuthMailLoginEvent extends AuthEvent {
+class AuthSelectStudentEvent extends AuthEvent {
+  const AuthSelectStudentEvent();
+}
+
+class AuthSelectTeacherEvent extends AuthEvent {
+  const AuthSelectTeacherEvent();
+}
+
+class AuthTeacherLoginEvent extends AuthEvent {
   final String email;
   final String password;
 
-  const AuthMailLoginEvent({
+  const AuthTeacherLoginEvent({
     required this.email,
     required this.password,
   });
 }
 
-class AuthMailRegisterEvent extends AuthEvent {
-  final Map<String, dynamic> userData;
-  final XFile file;
-  const AuthMailRegisterEvent({required this.userData, required this.file});
+class AuthStudentLoginEvent extends AuthEvent {
+  final String email;
+  final String password;
+
+  const AuthStudentLoginEvent({
+    required this.email,
+    required this.password,
+  });
 }
 
-class AuthPhoneLoginEvent extends AuthEvent {
-  final String phone;
-  const AuthPhoneLoginEvent({required this.phone});
+class AuthStudentRegisterEvent extends AuthEvent {
+  final Map<String, dynamic> userData;
+  final XFile file;
+  const AuthStudentRegisterEvent({required this.userData, required this.file});
+}
+
+class AuthFacultyRegisterEvent extends AuthEvent {
+  final Map<String, dynamic> userData;
+  final XFile file;
+  const AuthFacultyRegisterEvent({required this.userData, required this.file});
 }
 
 class AuthPhoneVerifyEvent extends AuthEvent {
@@ -82,10 +101,6 @@ class AuthUpdateUserDataEvent extends AuthEvent {
       required this.dataChanged,
       required this.file,
       required this.oldImageKey});
-}
-
-class OnAuthNavigateAppEvent extends AuthEvent {
-  const OnAuthNavigateAppEvent();
 }
 
 class AuthDeleteAccountEvent extends AuthEvent {

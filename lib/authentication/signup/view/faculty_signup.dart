@@ -1,5 +1,7 @@
 import 'dart:io' as io;
 
+import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
+import 'package:cui_messenger/authentication/bloc/auth_event.dart';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
@@ -7,20 +9,21 @@ import 'package:cui_messenger/helpers/style/custom_widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 // import 'package:safepall/screens/authentication/bloc/auth_bloc.dart';
 // import 'package:safepall/screens/authentication/bloc/auth_event.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+class FacultySignupPage extends StatefulWidget {
+  const FacultySignupPage({Key? key}) : super(key: key);
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<FacultySignupPage> createState() => _FacultySignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _FacultySignupPageState extends State<FacultySignupPage> {
   final signUpFormKey = GlobalKey<FormState>();
 
   TextEditingController firstNameController = TextEditingController();
@@ -32,121 +35,71 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypePasswordController = TextEditingController();
   TextEditingController countryCodeController =
-      TextEditingController(text: "+52");
+      TextEditingController(text: "+92");
 
   bool checkBoxValue = false;
   DateTime dateTime = DateTime.now();
   String error = "";
   bool isLoading = false;
 
-  io.File? pickedImage;
+  XFile? pickedImage;
 
   Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final XFile? image = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 60,
+        maxHeight: 600,
+        maxWidth: 600,
+      );
       if (image == null) return;
-      final imageTemporary = io.File(image.path);
+      // final imageTemporary = io.File(image.path);
       setState(() {
-        pickedImage = imageTemporary;
+        pickedImage = image;
       });
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
   }
 
-  // void signup() {
-  //   if (signUpFormKey.currentState!.validate()) {
-  //     if (!checkBoxValue) {
-  //       setState(() {
-  //         // TODO: Translations
-  //         error = "Please accept the terms and conditions!";
-  //       });
-  //     } else {
-  //       if (passwordController.text != retypePasswordController.text) {
-  //         setState(() {
-  //           error = "The passwords must be same";
-  //         });
-  //       } else {
-  //         setState(() {
-  //           error = "";
-  //         });
-  //         if (pickedImage != null) {
-  //           BlocProvider.of<AuthBloc>(context).add(
-  //             AuthMailRegisterEvent(
-  //               userData: {
-  //                 "first-name": firstNameController.text,
-  //                 "last-name": lastNameController.text,
-  //                 "email": emailController.text.trim(),
-  //                 "phone": countryCodeController.text + phoneController.text,
-  //                 "date-of-birth": dateTime.toIso8601String(),
-  //                 "address": addressController.text,
-  //                 "password": passwordController.text.trim(),
-  //               },
-  //               file: pickedImage as XFile,
-  //             ),
-  //           );
-  //         } else {
-  //           showSimpleNotification(
-  //             slideDismissDirection: DismissDirection.horizontal,
-  //             Text(AppLocalizations.instance.tr('select_an_image')),
-  //             background: Palette.red.withOpacity(0.9),
-  //             duration: const Duration(seconds: 2),
-  //           );
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
-  // Future<void> showChoiceDialog(BuildContext context) {
-  //   return showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           shape: RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.circular(10.0),
-  //           ),
-  //           title: Text(
-  //             "Choose Image Source",
-  //             style: const TextStyle(color: Palette.frenchBlue),
-  //           ),
-  //           content: SingleChildScrollView(
-  //             child: ListBody(
-  //               children: [
-  //                 const Divider(
-  //                   height: 1,
-  //                   color: Colors.blue,
-  //                 ),
-  //                 ListTile(
-  //                   onTap: () {
-  //                     galleryImagePicker(context);
-  //                   },
-  //                   title: Text(AppLocalizations.instance.tr('choose_gallery')),
-  //                   leading: const Icon(
-  //                     Icons.image,
-  //                     color: Colors.blue,
-  //                   ),
-  //                 ),
-  //                 const Divider(
-  //                   height: 1,
-  //                   color: Colors.blue,
-  //                 ),
-  //                 ListTile(
-  //                   onTap: () {
-  //                     cameraImagePicker(context);
-  //                   },
-  //                   title: Text(AppLocalizations.instance.tr('camera')),
-  //                   leading: const Icon(
-  //                     Icons.camera,
-  //                     color: Colors.blue,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
+  void signup() {
+    if (signUpFormKey.currentState!.validate()) {
+      if (passwordController.text != retypePasswordController.text) {
+        setState(() {
+          error = "The passwords must be same";
+        });
+      } else {
+        setState(() {
+          error = "";
+        });
+        if (pickedImage != null) {
+          BlocProvider.of<AuthBloc>(context).add(
+            AuthFacultyRegisterEvent(
+              userData: {
+                "first-name": firstNameController.text,
+                "last-name": lastNameController.text,
+                "role": "faculty",
+                "email": emailController.text.trim(),
+                "phone": countryCodeController.text + phoneController.text,
+                "date-of-birth": dateTime.toIso8601String(),
+                "address": addressController.text,
+                "password": passwordController.text.trim(),
+                "imageUrl": "",
+              },
+              file: pickedImage!,
+            ),
+          );
+        } else {
+          showSimpleNotification(
+            slideDismissDirection: DismissDirection.horizontal,
+            const Text("Select an Image"),
+            background: Palette.red.withOpacity(0.9),
+            duration: const Duration(seconds: 2),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +139,7 @@ class _SignupPageState extends State<SignupPage> {
                       child: pickedImage == null
                           ? Icon(Icons.account_circle_rounded,
                               size: mediaQuery.size.width * 0.3,
-                              color: Palette.cuiPurple
+                              color: Palette.cuiBlue
                               // size: mediaQuery.size.width * 0.4,
                               )
                           : Image.file(io.File(pickedImage!.path),
@@ -195,6 +148,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: mediaQuery.size.height * 0.02),
                   CustomWidgets.textButton(
+                    color: Palette.cuiBlue,
                     mediaQuery: mediaQuery,
                     text: "Upload Image",
                     onTap: () {
@@ -291,7 +245,7 @@ class _SignupPageState extends State<SignupPage> {
                           controller: countryCodeController,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: "+52",
+                            hintText: "+92",
                             hintStyle: TextStyle(
                               color: Palette.hintGrey,
                             ),
@@ -419,11 +373,9 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: mediaQuery.size.height * 0.03),
                   CustomWidgets.textButton(
-                    text: "Register",
-                    mediaQuery: mediaQuery,
-                    onTap: () {
-                      //TODO: Signup implementation
-                    },
+                    text: "Register", mediaQuery: mediaQuery, onTap: signup,
+                    color: Palette.cuiBlue,
+                    //TODO: Signup implementation
                   ),
                   if (error.isNotEmpty)
                     SizedBox(height: mediaQuery.size.height * 0.02),
@@ -440,9 +392,9 @@ class _SignupPageState extends State<SignupPage> {
                   RichText(
                     text: TextSpan(
                       children: [
-                        TextSpan(
+                        const TextSpan(
                           text: "Joined us before?",
-                          style: const TextStyle(color: Palette.black),
+                          style: TextStyle(color: Palette.black),
                         ),
                         TextSpan(
                           text: "Login Here",
@@ -453,7 +405,7 @@ class _SignupPageState extends State<SignupPage> {
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Navigator.pushReplacementNamed(
-                                  context, loginScreenRoute);
+                                  context, facultyLoginScreenRoute);
                             },
                         ),
                       ],
@@ -485,7 +437,7 @@ class _SignupPageState extends State<SignupPage> {
               children: [
                 ListTile(
                   leading: const Icon(Icons.browse_gallery_outlined),
-                  title: Text("Choose Gallery"),
+                  title: const Text("Choose Gallery"),
                   onTap: () {
                     pickImage(ImageSource.gallery);
                     Navigator.of(context).pop();
@@ -494,7 +446,7 @@ class _SignupPageState extends State<SignupPage> {
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.camera),
-                  title: Text("Camera"),
+                  title: const Text("Camera"),
                   onTap: () {
                     pickImage(ImageSource.camera);
                     Navigator.of(context).pop();

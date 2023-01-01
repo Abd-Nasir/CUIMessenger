@@ -1,5 +1,8 @@
+import 'package:cui_messenger/authentication/login/view/select_user_screen.dart';
+import 'package:cui_messenger/authentication/login/view/faculty_login.dart';
 import 'package:cui_messenger/authentication/verification/user_verification.dart';
 import 'package:cui_messenger/home/homepage.dart';
+import 'package:cui_messenger/root/root.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '/helpers/routes/routegenerator.dart';
@@ -7,7 +10,7 @@ import '/helpers/style/custom_widgets.dart';
 import 'authentication/bloc/auth_bloc.dart';
 import 'authentication/bloc/auth_event.dart';
 import 'authentication/bloc/auth_state.dart';
-import 'authentication/login/view/login_screen.dart';
+import 'authentication/login/view/student_login.dart';
 import '/helpers/style/colors.dart';
 // import 'package:safepall/screens/root/root.dart';
 
@@ -32,6 +35,18 @@ class _SplashPageState extends State<SplashPage> {
         print("authState naeed verification");
         RouteGenerator.navigatorKey.currentState!
             .popUntil((route) => route.isFirst);
+        setState(() {});
+      } else if (state is AuthStateStudentLogin) {
+        print("user selected");
+        setState(() {});
+      } else if (state is AuthStateTeacherLogin) {
+        print("user selected");
+        setState(() {});
+      } else if (state is AuthStateFacultyLoginFailure) {
+        print("user selected");
+        setState(() {});
+      } else if (state is AuthStateStudentLoginFailure) {
+        print("user selected");
         setState(() {});
       } else if (state is AuthStateLoggedOut) {
         print("\n");
@@ -77,17 +92,24 @@ class _SplashPageState extends State<SplashPage> {
           ),
         ));
       } else if (state is AuthStateLoggedIn) {
-        return const HomePage();
+        // return VerifyMail();
+        return const RootPage();
       } else if (state is AuthStateNeedsVerification) {
         print("Accessed Auth State Verify Mail");
         return const VerifyMail();
-      } else if (state is AuthStateLoginFailure) {
-        return const LoginScreen(
-            // error: state.exception.toString(),
-            );
+      } else if (state is AuthStateStudentLogin) {
+        return const StudentLoginScreen();
+        // return LoginScreen(isStudent: isStudent)
+      } else if (state is AuthStateTeacherLogin) {
+        return const FacultyLoginScreen();
+        // return LoginScreen(isStudent: isStudent)
+      } else if (state is AuthStateStudentLoginFailure) {
+        return const StudentLoginScreen();
+      } else if (state is AuthStateFacultyLoginFailure) {
+        return const FacultyLoginScreen();
       } else {
         print("To login screen");
-        return const LoginScreen();
+        return const SelectUserScreen();
       }
     });
   }
