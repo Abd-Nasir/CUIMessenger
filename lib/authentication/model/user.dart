@@ -15,6 +15,8 @@ class User {
 
   late String imageKey;
 
+  late String role;
+
   User({
     required this.uid,
     required this.email,
@@ -24,6 +26,7 @@ class User {
     required this.dateOfBirth,
     required this.profilePicture,
     required this.imageKey,
+    required this.role,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -33,9 +36,9 @@ class User {
     lastName = json['last-name'];
     phoneNumber = json['phone'];
     dateOfBirth = json['date-of-birth'];
-
     profilePicture = json["profile-picture"] ?? "";
     imageKey = json["profile-picture-key"];
+    role = json["role"];
   }
 
   Map<String, dynamic> toJson() {
@@ -46,10 +49,9 @@ class User {
     data['last-name'] = lastName;
     data['phone'] = phoneNumber;
     data['date-of-birth'] = dateOfBirth;
-
     data['profile-picture'] = profilePicture;
     data["profile-picture-key"] = imageKey;
-
+    data["role"] = role;
     return data;
   }
 }

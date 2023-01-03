@@ -1,7 +1,8 @@
 // import 'package:dio/dio.dart';
 import 'dart:io' as io;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cui_messenger/authentication/model/user.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,14 +14,16 @@ import '/helpers/style/colors.dart';
 
 class AuthProvider {
   // late SharedPreferences preferences;
-  User? currentUser;
+  fb.User? currentUser;
   String code = "";
   String userPhone = "";
   String forgotPassword = "null";
+  String userImageUrl = "";
   // AuthProvider({this.currentUser});
 
   Future<void> initialize() async {
-    currentUser = FirebaseAuth.instance.currentUser;
+    currentUser = fb.FirebaseAuth.instance.currentUser;
+
     return;
     //await _storage.read(key: 'CurrentUser').then((value) async {
     //  if (value != null) {
@@ -31,19 +34,35 @@ class AuthProvider {
     //});
   }
 
-  Future<User?> studentLogin({
+  Future<String?> imageUrl() async {
+    FirebaseFirestore.instance
+        .collection('registered-users')
+        // .where('username', isEqualTo: searchController.text)
+        .get()
+        .then((value) {
+      value.docs.forEach((users) {
+        if (users.data()["uid"] == fb.FirebaseAuth.instance.currentUser!.uid) {
+          userImageUrl = users.data()['imageUrl'];
+          print("userImageUrl ${userImageUrl}");
+        }
+      });
+    });
+    return userImageUrl;
+  }
+
+  Future<fb.User?> studentLogin({
     required String email,
     required String password,
   }) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      fb.UserCredential userCredential = await fb.FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       if (userCredential.user != null) {
         return userCredential.user;
       }
       return null;
       // print(response);
-    } on FirebaseAuthException catch (e) {
+    } on fb.FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         showSimpleNotification(
           slideDismissDirection: DismissDirection.horizontal,
@@ -80,19 +99,19 @@ class AuthProvider {
     return null;
   }
 
-  Future<User?> teacherLogin({
+  Future<fb.User?> teacherLogin({
     required String email,
     required String password,
   }) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      fb.UserCredential userCredential = await fb.FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       if (userCredential.user != null) {
         return userCredential.user;
       }
       return null;
       // print(response);
-    } on FirebaseAuthException catch (e) {
+    } on fb.FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         showSimpleNotification(
           slideDismissDirection: DismissDirection.horizontal,
@@ -129,12 +148,13 @@ class AuthProvider {
     return null;
   }
 
-  Future<User?> registerStudentWithEmail(
+  Future<fb.User?> registerStudentWithEmail(
       Map<String, dynamic> userData, XFile? file) async {
     try {
-      final auth = FirebaseAuth.instance;
-      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-          email: userData['email'], password: userData['password']);
+      final auth = fb.FirebaseAuth.instance;
+      fb.UserCredential userCredential =
+          await auth.createUserWithEmailAndPassword(
+              email: userData['email'], password: userData['password']);
       print("Registered email password");
 
       final ref = FirebaseStorage.instance
@@ -146,26 +166,68 @@ class AuthProvider {
 
       final url = await ref.getDownloadURL();
       userData['imageUrl'] = url;
+      userData["uid"] = userCredential.user!.uid;
       print("Image URL: ${userData["imageUrl"]}");
       await FirebaseFirestore.instance
-          .collection('students')
+          .collection('registered-users')
           .doc(userCredential.user!.uid)
           .set(userData);
       print("Completely registered");
 
       return userCredential.user;
-    } catch (error) {
-      print(error);
+    } on fb.FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text("The password provided is too weak."),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text('The account already exists for that email.'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('The account already exists for that email.');
+      } else if (e.code == 'operation-not-allowed') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text('There is a problem with auth service config :/'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('There is a problem with auth service config :/');
+      } else if (e.code == 'weak-password') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text("Please type stronger password"),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('Please type stronger password');
+      } else {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          Text("Auth Error + ${e}"),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('auth error ' + e.toString());
+        rethrow;
+      }
     }
     return null;
   }
 
-  Future<User?> registerFacultyWithEmail(
+  Future<fb.User?> registerFacultyWithEmail(
       Map<String, dynamic> userData, XFile? file) async {
     try {
       bool isRegistered = false;
       print("Email:==== ${userData["email"]}");
-      final auth = FirebaseAuth.instance;
+      final auth = fb.FirebaseAuth.instance;
       final userRef = FirebaseFirestore.instance
           .collection("registeredFacultyEmails")
           .doc(userData["email"]);
@@ -177,7 +239,7 @@ class AuthProvider {
           });
       print("is registered $isRegistered");
       if (isRegistered == true) {
-        UserCredential userCredential =
+        fb.UserCredential userCredential =
             await auth.createUserWithEmailAndPassword(
                 email: userData['email'], password: userData['password']);
         print("Registered email password");
@@ -191,9 +253,10 @@ class AuthProvider {
 
         final url = await ref.getDownloadURL();
         userData['imageUrl'] = url;
+        userData["uid"] = userCredential.user!.uid;
         print("Image URL: ${userData["imageUrl"]}");
         await FirebaseFirestore.instance
-            .collection('faculty-profiles')
+            .collection('registered-users')
             .doc(userCredential.user!.uid)
             .set(userData);
         print("Completely registered");
@@ -206,8 +269,49 @@ class AuthProvider {
           duration: const Duration(seconds: 2),
         );
       }
-    } catch (error) {
-      print(error);
+    } on fb.FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text("The password provided is too weak."),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text('The account already exists for that email.'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('The account already exists for that email.');
+      } else if (e.code == 'operation-not-allowed') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text('There is a problem with auth service config :/'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('There is a problem with auth service config :/');
+      } else if (e.code == 'weak-password') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text("Please type stronger password"),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('Please type stronger password');
+      } else {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          Text("Auth Error + ${e}"),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+        print('auth error ' + e.toString());
+        rethrow;
+      }
     }
     return null;
   }

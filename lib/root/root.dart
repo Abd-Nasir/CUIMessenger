@@ -1,12 +1,11 @@
 import 'dart:async';
+import 'package:cui_messenger/chat/view/chat_home_screen.dart';
+import 'package:cui_messenger/feed/view/feed_screen.dart';
+import 'package:cui_messenger/settings/view/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:cui_messenger/authentication/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '/helpers/routes/routegenerator.dart';
-import '/authentication/bloc/auth_bloc.dart';
 // import '/authentication/model/user.dart';
 // import 'package:safepall/screens/chat/view/chat_home_screen.dart';
 // import 'package:safepall/screens/contacts/bloc/contact_bloc.dart';
@@ -87,9 +86,9 @@ class _RootPageState extends State<RootPage> {
           //   inactiveColor: Palette.hintGrey,
           // ),
           FlashyTabBarItem(
-            icon: const Icon(Icons.contacts),
+            icon: const Icon(Icons.notifications_active_rounded),
             title: const Text(
-              "ABC",
+              "Notices",
               style: TextStyle(fontSize: 10.0),
             ),
             activeColor: Palette.cuiPurple,
@@ -97,9 +96,9 @@ class _RootPageState extends State<RootPage> {
           ),
 
           FlashyTabBarItem(
-            icon: const Icon(Icons.map_rounded),
+            icon: const Icon(Icons.chat_rounded),
             title: const Text(
-              "Xyz",
+              "Chat",
               style: TextStyle(fontSize: 10.0),
             ),
             activeColor: Palette.cuiPurple,
@@ -204,17 +203,11 @@ class _RootPageState extends State<RootPage> {
       // print("\n\nCustomer info: ${customerInfo.toJson()}");
       return const HomePage();
     } else if (selectedIndex == 1) {
-      // BlocProvider.of<ContactBloc>(context).add(LoadContactsFromDatabase(
-      //     uid: BlocProvider.of<AuthBloc>(context).state.user!.uid));
-
-      // return const ChatHome();
+      return const ChatHomeScreen();
     } else if (selectedIndex == 2) {
-      // BlocProvider.of<ContactBloc>(context).add(LoadContactsFromDatabase(
-      //     uid: BlocProvider.of<AuthBloc>(context).state.user!.uid));
-
-      // return const ContactListPage();
+      return const FeedScreen();
     } else if (selectedIndex == 3) {
-      // return const MapsHomePage();
+      return const SettingsPage();
     }
   }
 }

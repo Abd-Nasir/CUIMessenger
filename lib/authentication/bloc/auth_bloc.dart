@@ -250,6 +250,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<ResendVerificationMail>((event, emit) async {
+      print("Email sending");
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
     });
 

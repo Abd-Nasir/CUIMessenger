@@ -31,14 +31,13 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController dateOfBirthController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypePasswordController = TextEditingController();
   TextEditingController countryCodeController =
       TextEditingController(text: "+92");
   DateTime dateTime = DateTime.now();
   String error = "";
-  // bool isLoading = false;
+  bool isLoading = false;
 
   XFile? pickedImage;
 
@@ -71,22 +70,29 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
           error = "";
         });
         if (pickedImage != null) {
+          setState(() {
+            isLoading = true;
+          });
           BlocProvider.of<AuthBloc>(context).add(
             AuthStudentRegisterEvent(
               userData: {
+                "uid": "",
                 "first-name": firstNameController.text,
                 "last-name": lastNameController.text,
+                "reg-no": emailController.text.split("@").first.toUpperCase(),
                 "role": "student",
                 "email": emailController.text.trim(),
                 "phone": countryCodeController.text + phoneController.text,
                 "date-of-birth": dateTime.toIso8601String(),
-                "address": addressController.text,
                 "password": passwordController.text.trim(),
                 "imageUrl": "",
               },
               file: pickedImage!,
             ),
           );
+          setState(() {
+            isLoading = false;
+          });
         } else {
           showSimpleNotification(
             slideDismissDirection: DismissDirection.horizontal,
@@ -99,60 +105,32 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
     }
   }
 
-  // Future<void> showChoiceDialog(BuildContext context) {
-  //   return showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           shape: RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.circular(10.0),
-  //           ),
-  //           title: Text(
-  //             "Choose Image Source",
-  //             style: const TextStyle(color: Palette.frenchBlue),
-  //           ),
-  //           content: SingleChildScrollView(
-  //             child: ListBody(
-  //               children: [
-  //                 const Divider(
-  //                   height: 1,
-  //                   color: Colors.blue,
-  //                 ),
-  //                 ListTile(
-  //                   onTap: () {
-  //                     galleryImagePicker(context);
-  //                   },
-  //                   title: Text(AppLocalizations.instance.tr('choose_gallery')),
-  //                   leading: const Icon(
-  //                     Icons.image,
-  //                     color: Colors.blue,
-  //                   ),
-  //                 ),
-  //                 const Divider(
-  //                   height: 1,
-  //                   color: Colors.blue,
-  //                 ),
-  //                 ListTile(
-  //                   onTap: () {
-  //                     cameraImagePicker(context);
-  //                   },
-  //                   title: Text(AppLocalizations.instance.tr('camera')),
-  //                   leading: const Icon(
-  //                     Icons.camera,
-  //                     color: Colors.blue,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
-
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        shadowColor: Colors.transparent,
+        backgroundColor: Palette.white,
+        leading: IconButton(
+          onPressed: () {
+            RouteGenerator.navigatorKey.currentState!.pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Palette.cuiPurple,
+          ),
+        ),
+        title: const Text(
+          "Student Signup",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Palette.cuiPurple,
+              fontSize: 22.0,
+              fontWeight: FontWeight.w600),
+        ),
+      ),
       body: SafeArea(
         child: Form(
           key: signUpFormKey,
@@ -167,15 +145,7 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: mediaQuery.size.height * 0.04),
-                  const Text(
-                    "Enter Details",
-                    style: TextStyle(
-                        color: Palette.cuiBlue,
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: mediaQuery.size.height * 0.04),
+                  SizedBox(height: mediaQuery.size.height * 0.02),
                   Container(
                     height: mediaQuery.size.width * 0.3,
                     width: mediaQuery.size.width * 0.3,
@@ -419,10 +389,13 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
                     ),
                   ),
                   SizedBox(height: mediaQuery.size.height * 0.03),
-                  CustomWidgets.textButton(
-                    text: "Register", mediaQuery: mediaQuery, onTap: signup,
-                    //TODO: Signup implementation
-                  ),
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : CustomWidgets.textButton(
+                          text: "Register", mediaQuery: mediaQuery,
+                          onTap: signup,
+                          //TODO: Signup implementation
+                        ),
                   if (error.isNotEmpty)
                     SizedBox(height: mediaQuery.size.height * 0.02),
                   if (error.isNotEmpty)

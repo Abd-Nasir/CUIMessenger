@@ -11,11 +11,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-          child: ElevatedButton(
-              onPressed: () {
-                BlocProvider.of<AuthBloc>(context).add(const AuthLogoutEvent());
-              },
-              child: const Icon(Icons.abc))),
+        child: Text("TODO// Notification Screen"),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     BlocProvider.of<AuthBloc>(context).add(const AuthLogoutEvent());
+        //   },
+        //   child: const Icon(Icons.abc),
+        // ),
+      ),
     );
   }
 }

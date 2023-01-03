@@ -31,13 +31,11 @@ class _FacultySignupPageState extends State<FacultySignupPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController dateOfBirthController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypePasswordController = TextEditingController();
   TextEditingController countryCodeController =
       TextEditingController(text: "+92");
 
-  bool checkBoxValue = false;
   DateTime dateTime = DateTime.now();
   String error = "";
   bool isLoading = false;
@@ -73,22 +71,30 @@ class _FacultySignupPageState extends State<FacultySignupPage> {
           error = "";
         });
         if (pickedImage != null) {
+          setState(() {
+            isLoading = true;
+          });
           BlocProvider.of<AuthBloc>(context).add(
             AuthFacultyRegisterEvent(
               userData: {
+                "uid": "",
                 "first-name": firstNameController.text,
                 "last-name": lastNameController.text,
+                "reg-no": "Faculty member",
                 "role": "faculty",
                 "email": emailController.text.trim(),
                 "phone": countryCodeController.text + phoneController.text,
                 "date-of-birth": dateTime.toIso8601String(),
-                "address": addressController.text,
                 "password": passwordController.text.trim(),
                 "imageUrl": "",
               },
               file: pickedImage!,
             ),
           );
+
+          setState(() {
+            isLoading = false;
+          });
         } else {
           showSimpleNotification(
             slideDismissDirection: DismissDirection.horizontal,
@@ -105,6 +111,28 @@ class _FacultySignupPageState extends State<FacultySignupPage> {
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        shadowColor: Colors.transparent,
+        backgroundColor: Palette.white,
+        leading: IconButton(
+          onPressed: () {
+            RouteGenerator.navigatorKey.currentState!.pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Palette.cuiBlue,
+          ),
+        ),
+        title: const Text(
+          "Faculty Signup",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Palette.cuiBlue,
+              fontSize: 22.0,
+              fontWeight: FontWeight.w600),
+        ),
+      ),
       body: SafeArea(
         child: Form(
           key: signUpFormKey,
@@ -119,15 +147,7 @@ class _FacultySignupPageState extends State<FacultySignupPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: mediaQuery.size.height * 0.04),
-                  const Text(
-                    "Enter Details",
-                    style: TextStyle(
-                        color: Palette.cuiBlue,
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: mediaQuery.size.height * 0.04),
+                  SizedBox(height: mediaQuery.size.height * 0.01),
                   Container(
                     height: mediaQuery.size.width * 0.3,
                     width: mediaQuery.size.width * 0.3,
@@ -372,11 +392,14 @@ class _FacultySignupPageState extends State<FacultySignupPage> {
                     ),
                   ),
                   SizedBox(height: mediaQuery.size.height * 0.03),
-                  CustomWidgets.textButton(
-                    text: "Register", mediaQuery: mediaQuery, onTap: signup,
-                    color: Palette.cuiBlue,
-                    //TODO: Signup implementation
-                  ),
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : CustomWidgets.textButton(
+                          text: "Register", mediaQuery: mediaQuery,
+                          onTap: signup,
+                          color: Palette.cuiBlue,
+                          //TODO: Signup implementation
+                        ),
                   if (error.isNotEmpty)
                     SizedBox(height: mediaQuery.size.height * 0.02),
                   if (error.isNotEmpty)
