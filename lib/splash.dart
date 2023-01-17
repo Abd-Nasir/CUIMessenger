@@ -98,6 +98,7 @@ class _SplashPageState extends State<SplashPage> {
         print("Accessed Auth State Verify Mail");
         return const VerifyMail();
       } else if (state is AuthStateStudentLogin) {
+        print("Accessed Auth State Student Login");
         return const StudentLoginScreen();
         // return LoginScreen(isStudent: isStudent)
       } else if (state is AuthStateTeacherLogin) {

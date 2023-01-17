@@ -26,9 +26,19 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
 
   bool isLoading = false;
   User? user = FirebaseAuth.instance.currentUser;
+  var charLength;
 
   // This function is called whenever the text field changes
   void _runFilter(String enteredKeyword) {
+    setState(() {
+      charLength = enteredKeyword.length;
+      print(charLength);
+      if (charLength < 1) {
+        textFieldSelected = false;
+      } else {
+        textFieldSelected = true;
+      }
+    });
     List<Map<dynamic, dynamic>> results = [];
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
@@ -79,6 +89,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
 
     // Future<List> users = userProvider.getData();
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xffF8F8F8),
         appBar: AppBar(
           elevation: 0,
@@ -98,7 +109,10 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 20,
+              ),
               child: TextFormField(
                 onTap: () {
                   textFieldSelected = true;
@@ -177,6 +191,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                                   })));
                                 }),
                                 child: Container(
+                                  margin: const EdgeInsets.only(top: 10),
                                   decoration: BoxDecoration(
                                       color: Palette.cuiOffWhite,
                                       borderRadius: BorderRadius.circular(20)),
@@ -187,6 +202,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                                     leading: Container(
                                       height: 45,
                                       width: 45,
+                                      // margin: EdgeInsets.only(top: 20),
                                       decoration: BoxDecoration(
                                           color: Palette.white,
                                           borderRadius:
@@ -261,6 +277,8 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                                         if (asyncSnapshot.hasData) {
                                           var friend = asyncSnapshot.data;
                                           return Container(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 5),
                                             decoration: BoxDecoration(
                                                 color: Palette.white,
                                                 borderRadius:

@@ -34,31 +34,16 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   int selectedIndex = 0;
-  late User user;
-  late Timer timer;
-  late Timer time;
-  // StreamSubscription<LocationData>? locationSubscription;
-  // Location location = Location();
-  final isDialOpen = ValueNotifier(false);
+  // late User user;
 
   @override
   void initState() {
-    // location.enableBackgroundMode(enable: true);
     // user = BlocProvider.of<AuthBloc>(context).state.user as User;
-    // getActiveSub();
     super.initState();
   }
 
-  // getActiveSub() {
-  //   final MapProvider mapProvider = MapProvider()
-  //     ..loadDataDangerZones(context: context)
-  //     ..getCurrentLocation();
-  // }
-
   @override
   void dispose() {
-    timer.cancel();
-    time.cancel();
     super.dispose();
   }
 

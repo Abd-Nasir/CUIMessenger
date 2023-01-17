@@ -22,7 +22,7 @@ class VerifyMail extends StatefulWidget {
 
 class _VerifyMailState extends State<VerifyMail> {
   Timer? countDownTimer;
-  Duration resendDuration = const Duration(seconds: 61);
+  Duration resendDuration = const Duration(seconds: 0);
   bool resendToken = false;
 
   void startTimer() {
@@ -128,10 +128,6 @@ class _VerifyMailState extends State<VerifyMail> {
                 text: "Sign out",
                 mediaQuery: mediaQuery,
                 onTap: () {
-                  RouteGenerator.navigatorKey.currentState!.pop('dialog');
-                  RouteGenerator.navigatorKey.currentState!
-                      .pushNamedAndRemoveUntil(
-                          studentLoginScreenRoute, (route) => false);
                   BlocProvider.of<AuthBloc>(context)
                       .add(const AuthLogoutEvent());
                 },
