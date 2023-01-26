@@ -161,7 +161,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                                   Icons.remove_red_eye_outlined,
                                   color: passwordVisible
                                       ? Palette.grey
-                                      : Palette.cuiBlue,
+                                      : Palette.cuiPurple,
                                 ),
                               ),
                             ),
@@ -237,7 +237,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                                 }),
                                 child: const Text(
                                   "Sign up here",
-                                  style: TextStyle(color: Palette.cuiBlue),
+                                  style: TextStyle(color: Palette.cuiPurple),
                                 ))
                           ])
                     ],

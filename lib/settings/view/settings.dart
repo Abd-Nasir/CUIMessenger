@@ -25,7 +25,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool emergencyAlarm = false;
-  late String imageUrl = "";
+  late String imageUrl = "http://cdn.onlinewebfonts.com/svg/img_401900.png";
 
   @override
   void initState() {

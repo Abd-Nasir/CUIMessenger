@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/authentication/bloc/auth_event.dart';
-import 'package:cui_messenger/helpers/routes/routegenerator.dart';
-import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,11 +52,11 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 20),
+            SizedBox(height: 30),
             const Text(
               'Welcome to',
               style: TextStyle(
-                  color: Palette.black,
+                  color: Palette.cuiPurple,
                   fontSize: 20,
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
@@ -68,28 +65,27 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
             const Text(
               "CUI Messenger",
               style: TextStyle(
-                  color: Palette.black,
+                  color: Palette.cuiBlue,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
-              height: 10,
+              height: 30,
             ),
             Container(
               height: mediaQuery.size.height * 0.45,
               margin: const EdgeInsets.symmetric(
-                horizontal: 20,
+                horizontal: 30,
               ),
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(
-                    color: Palette.frenchBlue.withOpacity(0.25),
-                    offset: Offset(0, 0),
-                    spreadRadius: 3,
-                    blurRadius: 5)
-              ], borderRadius: BorderRadius.circular(20), color: Palette.white),
+                    color: Palette.cuiPurple.withOpacity(0.35),
+                    spreadRadius: 2,
+                    blurRadius: 7)
+              ], borderRadius: BorderRadius.circular(10), color: Palette.white),
               child: Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(7),
                   width: double.infinity,
                   // height: mediaQuery.size.height * 0.4,
                   // padding: EdgeInsets.all(8),
@@ -146,7 +142,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                                         style: const TextStyle(
                                             color: Palette.white),
                                       ),
-                                      const SizedBox(height: 10),
+                                      const SizedBox(height: 20),
                                     ],
                                   );
                                 }),
@@ -163,7 +159,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                     'Select who you are?',
                     style: TextStyle(
                         color: Colors.grey.shade600,
-                        fontSize: 14,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600),
                     textAlign: TextAlign.center,
                   ),
@@ -186,8 +182,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                                 side: BorderSide(color: Colors.grey.shade400),
                                 borderRadius: BorderRadius.circular(10)),
                             elevation: 0,
-                            color:
-                                isTeacher ? Palette.frenchBlue : Palette.white,
+                            color: isTeacher ? Palette.aeroBlue : Palette.white,
                             child: Column(
                               children: [
                                 const Padding(
@@ -232,8 +227,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                                 side: BorderSide(color: Colors.grey.shade400),
                                 borderRadius: BorderRadius.circular(10)),
                             elevation: 0,
-                            color:
-                                isStudent ? Palette.frenchBlue : Colors.white,
+                            color: isStudent ? Palette.aeroBlue : Colors.white,
                             child: Column(
                               children: [
                                 const Padding(

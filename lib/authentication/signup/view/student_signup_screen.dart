@@ -412,7 +412,7 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
                     text: TextSpan(
                       children: [
                         const TextSpan(
-                          text: "Joined us before?",
+                          text: "Joined us before?  ",
                           style: TextStyle(color: Palette.black),
                         ),
                         TextSpan(
