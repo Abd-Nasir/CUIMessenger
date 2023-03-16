@@ -3,14 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:overlay_support/overlay_support.dart';
 // import 'package:permission_handler/permission_handler.dart';
 import '/authentication/bloc/auth_event.dart';
 import '/authentication/bloc/auth_provider.dart';
 import '/authentication/bloc/auth_state.dart';
 import '/helpers/routes/routegenerator.dart';
 import '/helpers/routes/routenames.dart';
-import '/helpers/style/colors.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthProvider provider) : super(const AuthStateLoading(null)) {
@@ -19,12 +17,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // Check Notifications and Exit App
       emit(const AuthStateLoading(null));
       await provider.initialize().then((value) async {
-        final user = provider.currentUser;
+        // final fbuser = provider.currentUser;
+        final user = provider.userData;
+
         print("Printing user in auth bloc initialization: \n$user");
-        if (user != null) {
-          if (user.emailVerified) {
+        if (FirebaseAuth.instance.currentUser != null) {
+          if (FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateLoggedIn(user));
-          } else if (!user.emailVerified) {
+          } else if (!FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateNeedsVerification(user));
           }
         } else {
@@ -53,7 +53,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               .then((user) async {
             print(user);
             if (user != null) {
-              if (user.emailVerified) {
+              if (FirebaseAuth.instance.currentUser!.emailVerified) {
                 print("\nEmitting Logged in user!\n");
                 emit(AuthStateLoggedIn(user));
               } else {
@@ -88,7 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             // final user = provider.currentUser;
             print(user);
             if (user != null) {
-              if (user.emailVerified) {
+              if (FirebaseAuth.instance.currentUser!.emailVerified) {
                 print("\nEmitting Logged in user!\n");
                 emit(AuthStateLoggedIn(user));
               } else {
@@ -240,7 +240,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CheckEmailVerified>((event, emit) async {
       await FirebaseAuth.instance.currentUser!.reload();
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        emit(AuthStateLoggedIn(provider.currentUser));
+        emit(AuthStateLoggedIn(provider.userData));
         // RouteGenerator.navigatorKey.currentState!
         //     .pushNamedAndRemoveUntil(chatHomeRoute, (route) => false);
         // add(const OnAuthNavigateAppEvent());

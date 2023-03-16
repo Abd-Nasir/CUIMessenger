@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/bloc/auth_provider.dart';
+import 'package:cui_messenger/authentication/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -25,14 +26,17 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool emergencyAlarm = false;
-  late String imageUrl = "http://cdn.onlinewebfonts.com/svg/img_401900.png";
+  UserData? currentUser;
+  // late String imageUrl = "http://cdn.onlinewebfonts.com/svg/img_401900.png";
 
   @override
   void initState() {
-    AuthProvider().imageUrl().then((value) {
-      print(value);
-      imageUrl = value!;
-    });
+    currentUser = BlocProvider.of<AuthBloc>(context).state.user;
+
+    // AuthProvider().imageUrl().then((value) {
+    //   print(value);
+    //   imageUrl = value!;
+    // });
     // TODO: implement initState
     super.initState();
   }
@@ -439,11 +443,10 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(200.0),
               child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                // BlocProvider.of<AuthBloc>(context)
-                //     .state
-                //     .user!.
-                //     .profilePicture,
+                imageUrl: BlocProvider.of<AuthBloc>(context)
+                    .state
+                    .user!
+                    .profilePicture,
                 fit: BoxFit.cover,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Center(
@@ -459,8 +462,8 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "User Name",
+                Text(
+                  BlocProvider.of<AuthBloc>(context).state.user!.firstName,
                   style: TextStyle(
                     color: Palette.textColor,
                     fontSize: 14.0,

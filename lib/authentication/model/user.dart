@@ -1,4 +1,4 @@
-class User {
+class UserData {
   late String uid;
 
   late String email;
@@ -13,11 +13,10 @@ class User {
 
   late String profilePicture;
 
-  late String imageKey;
-
   late String role;
+  late String regNo;
 
-  User({
+  UserData({
     required this.uid,
     required this.email,
     required this.firstName,
@@ -25,19 +24,19 @@ class User {
     required this.phoneNumber,
     required this.dateOfBirth,
     required this.profilePicture,
-    required this.imageKey,
     required this.role,
+    required this.regNo,
   });
 
-  User.fromJson(Map<String, dynamic> json) {
+  UserData.fromJson(Map<String, dynamic> json) {
     uid = json['uid'] ?? json['_id'];
     email = json['email'];
     firstName = json['first-name'];
     lastName = json['last-name'];
+    regNo = json['reg-no'];
     phoneNumber = json['phone'];
     dateOfBirth = json['date-of-birth'];
-    profilePicture = json["profile-picture"] ?? "";
-    imageKey = json["profile-picture-key"];
+    profilePicture = json["imageUrl"];
     role = json["role"];
   }
 
@@ -49,9 +48,9 @@ class User {
     data['last-name'] = lastName;
     data['phone'] = phoneNumber;
     data['date-of-birth'] = dateOfBirth;
-    data['profile-picture'] = profilePicture;
-    data["profile-picture-key"] = imageKey;
+    data["imageUrl"] = profilePicture;
     data["role"] = role;
+    data['reg-no'] = regNo;
     return data;
   }
 }

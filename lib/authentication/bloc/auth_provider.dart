@@ -15,6 +15,7 @@ import '/helpers/style/colors.dart';
 class AuthProvider {
   // late SharedPreferences preferences;
   fb.User? currentUser;
+  UserData? userData;
   String code = "";
   String userPhone = "";
   String forgotPassword = "null";
@@ -23,7 +24,21 @@ class AuthProvider {
 
   Future<void> initialize() async {
     currentUser = fb.FirebaseAuth.instance.currentUser;
-
+    if (currentUser != null) {
+      await FirebaseFirestore.instance
+          .collection('registered-users')
+          // .where('username', isEqualTo: searchController.text)
+          .get()
+          .then((value) {
+        for (var user in value.docs) {
+          if (user.data()["uid"] == currentUser!.uid) {
+            print("This is user \n\n ${user.data()}\n");
+            userData = UserData.fromJson(user.data());
+            print("This is email ${userData!.email}");
+          }
+        }
+      });
+    }
     return;
     //await _storage.read(key: 'CurrentUser').then((value) async {
     //  if (value != null) {
@@ -34,23 +49,42 @@ class AuthProvider {
     //});
   }
 
-  Future<String?> imageUrl() async {
-    FirebaseFirestore.instance
-        .collection('registered-users')
-        // .where('username', isEqualTo: searchController.text)
-        .get()
-        .then((value) {
-      value.docs.forEach((users) {
-        if (users.data()["uid"] == fb.FirebaseAuth.instance.currentUser!.uid) {
-          userImageUrl = users.data()['imageUrl'];
-          print("userImageUrl ${userImageUrl}");
-        }
+  getUserData({required fb.UserCredential userCredential}) async {
+    if (userCredential.user != null) {
+      // return userCredential.user;
+      await FirebaseFirestore.instance
+          .collection('registered-users')
+          // .where('username', isEqualTo: searchController.text)
+          .get()
+          .then((value) {
+        value.docs.forEach((user) {
+          if (user.data()["uid"] == userCredential.user!.uid) {
+            print("This is user \n\n ${user.data()}\n");
+            userData = UserData.fromJson(user.data());
+            print("This is email ${userData!.email}");
+          }
+        });
       });
-    });
-    return userImageUrl;
+      return userData;
+    }
   }
+  // Future<String?> imageUrl() async {
+  //   FirebaseFirestore.instance
+  //       .collection('registered-users')
+  //       // .where('username', isEqualTo: searchController.text)
+  //       .get()
+  //       .then((value) {
+  //     value.docs.forEach((users) {
+  //       if (users.data()["uid"] == fb.FirebaseAuth.instance.currentUser!.uid) {
+  //         userImageUrl = users.data()['imageUrl'];
+  //         print("userImageUrl ${userImageUrl}");
+  //       }
+  //     });
+  //   });
+  //   return userImageUrl;
+  // }
 
-  Future<fb.User?> studentLogin({
+  Future<UserData?> studentLogin({
     required String email,
     required String password,
   }) async {
@@ -58,7 +92,21 @@ class AuthProvider {
       fb.UserCredential userCredential = await fb.FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       if (userCredential.user != null) {
-        return userCredential.user;
+        // return userCredential.user;
+        await FirebaseFirestore.instance
+            .collection('registered-users')
+            // .where('username', isEqualTo: searchController.text)
+            .get()
+            .then((value) {
+          value.docs.forEach((user) {
+            if (user.data()["uid"] == userCredential.user!.uid) {
+              print("This is user \n\n ${user.data()}\n");
+              userData = UserData.fromJson(user.data());
+              print("This is email ${userData!.email}");
+            }
+          });
+        });
+        return userData;
       }
       return null;
       // print(response);
@@ -99,7 +147,7 @@ class AuthProvider {
     return null;
   }
 
-  Future<fb.User?> teacherLogin({
+  Future<UserData?> teacherLogin({
     required String email,
     required String password,
   }) async {
@@ -107,7 +155,21 @@ class AuthProvider {
       fb.UserCredential userCredential = await fb.FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       if (userCredential.user != null) {
-        return userCredential.user;
+        // return userCredential.user;
+        await FirebaseFirestore.instance
+            .collection('registered-users')
+            // .where('username', isEqualTo: searchController.text)
+            .get()
+            .then((value) {
+          value.docs.forEach((user) {
+            if (user.data()["uid"] == userCredential.user!.uid) {
+              print("This is user \n\n ${user.data()}\n");
+              userData = UserData.fromJson(user.data());
+              print("This is email ${userData!.email}");
+            }
+          });
+        });
+        return userData;
       }
       return null;
       // print(response);
@@ -148,7 +210,7 @@ class AuthProvider {
     return null;
   }
 
-  Future<fb.User?> registerStudentWithEmail(
+  Future<UserData?> registerStudentWithEmail(
       Map<String, dynamic> userData, XFile? file) async {
     try {
       final auth = fb.FirebaseAuth.instance;
@@ -173,8 +235,10 @@ class AuthProvider {
           .doc(userCredential.user!.uid)
           .set(userData);
       print("Completely registered");
-
-      return userCredential.user;
+      if (userCredential.user != null) {
+        final userData = getUserData(userCredential: userCredential);
+        return userData;
+      }
     } on fb.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         showSimpleNotification(
@@ -222,7 +286,7 @@ class AuthProvider {
     return null;
   }
 
-  Future<fb.User?> registerFacultyWithEmail(
+  Future<UserData?> registerFacultyWithEmail(
       Map<String, dynamic> userData, XFile? file) async {
     try {
       bool isRegistered = false;
@@ -260,7 +324,10 @@ class AuthProvider {
             .doc(userCredential.user!.uid)
             .set(userData);
         print("Completely registered");
-        return userCredential.user;
+        if (userCredential.user != null) {
+          final userData = getUserData(userCredential: userCredential);
+          return userData;
+        }
       } else {
         showSimpleNotification(
           slideDismissDirection: DismissDirection.horizontal,
