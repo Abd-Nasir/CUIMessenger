@@ -8,3 +8,4 @@ const String chatHomeRoute = "/chat-home-route";
 const String studentSignupPageRoute = "/student-signup-route";
 const String facultySignupPageRoute = "/faculty-signup-route";
 const String verifyMailRoute = "/verifymail-route";
+const String commentScreenRoute = "/comment-screen-route";

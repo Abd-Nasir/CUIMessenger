@@ -301,8 +301,8 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                                                       BorderRadius.circular(
                                                           200.0),
                                                   child: CachedNetworkImage(
-                                                    imageUrl: _foundUsers[index]
-                                                        ['imageUrl'],
+                                                    imageUrl:
+                                                        friend['imageUrl'],
                                                     // BlocProvider.of<AuthBloc>(context)
                                                     //     .state
                                                     //     .user!.

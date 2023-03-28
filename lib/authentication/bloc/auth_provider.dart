@@ -1,16 +1,11 @@
-// import 'package:dio/dio.dart';
 import 'dart:io' as io;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cui_messenger/authentication/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
-// import 'package:safepall/screens/authentication/model/user.dart';
-// import 'package:safepall/helpers/api/api.dart';
 import '/helpers/style/colors.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider {
   // late SharedPreferences preferences;
@@ -19,7 +14,6 @@ class AuthProvider {
   String userPhone = "";
   String forgotPassword = "null";
   String userImageUrl = "";
-  // AuthProvider({this.currentUser});
 
   Future<void> initialize() async {
     currentUser = fb.FirebaseAuth.instance.currentUser;

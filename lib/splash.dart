@@ -1,14 +1,11 @@
 import 'package:cui_messenger/authentication/login/view/select_user_screen.dart';
 import 'package:cui_messenger/authentication/login/view/faculty_login.dart';
 import 'package:cui_messenger/authentication/verification/user_verification.dart';
-import 'package:cui_messenger/home/homepage.dart';
 import 'package:cui_messenger/root/root.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '/helpers/routes/routegenerator.dart';
-import '/helpers/style/custom_widgets.dart';
 import 'authentication/bloc/auth_bloc.dart';
-import 'authentication/bloc/auth_event.dart';
 import 'authentication/bloc/auth_state.dart';
 import 'authentication/login/view/student_login.dart';
 import '/helpers/style/colors.dart';

@@ -1,16 +1,13 @@
 import 'package:bloc/bloc.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:overlay_support/overlay_support.dart';
-// import 'package:permission_handler/permission_handler.dart';
+
 import '/authentication/bloc/auth_event.dart';
 import '/authentication/bloc/auth_provider.dart';
 import '/authentication/bloc/auth_state.dart';
 import '/helpers/routes/routegenerator.dart';
 import '/helpers/routes/routenames.dart';
-import '/helpers/style/colors.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthProvider provider) : super(const AuthStateLoading(null)) {

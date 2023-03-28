@@ -2,15 +2,20 @@ import 'package:cui_messenger/app_retain.dart';
 import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/authentication/bloc/auth_event.dart';
 import 'package:cui_messenger/authentication/bloc/auth_provider.dart';
-import 'package:cui_messenger/authentication/verification/user_verification.dart';
+import 'package:cui_messenger/feed/model/comments.dart';
+import 'package:cui_messenger/feed/model/post_class.dart';
+import 'package:cui_messenger/feed/model/posts.dart';
+import 'package:cui_messenger/feed/view/feed_screen.dart';
+
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/splash.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +44,12 @@ class _MyAppState extends State<MyApp> {
               ..add(
                 const AuthEventInitialize(),
               ),
+          ),
+          ChangeNotifierProvider.value(
+            value: Posts(),
+          ),
+          ChangeNotifierProvider.value(
+            value: Comments(),
           ),
         ],
         child: MaterialApp(
