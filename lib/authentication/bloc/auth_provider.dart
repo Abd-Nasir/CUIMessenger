@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
+import '../model/user.dart';
 import '/helpers/style/colors.dart';
 
 class AuthProvider {
@@ -273,7 +274,7 @@ class AuthProvider {
           background: Palette.red.withOpacity(0.9),
           duration: const Duration(seconds: 2),
         );
-        print('auth error ' + e.toString());
+        print('auth error $e');
         rethrow;
       }
     }

@@ -9,7 +9,6 @@ import 'authentication/bloc/auth_bloc.dart';
 import 'authentication/bloc/auth_state.dart';
 import 'authentication/login/view/student_login.dart';
 import '/helpers/style/colors.dart';
-// import 'package:safepall/screens/root/root.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);

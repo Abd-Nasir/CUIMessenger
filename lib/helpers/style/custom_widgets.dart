@@ -35,7 +35,9 @@ class CustomWidgets {
       onTap: onTap,
       child: Container(
         width: mediaQuery.size.width,
-        padding: EdgeInsets.symmetric(vertical: mediaQuery.size.height * 0.02),
+        padding: EdgeInsets.symmetric(
+          vertical: mediaQuery.size.height * 0.02,
+        ),
         decoration: BoxDecoration(
             color: color ?? Palette.cuiPurple,
             borderRadius: BorderRadius.circular(borderRadius ?? 8.0),

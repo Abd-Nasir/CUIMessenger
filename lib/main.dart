@@ -3,10 +3,7 @@ import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/authentication/bloc/auth_event.dart';
 import 'package:cui_messenger/authentication/bloc/auth_provider.dart';
 import 'package:cui_messenger/feed/model/comments.dart';
-import 'package:cui_messenger/feed/model/post_class.dart';
 import 'package:cui_messenger/feed/model/posts.dart';
-import 'package:cui_messenger/feed/view/feed_screen.dart';
-
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/splash.dart';

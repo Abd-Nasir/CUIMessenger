@@ -442,8 +442,11 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
 
   void bottomSheet(BuildContext context) {
     showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
         ),
         context: context,
         builder: (context) {
@@ -456,7 +459,7 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
               children: [
                 ListTile(
                   leading: const Icon(Icons.browse_gallery_outlined),
-                  title: Text("Choose Gallery"),
+                  title: const Text("Choose Gallery"),
                   onTap: () {
                     pickImage(ImageSource.gallery);
                     Navigator.of(context).pop();
@@ -465,7 +468,7 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.camera),
-                  title: Text("Camera"),
+                  title: const Text("Camera"),
                   onTap: () {
                     pickImage(ImageSource.camera);
                     Navigator.of(context).pop();
