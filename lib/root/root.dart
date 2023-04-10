@@ -186,7 +186,7 @@ class _RootPageState extends State<RootPage> {
     if (selectedIndex == 0) {
       // CustomerInfo customerInfo = await Purchases.getCustomerInfo();
       // print("\n\nCustomer info: ${customerInfo.toJson()}");
-      return const HomePage();
+      return HomePage();
     } else if (selectedIndex == 1) {
       return const ChatHomeScreen();
     } else if (selectedIndex == 2) {

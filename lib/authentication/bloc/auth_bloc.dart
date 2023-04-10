@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:permission_handler/permission_handler.dart';
 // import 'package:permission_handler/permission_handler.dart';
 import '/authentication/bloc/auth_event.dart';
 import '/authentication/bloc/auth_provider.dart';
@@ -16,6 +18,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEventInitialize>((event, emit) async {
       // print("Auth Bloc Event Initialized");
       // Check Notifications and Exit App
+      if (await Permission.notification.isDenied) {
+        print("Permission is denied");
+        // Request Notification Access again
+        PermissionStatus status = await Permission.notification.request();
+        print("This is status $status");
+        await openAppSettings();
+        if (await Permission.notification.isDenied) {
+          emit(const AuthStateNotificationError(null));
+        }
+      }
+      if (await Permission.notification.isPermanentlyDenied) {
+        await openAppSettings().then((value) {
+          print(value);
+        });
+        if (await Permission.notification.isPermanentlyDenied) {
+          print("Permanently denied");
+          emit(const AuthStateNotificationError(null));
+        }
+      }
+      // if (await Permission.notification.isGranted) {
+      print("isGranted");
       emit(const AuthStateLoading(null));
       await provider.initialize().then((value) async {
         // final fbuser = provider.currentUser;
@@ -32,6 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(const AuthStateLoggedOut(null));
         }
       });
+      // }
     });
 
     on<AuthSelectStudentEvent>((event, emit) async {
@@ -254,6 +278,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print("Email sending");
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
     });
+
+    on<OnAuthNavigateAppEvent>(
+      (event, emit) async {
+        emit(const AuthStateLoading(null));
+        await provider.initialize().then((value) {
+          final user = provider.userData;
+
+          print("Printing user in auth bloc initialization: \n$user");
+          if (FirebaseAuth.instance.currentUser != null) {
+            if (FirebaseAuth.instance.currentUser!.emailVerified) {
+              emit(AuthStateLoggedIn(user));
+            } else if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+              emit(AuthStateNeedsVerification(user));
+            }
+          } else {
+            emit(const AuthStateLoggedOut(null));
+          }
+        });
+      },
+    );
 
     // on<AuthDeleteAccountEvent>((event, emit) async {
     //   bool res = await provider.deleteAccount(event.email);

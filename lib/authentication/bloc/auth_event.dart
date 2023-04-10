@@ -10,6 +10,10 @@ class AuthEventInitialize extends AuthEvent {
   const AuthEventInitialize();
 }
 
+class OnAuthNavigateAppEvent extends AuthEvent {
+  const OnAuthNavigateAppEvent();
+}
+
 class AuthSelectStudentEvent extends AuthEvent {
   const AuthSelectStudentEvent();
 }
