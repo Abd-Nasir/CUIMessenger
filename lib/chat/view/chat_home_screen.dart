@@ -4,6 +4,7 @@ import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/chat/view/chat_box.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -77,6 +78,8 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
   @override
   void initState() {
     // TODO: implement initState
+    // final fbm = FirebaseMessaging.instance;
+
     listSearch();
 
     super.initState();

@@ -1,9 +1,7 @@
-import 'package:cui_messenger/authentication/bloc/auth_provider.dart';
-import 'package:cui_messenger/feed/model/post_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
+
 import 'dart:io' as io;
 
 import '../../helpers/style/colors.dart';

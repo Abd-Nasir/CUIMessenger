@@ -106,7 +106,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                '${postsList[i].title} (${postsList[i].id})',
+                                '(${postsList[i].postId})',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -197,7 +197,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   ),
                   Column(children: [
                     postsList[i].imageUrl != ''
-                        ? Image.network(postsList[i].imageUrl)
+                        ? Image.network(postsList[i].imageUrl!)
                         : Container(
                             padding: const EdgeInsets.only(top: 10),
                             decoration: const BoxDecoration(
@@ -215,7 +215,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         ),
                         image: DecorationImage(
                           image: NetworkImage(
-                            postsList[i].imageUrl,
+                            postsList[i].imageUrl!,
                           ),
                           fit: BoxFit.cover,
                         ),
