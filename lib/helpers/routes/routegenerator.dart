@@ -3,8 +3,8 @@ import 'package:cui_messenger/authentication/login/view/faculty_login.dart';
 import 'package:cui_messenger/authentication/signup/view/faculty_signup.dart';
 import 'package:cui_messenger/authentication/signup/view/student_signup_screen.dart';
 import 'package:cui_messenger/authentication/verification/user_verification.dart';
-import 'package:cui_messenger/feed/view/comment_box.dart';
-import 'package:cui_messenger/feed/view/feed_screen.dart';
+import 'package:cui_messenger/feed/view/comment_screen.dart';
+
 import 'package:cui_messenger/feed/view/new_post_screen.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
@@ -47,9 +47,15 @@ class RouteGenerator {
           builder: (_) => const VerifyMail(),
         );
       case commentScreenRoute:
-        return MaterialPageRoute(
-          builder: (_) => const CommentBox(),
-        );
+        if (args != null) {
+          return MaterialPageRoute(
+            builder: (_) => CommentBox(
+              postId: args as String,
+            ),
+          );
+        }
+        return _errorRoute();
+
       case newPostScreenRoute:
         return MaterialPageRoute(
           builder: (_) => const NewPost(),

@@ -1,4 +1,5 @@
 import 'package:cui_messenger/feed/model/post.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PostEvents {
   const PostEvents();
@@ -10,8 +11,8 @@ class LoadReportsEvent extends PostEvents {
 
 class AddPostEvent extends PostEvents {
   final Post post;
-  final String userid;
-  const AddPostEvent({required this.post, required this.userid}) : super();
+  final XFile? file;
+  const AddPostEvent({required this.post, required this.file}) : super();
 }
 
 class LoadPostsFromDatabase extends PostEvents {

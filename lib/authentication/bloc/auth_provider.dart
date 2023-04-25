@@ -95,9 +95,9 @@ class AuthProvider {
             .then((value) {
           value.docs.forEach((user) {
             if (user.data()["uid"] == userCredential.user!.uid) {
-              print("This is user \n\n ${user.data()}\n");
+              // print("This is user \n\n ${user.data()}\n");
               userData = UserData.fromJson(user.data());
-              print("This is email ${userData!.email}");
+              // print("This is email ${userData!.email}");
             }
           });
         });
@@ -158,9 +158,9 @@ class AuthProvider {
             .then((value) {
           value.docs.forEach((user) {
             if (user.data()["uid"] == userCredential.user!.uid) {
-              print("This is user \n\n ${user.data()}\n");
+              // print("This is user \n\n ${user.data()}\n");
               userData = UserData.fromJson(user.data());
-              print("This is email ${userData!.email}");
+              // print("This is email ${userData!.email}");
             }
           });
         });
@@ -177,7 +177,7 @@ class AuthProvider {
           duration: const Duration(seconds: 2),
         );
       } else if (e.code == 'user-not-found') {
-        print(e.code);
+        // print(e.code);
         showSimpleNotification(
           slideDismissDirection: DismissDirection.horizontal,
           const Text("User not found,\n Try again or Register"),
@@ -185,7 +185,7 @@ class AuthProvider {
           duration: const Duration(seconds: 2),
         );
       } else if (e.code == 'wrong-password') {
-        print(e.code);
+        // print(e.code);
         showSimpleNotification(
           slideDismissDirection: DismissDirection.horizontal,
           const Text("Incorrect password!, try again"),
@@ -193,7 +193,7 @@ class AuthProvider {
           duration: const Duration(seconds: 2),
         );
       } else {
-        print(e.code);
+        // print(e.code);
         showSimpleNotification(
           slideDismissDirection: DismissDirection.horizontal,
           const Text("Please check your internet connection"),
@@ -218,7 +218,6 @@ class AuthProvider {
           .ref()
           .child('user_image')
           .child('${userCredential.user!.uid}.jpg');
-      print("Reference of storage $ref");
       await ref.putFile(io.File(file!.path));
 
       final url = await ref.getDownloadURL();

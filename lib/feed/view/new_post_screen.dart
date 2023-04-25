@@ -1,12 +1,16 @@
+import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
+import 'package:cui_messenger/feed/bloc/post_bloc.dart';
+import 'package:cui_messenger/feed/bloc/post_event.dart';
+import 'package:cui_messenger/feed/model/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'dart:io' as io;
 
 import '../../helpers/style/colors.dart';
 import '../../helpers/style/custom_widgets.dart';
-import '../model/posts.dart';
 
 class NewPost extends StatefulWidget {
   const NewPost({super.key});
@@ -17,6 +21,7 @@ class NewPost extends StatefulWidget {
 
 class _NewPostState extends State<NewPost> {
   XFile? pickedImage;
+  TextEditingController descriptionController = TextEditingController();
 
   Future pickImage(ImageSource source) async {
     try {
@@ -35,6 +40,22 @@ class _NewPostState extends State<NewPost> {
     }
   }
 
+  void addPost(String description, XFile file) {
+    var user = BlocProvider.of<AuthBloc>(context).state.user!;
+    BlocProvider.of<PostBloc>(context).add(AddPostEvent(
+        post: Post(
+          uId: user.uid,
+          postId: "",
+          description: description,
+          userImage: user.profilePicture,
+          imageUrl: "",
+          fullName: user.firstName + user.lastName,
+          createdAt: DateTime.now().toIso8601String(),
+          // comments: [],
+        ),
+        file: file));
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -42,7 +63,13 @@ class _NewPostState extends State<NewPost> {
         backgroundColor: Palette.cuiOffWhite,
         appBar: AppBar(
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.done_rounded))
+            IconButton(
+                onPressed: () {
+                  if (pickedImage != null) {
+                    addPost(descriptionController.text, pickedImage!);
+                  }
+                },
+                icon: Icon(Icons.done_rounded))
           ],
           iconTheme: const IconThemeData(color: Colors.black),
           elevation: 0,
@@ -65,8 +92,9 @@ class _NewPostState extends State<NewPost> {
                     children: [
                       Column(
                         children: [
-                          const TextField(
-                            decoration: InputDecoration(
+                          TextFormField(
+                            controller: descriptionController,
+                            decoration: const InputDecoration(
                                 hintText: "What's on your mind?"),
                             textCapitalization: TextCapitalization.sentences,
                           ),

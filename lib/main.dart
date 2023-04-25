@@ -2,8 +2,9 @@ import 'package:cui_messenger/app_retain.dart';
 import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/authentication/bloc/auth_event.dart';
 import 'package:cui_messenger/authentication/bloc/auth_provider.dart';
-import 'package:cui_messenger/feed/model/comments.dart';
-import 'package:cui_messenger/feed/model/posts.dart';
+import 'package:cui_messenger/feed/bloc/post_bloc.dart';
+import 'package:cui_messenger/feed/bloc/post_provider.dart';
+
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/splash.dart';
@@ -12,7 +13,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final AuthProvider provider = AuthProvider();
+  final AuthProvider authProvider = AuthProvider();
+  final PostProvider postProvider = PostProvider();
   @override
   Widget build(BuildContext context) {
     return OverlaySupport.global(
@@ -37,16 +38,16 @@ class _MyAppState extends State<MyApp> {
         providers: [
           BlocProvider<AuthBloc>(
             lazy: false,
-            create: (context) => AuthBloc(provider)
+            create: (context) => AuthBloc(authProvider)
               ..add(
                 const AuthEventInitialize(),
               ),
           ),
-          ChangeNotifierProvider.value(
-            value: Posts(),
-          ),
-          ChangeNotifierProvider.value(
-            value: Comments(),
+          BlocProvider<PostBloc>(
+            lazy: true,
+            create: (context) => PostBloc(
+              postProvider..loadData(),
+            ),
           ),
         ],
         child: MaterialApp(
