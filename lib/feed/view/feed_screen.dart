@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/feed/bloc/post_bloc.dart';
@@ -124,8 +125,31 @@ class _FeedScreenState extends State<FeedScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(post.userImage),
+                Container(
+                  height: mediaQuery.size.width * 0.1,
+                  width: mediaQuery.size.width * 0.1,
+                  decoration: BoxDecoration(
+                      color: Palette.white,
+                      borderRadius: BorderRadius.circular(200.0),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Palette.frenchBlue.withOpacity(0.25),
+                            offset: const Offset(0.0, 4.0),
+                            blurRadius: 16.0)
+                      ]),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(200.0),
+                    child: CachedNetworkImage(
+                      imageUrl: post.userImage,
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: CircularProgressIndicator(
+                                  value: downloadProgress.progress)),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -219,7 +243,19 @@ class _FeedScreenState extends State<FeedScreen> {
         ),
         Column(children: [
           post.imageUrl != ''
-              ? Image.network(post.imageUrl!)
+              ? Container(
+                  // borderRadius: BorderRadius.circular(200.0),
+                  child: CachedNetworkImage(
+                    imageUrl: post.imageUrl!,
+                    fit: BoxFit.cover,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                            child: CircularProgressIndicator(
+                                value: downloadProgress.progress)),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                )
               : Container(
                   padding: const EdgeInsets.only(top: 10),
                   decoration: const BoxDecoration(
@@ -252,19 +288,19 @@ class _FeedScreenState extends State<FeedScreen> {
                   sigmaX: 20,
                   sigmaY: 50,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      children: [
-                        StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection("posts")
-                                .doc(post.postId)
-                                .collection('likes')
-                                .snapshots(),
-                            builder: (context, AsyncSnapshot snapshot) {
-                              return Text(
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("posts")
+                        .doc(post.postId)
+                        .collection('likes')
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
                                 "${snapshot.data.docs.length}",
                                 style: TextStyle(
                                     color: post.imageUrl != ''
@@ -272,42 +308,77 @@ class _FeedScreenState extends State<FeedScreen> {
                                         : Colors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15),
-                              );
-                            }),
-                        IconButton(
-                          onPressed: () {
-                            FirebaseFirestore.instance
-                                .collection("posts")
-                                .doc(post.postId)
-                                .collection('likes')
-                                .doc(currentUser.uid)
-                                .set({
-                              "uid": currentUser.uid,
-                              "name":
-                                  currentUser.firstName + currentUser.lastName,
-                            });
-                          },
-                          icon:
-                              const Icon(Icons.thumb_up_alt_outlined, size: 20),
-                          color:
-                              post.imageUrl != '' ? Colors.white : Colors.black,
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        RouteGenerator.navigatorKey.currentState!.pushNamed(
-                            commentScreenRoute,
-                            arguments: post.postId);
-                      },
-                      icon: const Icon(
-                        Icons.comment_outlined,
-                        size: 20,
-                      ),
-                      color: post.imageUrl != '' ? Colors.white : Colors.black,
-                    ),
-                  ],
-                ),
+                              ),
+                              StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("posts")
+                                      .doc(post.postId)
+                                      .collection('likes')
+                                      .doc(currentUser.uid)
+                                      .snapshots(),
+                                  builder:
+                                      (context, AsyncSnapshot iconSnapshot) {
+                                    return IconButton(
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection("posts")
+                                            .doc(post.postId)
+                                            .collection('likes')
+                                            .doc(currentUser.uid)
+                                            .get()
+                                            .then((value) {
+                                          if (value.data() == null) {
+                                            FirebaseFirestore.instance
+                                                .collection("posts")
+                                                .doc(post.postId)
+                                                .collection('likes')
+                                                .doc(currentUser.uid)
+                                                .set({
+                                              "uid": currentUser.uid,
+                                              "name": currentUser.firstName +
+                                                  currentUser.lastName,
+                                            });
+                                          } else {
+                                            FirebaseFirestore.instance
+                                                .collection("posts")
+                                                .doc(post.postId)
+                                                .collection('likes')
+                                                .doc(currentUser.uid)
+                                                .delete();
+                                          }
+                                        });
+                                      },
+                                      icon: Icon(
+                                          iconSnapshot.data?.data() != null
+                                              ? Icons.thumb_up_alt_rounded
+                                              : Icons.thumb_up_alt_outlined,
+                                          size: 20),
+                                      color: iconSnapshot.data?.data() != null
+                                          ? Palette.cuiPurple
+                                          : post.imageUrl == ''
+                                              ? Colors.black
+                                              : Palette.white,
+                                    );
+                                  }),
+                            ],
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              RouteGenerator.navigatorKey.currentState!
+                                  .pushNamed(commentScreenRoute,
+                                      arguments: post.postId);
+                            },
+                            icon: const Icon(
+                              Icons.comment_outlined,
+                              size: 20,
+                            ),
+                            color: post.imageUrl != ''
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ],
+                      );
+                    }),
               ),
             ),
           ),

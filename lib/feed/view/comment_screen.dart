@@ -45,7 +45,6 @@ class _CommentBoxState extends State<CommentBox> {
             builder: (context, AsyncSnapshot snapshot) {
               var data = snapshot.data.docs;
 
-              // print(snapshot.data);
               if (snapshot.hasData) {
                 return Column(
                   children: [
@@ -113,12 +112,8 @@ class _CommentBoxState extends State<CommentBox> {
                                                                       200.0),
                                                           child:
                                                               CachedNetworkImage(
-                                                            imageUrl: BlocProvider
-                                                                    .of<AuthBloc>(
-                                                                        context)
-                                                                .state
-                                                                .user!
-                                                                .profilePicture,
+                                                            imageUrl: comment
+                                                                .userImage,
                                                             fit: BoxFit.cover,
                                                             progressIndicatorBuilder: (context,
                                                                     url,
