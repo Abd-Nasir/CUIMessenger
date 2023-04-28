@@ -1,11 +1,19 @@
 import 'dart:async';
 import 'package:cui_messenger/chat/view/chat_home_screen.dart';
 import 'package:cui_messenger/feed/view/feed_screen.dart';
+import 'package:cui_messenger/groupchat/constants/colors.dart';
+import 'package:cui_messenger/groupchat/constants/constant_utils.dart';
+import 'package:cui_messenger/groupchat/constants/constants.dart';
+import 'package:cui_messenger/groupchat/screens/group/screens/create_group_screen.dart';
+import 'package:cui_messenger/groupchat/screens/search_screen.dart';
+import 'package:cui_messenger/groupchat/screens/toppages/chat/chat_list_screen.dart';
 import 'package:cui_messenger/settings/view/settings.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:cui_messenger/authentication/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import '/authentication/model/user.dart';
 // import 'package:safepall/screens/chat/view/chat_home_screen.dart';
 // import 'package:safepall/screens/contacts/bloc/contact_bloc.dart';
@@ -49,8 +57,13 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (userInfo == null) {
+      fetchUserInfo();
+    }
     MediaQueryData mediaQuery = MediaQuery.of(context);
     return Scaffold(
+      floatingActionButton:
+          selectedIndex == 1 ? _getFloatingButton() : const SizedBox(),
       resizeToAvoidBottomInset: false,
       backgroundColor: Palette.aliceBlue,
       bottomNavigationBar: FlashyTabBar(
@@ -70,6 +83,7 @@ class _RootPageState extends State<RootPage> {
           //   activeColor: Palette.frenchBlue,
           //   inactiveColor: Palette.hintGrey,
           // ),
+
           FlashyTabBarItem(
             icon: const Icon(Icons.notifications_active_rounded),
             title: const Text(
@@ -188,11 +202,105 @@ class _RootPageState extends State<RootPage> {
       // print("\n\nCustomer info: ${customerInfo.toJson()}");
       return HomePage();
     } else if (selectedIndex == 1) {
-      return const ChatHomeScreen();
+      return ChatContactsListScreen(value: '');
     } else if (selectedIndex == 2) {
       return const FeedScreen();
     } else if (selectedIndex == 3) {
       return const SettingsPage();
+    }
+  }
+
+  _getFloatingButton() {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton2(
+        isExpanded: true,
+        customButton: Card(
+          elevation: 8,
+          color: mainColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          child: const Padding(
+            padding: EdgeInsets.all(14.0),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        items: [
+          ...MenuItemsHome.firstItems.map(
+            (item) => DropdownMenuItem<MenuItem>(
+              value: item,
+              child: MenuItemsHome.buildItem(item),
+            ),
+          ),
+          // const DropdownMenuItem<Divider>(
+          //     enabled: false, child: Divider()),
+        ],
+        onChanged: (value) {
+          MenuItemsHome.onChanged(context, value as MenuItem, showNewMessage);
+        },
+        dropdownStyleData: DropdownStyleData(
+          width: 180,
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: mainColor,
+          ),
+          elevation: 8,
+          offset: const Offset(0, 8),
+        ),
+      ),
+    );
+  }
+}
+
+class MenuItemsHome {
+  static List<MenuItem> firstItems = [newChat, newContact, newGroup];
+  // static List<MenuItem> secondItems = [logout];
+
+  static var newChat = const MenuItem(
+    text: "New Chat",
+    icon: FontAwesomeIcons.commentDots,
+  );
+
+  static var newContact =
+      const MenuItem(text: 'New Contact', icon: Icons.people);
+
+  static var newGroup =
+      const MenuItem(text: "New Group", icon: Icons.groups_rounded);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(item.icon, color: Colors.white, size: 22),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(
+          item.text,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static onChanged(
+    BuildContext context,
+    MenuItem item,
+    Function newChatCallBack,
+    // Function newCallCallBack,
+  ) {
+    if (item == MenuItemsHome.newChat) {
+      newChatCallBack(context);
+    } else if (item == MenuItemsHome.newContact) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const SearchScreen()));
+    } else if (item == MenuItemsHome.newGroup) {
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const CreateGroupScreen()));
     }
   }
 }
