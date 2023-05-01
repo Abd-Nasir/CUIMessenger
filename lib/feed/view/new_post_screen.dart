@@ -2,6 +2,7 @@ import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/feed/bloc/post_bloc.dart';
 import 'package:cui_messenger/feed/bloc/post_event.dart';
 import 'package:cui_messenger/feed/model/post.dart';
+import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,20 +41,38 @@ class _NewPostState extends State<NewPost> {
     }
   }
 
-  void addPost(String description, XFile file) {
+  void addPost(String description, XFile? file) {
     var user = BlocProvider.of<AuthBloc>(context).state.user!;
-    BlocProvider.of<PostBloc>(context).add(AddPostEvent(
-        post: Post(
-          uId: user.uid,
-          postId: "",
-          description: description,
-          userImage: user.profilePicture,
-          imageUrl: "",
-          fullName: user.firstName + user.lastName,
-          createdAt: DateTime.now().toIso8601String(),
-          // comments: [],
-        ),
-        file: file));
+    if (file != null) {
+      print(" add post !=null");
+      BlocProvider.of<PostBloc>(context).add(AddPostEvent(
+          post: Post(
+            uId: user.uid,
+            postId: "",
+            description: description,
+            userImage: user.profilePicture,
+            imageUrl: "",
+            fullName: user.firstName + user.lastName,
+            createdAt: DateTime.now().toIso8601String(),
+            // comments: [],
+          ),
+          file: file));
+    } else {
+      print(" add post null");
+      BlocProvider.of<PostBloc>(context).add(AddPostEvent(
+          post: Post(
+            uId: user.uid,
+            postId: "",
+            description: description,
+            userImage: user.profilePicture,
+            imageUrl: "",
+            fullName: user.firstName + user.lastName,
+            createdAt: DateTime.now().toIso8601String(),
+            // comments: [],
+          ),
+          file: null));
+    }
+    RouteGenerator.navigatorKey.currentState!.pop();
   }
 
   @override
@@ -65,9 +84,7 @@ class _NewPostState extends State<NewPost> {
           actions: [
             IconButton(
                 onPressed: () {
-                  if (pickedImage != null) {
-                    addPost(descriptionController.text, pickedImage!);
-                  }
+                  addPost(descriptionController.text, pickedImage);
                 },
                 icon: Icon(Icons.done_rounded))
           ],
@@ -97,6 +114,7 @@ class _NewPostState extends State<NewPost> {
                             decoration: const InputDecoration(
                                 hintText: "What's on your mind?"),
                             textCapitalization: TextCapitalization.sentences,
+                            maxLines: null,
                           ),
                           SizedBox(height: mediaQuery.size.height * 0.02),
                           ConstrainedBox(
