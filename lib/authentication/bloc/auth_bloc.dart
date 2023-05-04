@@ -23,10 +23,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // Request Notification Access again
         PermissionStatus status = await Permission.notification.request();
         print("This is status $status");
-        await openAppSettings();
-        if (await Permission.notification.isDenied) {
-          emit(const AuthStateNotificationError(null));
-        }
+        // await openAppSettings();
+        // if (await Permission.notification.isDenied) {
+        //   emit(const AuthStateNotificationError(null));
+        // }
       }
       if (await Permission.notification.isPermanentlyDenied) {
         await openAppSettings().then((value) {

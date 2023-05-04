@@ -709,6 +709,28 @@ class ChatMethods {
     });
   }
 
+  Future<List<UserModel>> getContacts1() {
+    List<UserModel> contactUsers = [];
+
+    return firebaseFirestore.collection('registered-users').get().then((event) {
+      // log(event.docs[0].data().toString());
+      for (var document in event.docs) {
+        try {
+          var userVal = UserModel.getValuesFromSnap(document);
+          if (userVal.uid != firebaseAuth.currentUser!.uid) {
+            contactUsers.add(userVal);
+            // if (userInfo.contacts.contains(userVal.uid)) {
+            //   contactUsers.add(userVal);
+            // }
+          }
+        } catch (e) {
+          log(e.toString());
+        }
+      }
+      return contactUsers;
+    });
+  }
+
 // streams
   Future<List<UserModel>> getContacts() {
     List<UserModel> contactUsers = [];
@@ -719,9 +741,10 @@ class ChatMethods {
         try {
           var userVal = UserModel.getValuesFromSnap(document);
           if (userVal.uid != firebaseAuth.currentUser!.uid) {
-            if (userInfo.contacts.contains(userVal.uid)) {
-              contactUsers.add(userVal);
-            }
+            contactUsers.add(userVal);
+            // if (userInfo.contacts.contains(userVal.uid)) {
+            //   contactUsers.add(userVal);
+            // }
           }
         } catch (e) {
           log(e.toString());

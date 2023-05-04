@@ -1768,8 +1768,6 @@ Widget returnNothingToShow() {
   ));
 }
 
-
-
 Future<List<String>> fetchImageUrlsFromUid(List peopleUid) async {
   List<String> peopleImages = [];
   for (var element in peopleUid) {

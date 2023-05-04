@@ -5,7 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/groupchat/constants/colors.dart';
 import 'package:cui_messenger/groupchat/constants/constant_utils.dart';
 import 'package:cui_messenger/groupchat/constants/constants.dart';
+import 'package:cui_messenger/groupchat/models/chat_model.dart';
 import 'package:cui_messenger/groupchat/models/user_model.dart';
+import 'package:cui_messenger/groupchat/screens/toppages/chat/chat_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -158,7 +160,23 @@ class _SearchScreenState extends State<SearchScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: InkWell(
                                 onTap: () {
-                                  showAddToContact(context, usersList[index]);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => ChatScreen(
+                                            contactModel: ChatContactModel(
+                                              contactId: usersList[index].uid,
+                                              name: usersList[index].username,
+                                              photoUrl:
+                                                  usersList[index].photoUrl,
+                                              timeSent: DateTime.now(),
+                                              lastMessageBy: "",
+                                              lastMessageId: '',
+                                              isSeen: false,
+                                              lastMessage: "",
+                                            ),
+                                            people: [],
+                                            isGroupChat: false,
+                                          )));
+                                  // showAddToContact(context, usersList[index]);
                                 },
                                 child: ListTile(
                                   tileColor: Colors.white60,

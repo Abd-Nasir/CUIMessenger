@@ -1535,56 +1535,105 @@ class _MyTextFieldState extends State<MyTextField> {
     ChatMethods().stopTyping(widget.model.contactId);
   }
 
+  // void sendTextMessage() async {
+  //   if (isShowSendButton) {
+  //     if (_messageController.text.isNotEmpty) {
+  //       ChatMethods().sendTextMessage(
+  //           context: context,
+  //           text: _messageController.text.trim(),
+  //           recieverUserId: widget.model.contactId,
+  //           senderUser: userInfo,
+  //           messageReply: null,
+  //           isGroupChat: widget.isGroupChat);
+  //       setState(() {
+  //         _messageController.text = '';
+  //         if (!widget.isGroupChat) {
+  //           ChatMethods().stopTyping(widget.model.contactId);
+  //         }
+  //       });
+  //       if (!isShowSendButton) {
+  //         // ChatMethods()
+  //         //     .updateTyping(widget.model.contactId, true);
+  //         setState(() {
+  //           isShowSendButton = true;
+  //         });
+  //       } else {
+  //         // ChatMethods().updateTyping(widget.model.contactId, false);
+  //         setState(() {
+  //           isShowSendButton = false;
+  //         });
+  //       }
+  //     }
+  //   } else {
+  //     if (isRecordingPressed) {
+  //       var tempDir = await getTemporaryDirectory();
+  //       var path = '${tempDir.path}/flutter_sound.aac';
+  //       // if (!isRecorderInit) {
+  //       //   return;
+  //       // }
+  //       if (isRecording) {
+  //         print('hi');
+  //         final path = await _controller!.stop();
+  //         showToastMessage("Sending Recording");
+  //         sendFileMessage(File(path!), MessageEnum.audio);
+  //       } else {
+  //         await _controller!.record(path: path);
+  //       }
+
+  //       setState(() {
+  //         isRecording = !isRecording;
+  //         isRecordingPressed = !isRecordingPressed;
+  //       });
+  //     }
+  //   }
+  // }
   void sendTextMessage() async {
     if (isShowSendButton) {
       if (_messageController.text.isNotEmpty) {
         ChatMethods().sendTextMessage(
-            context: context,
-            text: _messageController.text.trim(),
-            recieverUserId: widget.model.contactId,
-            senderUser: userInfo,
-            messageReply: null,
-            isGroupChat: widget.isGroupChat);
+          context: context,
+          text: _messageController.text.trim(),
+          recieverUserId: widget.model.contactId,
+          senderUser: userInfo,
+          messageReply: null,
+          isGroupChat: widget.isGroupChat,
+        );
         setState(() {
           _messageController.text = '';
           if (!widget.isGroupChat) {
             ChatMethods().stopTyping(widget.model.contactId);
           }
         });
-        if (!isShowSendButton) {
-          // ChatMethods()
-          //     .updateTyping(widget.model.contactId, true);
-          setState(() {
-            isShowSendButton = true;
-          });
-        } else {
-          // ChatMethods().updateTyping(widget.model.contactId, false);
-          setState(() {
-            isShowSendButton = false;
-          });
-        }
       }
     } else {
-      if (isRecordingPressed) {
-        var tempDir = await getTemporaryDirectory();
-        var path = '${tempDir.path}/flutter_sound.aac';
-        // if (!isRecorderInit) {
-        //   return;
-        // }
-        if (isRecording) {
-          print('hi');
-          final path = await _controller!.stop();
-          showToastMessage("Sending Recording");
-          sendFileMessage(File(path!), MessageEnum.audio);
-        } else {
-          await _controller!.record(path: path);
-        }
-
-        setState(() {
-          isRecording = !isRecording;
-          isRecordingPressed = !isRecordingPressed;
-        });
+      var tempDir = await getTemporaryDirectory();
+      var path = '${tempDir.path}/flutter_sound.aac';
+      // if (!isRecorderInit) {
+      //   return;
+      // }
+      if (isRecording) {
+        final path = await _controller!.stop();
+        showToastMessage("Sending Recording");
+        sendFileMessage(File(path!), MessageEnum.audio);
+      } else {
+        await _controller!.record(path: path);
       }
+
+      setState(() {
+        isRecording = !isRecording;
+      });
+    }
+    if (!isShowSendButton) {
+      // ChatMethods()
+      //     .updateTyping(widget.model.contactId, true);
+      setState(() {
+        isShowSendButton = true;
+      });
+    } else {
+      // ChatMethods().updateTyping(widget.model.contactId, false);
+      setState(() {
+        isShowSendButton = false;
+      });
     }
   }
 

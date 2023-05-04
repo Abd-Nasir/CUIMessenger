@@ -7,6 +7,7 @@ import 'package:cui_messenger/groupchat/constants/constants.dart';
 import 'package:cui_messenger/groupchat/constants/utils.dart';
 import 'package:cui_messenger/groupchat/methods/storage_methods.dart';
 import 'package:cui_messenger/groupchat/models/group.dart';
+import 'package:cui_messenger/groupchat/screens/group/screens/users_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cui_messenger/groupchat/models/group.dart' as model;
@@ -292,7 +293,12 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                     elevation: 3,
                     child: ListTile(
                       onTap: () {
-                        showPeopleForTask(context, peopleUid, refresh);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    AddPeople(context, peopleUid, refresh)));
+                        // showPeopleForTask(context, peopleUid, refresh);
                       },
                       title: const Text("Add Group Members"),
                       trailing: Container(

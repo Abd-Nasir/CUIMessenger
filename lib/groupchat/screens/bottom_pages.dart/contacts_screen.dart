@@ -18,7 +18,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: FutureBuilder<List<UserModel>>(
-          future: ChatMethods().getContacts(),
+          future: ChatMethods().getContacts1(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(

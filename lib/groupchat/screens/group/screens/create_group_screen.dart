@@ -8,6 +8,7 @@ import 'package:cui_messenger/groupchat/constants/utils.dart';
 import 'package:cui_messenger/groupchat/methods/storage_methods.dart';
 import 'package:cui_messenger/groupchat/models/group.dart';
 import 'package:cui_messenger/groupchat/models/user_model.dart';
+import 'package:cui_messenger/groupchat/screens/group/screens/users_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:uuid/uuid.dart';
@@ -111,6 +112,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // print('ss');
+    // refresh();
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -191,7 +194,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            showPeopleForTask(context, peopleUid, refresh);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AddPeople(context, peopleUid, refresh)));
+            // showPeopleForTask(context, peopleUid, refresh);
           },
           label: const Text('Add People'),
           icon: const Icon(Icons.people),
