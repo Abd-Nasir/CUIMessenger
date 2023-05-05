@@ -32,7 +32,7 @@ class Post {
     postId = json['post-id'];
     // title = json['title'];
     description = json['description'];
-    imageUrl = json['image-url'];
+    imageUrl = json['image-url'] ?? "";
     fullName = json['full-name'];
     userImage = json['user-image'];
     // message = json['message'];
@@ -47,7 +47,7 @@ class Post {
     // data['title'] = title;
     data['description'] = description;
     data['full-name'] = fullName;
-    data['image-url'] = imageUrl;
+    data['image-url'] = imageUrl ?? "";
     data['createdAt'] = createdAt;
 
     return data;

@@ -33,44 +33,31 @@ class PostProvider {
 
   Future<bool> saveReport(Post post, XFile? file) async {
     try {
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('feed-images')
-          .child('${post.postId}.jpg');
-      // print("Reference of storage $ref");
-      await ref.putFile(io.File(file!.path));
+      print("In save report");
+      if (file != null) {
+        print("In if of save report");
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('feed-images')
+            .child('${post.postId}.jpg');
+        // print("Reference of storage $ref");
+        await ref.putFile(io.File(file.path));
 
-      final url = await ref.getDownloadURL();
-      post.imageUrl = url;
-      // userData['imageUrl'] = url;
-      // userData["uid"] = userCredential.user!.uid;
-      // print("Image URL: ${userData["imageUrl"]}");
+        final url = await ref.getDownloadURL();
+        post.imageUrl = url;
+      }
+      print("here 1");
       var docref = FirebaseFirestore.instance.collection('posts').doc();
       post.postId = docref.id;
-      docref.set(post.toJson());
-      // print("Completely registered");
-
-      // if (userCredential.user != null) {
-      //   final userData = getUserData(userCredential: userCredential);
-      //   return userData;
-      // }
-      // if (response["success"]) {
-      //   showSimpleNotification(
-      //     Text("Success"),
-      //     background: Palette.green.withOpacity(0.9),
-      //     duration: const Duration(seconds: 2),
-      //     slideDismissDirection: DismissDirection.horizontal,
-      //   );
-      //   return true;
-      // } else {
-      //   showSimpleNotification(
-      //     Text("Adding failed"),
-      //     background: Palette.red.withOpacity(0.9),
-      //     duration: const Duration(seconds: 2),
-      //     slideDismissDirection: DismissDirection.horizontal,
-      //   );
-      //   return false;
-      // }
+      docref.set(post.toJson()).then((_) {
+        showSimpleNotification(
+          const Text('Added successfully'),
+          background: Palette.green.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+          slideDismissDirection: DismissDirection.horizontal,
+        );
+      });
+      print("here2");
       return true;
     } catch (error) {
       if (error is FirebaseException) {

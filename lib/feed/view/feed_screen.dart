@@ -271,12 +271,14 @@ class _FeedScreenState extends State<FeedScreen> {
                 bottomLeft: Radius.circular(10),
                 bottomRight: Radius.circular(10),
               ),
-              image: DecorationImage(
-                image: NetworkImage(
-                  post.imageUrl!,
-                ),
-                fit: BoxFit.cover,
-              ),
+              image: post.imageUrl != ""
+                  ? DecorationImage(
+                      image: NetworkImage(
+                        post.imageUrl!,
+                      ),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
