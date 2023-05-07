@@ -36,9 +36,3 @@ class NotificationStateMessageLoaded extends NotificationState {
       {required NotificationProvider notificationProvider})
       : super(notificationProvider: notificationProvider);
 }
-
-class NotificationStateMessageSending extends NotificationState {
-  const NotificationStateMessageSending(
-      {required NotificationProvider notificationProvider})
-      : super(notificationProvider: notificationProvider);
-}

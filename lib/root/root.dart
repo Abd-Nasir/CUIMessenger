@@ -7,6 +7,7 @@ import 'package:cui_messenger/groupchat/constants/constants.dart';
 import 'package:cui_messenger/groupchat/screens/group/screens/create_group_screen.dart';
 import 'package:cui_messenger/groupchat/screens/search_screen.dart';
 import 'package:cui_messenger/groupchat/screens/toppages/chat/chat_list_screen.dart';
+import 'package:cui_messenger/notification/view/notifications.dart';
 import 'package:cui_messenger/settings/view/settings.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -131,76 +132,13 @@ class _RootPageState extends State<RootPage> {
       ),
       body: buildBody(),
     );
-
-    // return GNav(
-    //   backgroundColor: Palette.frenchBlue,
-    //   haptic: true,
-    //   selectedIndex: selectedIndex,
-    //   tabBorderRadius: 8.0,
-    //   color: Palette.aliceBlue,
-    //   gap: 0.0,
-    //   activeColor: Palette.frenchBlue,
-    //   tabBackgroundColor: Palette.aliceBlue,
-    //   tabMargin: EdgeInsets.only(
-    //       top: 12.0,
-    //       left: 10.0,
-    //       right: 10.0,
-    //       bottom: mediaQuery.size.height * 0.028),
-    //   padding: EdgeInsets.symmetric(
-    //       vertical: mediaQuery.size.height * 0.006,
-    //       horizontal: mediaQuery.size.width * 0.01),
-    //   textStyle: const TextStyle(
-    //       fontSize: 10.0,
-    //       fontWeight: FontWeight.bold,
-    //       color: Palette.frenchBlue),
-    //   tabs: [
-    //     GButton(
-    //       icon: Icons.home,
-    //       text: AppLocalizations.of(context).translate('home'),
-    //     ),
-    //     GButton(
-    //       icon: Icons.contacts,
-    //       text: AppLocalizations.of(context).translate('contacts'),
-    //     ),
-    //     GButton(
-    //       icon: Icons.map_rounded,
-    //       text: AppLocalizations.of(context).translate('danger_zones'),
-    //     ),
-    //     const GButton(
-    //       icon: Icons.rss_feed,
-    //       text: 'Feed',
-    //     ),
-    //     GButton(
-    //       icon: Icons.settings,
-    //       text: AppLocalizations.of(context).translate('settings'),
-    //     ),
-    //   ],
-    //   onTabChange: (value) {
-    //     if (value == 0) {
-    //       BlocProvider.of<NavBarBloc>(context)
-    //           .add(NavBarShowHomePageEvent(0));
-    //     } else if (value == 1) {
-    //       BlocProvider.of<NavBarBloc>(context)
-    //           .add(NavBarShowContactPageEvent(1));
-    //     } else if (value == 2) {
-    //       BlocProvider.of<NavBarBloc>(context)
-    //           .add(NavBarShowMapsHomePageEvent(2));
-    //     } else if (value == 3) {
-    //       BlocProvider.of<NavBarBloc>(context)
-    //           .add(NavBarShowFeedPageEvent(3));
-    //     } else if (value == 4) {
-    //       BlocProvider.of<NavBarBloc>(context)
-    //           .add(NavBarShowSettingsPageEvent(4));
-    //     }
-    //   },
-    // );
   }
 
   buildBody() {
     if (selectedIndex == 0) {
       // CustomerInfo customerInfo = await Purchases.getCustomerInfo();
       // print("\n\nCustomer info: ${customerInfo.toJson()}");
-      return HomePage();
+      return const NotificationsPage();
     } else if (selectedIndex == 1) {
       return ChatContactsListScreen(value: '');
     } else if (selectedIndex == 2) {
@@ -213,10 +151,11 @@ class _RootPageState extends State<RootPage> {
   _getFloatingButton() {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
+        menuItemStyleData: MenuItemStyleData(height: 30),
         isExpanded: true,
         customButton: Card(
           elevation: 8,
-          color: mainColor,
+          color: Palette.cuiPurple,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           child: const Padding(
@@ -241,11 +180,11 @@ class _RootPageState extends State<RootPage> {
           MenuItemsHome.onChanged(context, value as MenuItem, showNewMessage);
         },
         dropdownStyleData: DropdownStyleData(
-          width: 180,
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          width: 150,
+          padding: const EdgeInsets.symmetric(vertical: 2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: mainColor,
+            color: Palette.cuiPurple,
           ),
           elevation: 8,
           offset: const Offset(0, 8),
@@ -273,13 +212,14 @@ class MenuItemsHome {
   static Widget buildItem(MenuItem item) {
     return Row(
       children: [
-        Icon(item.icon, color: Colors.white, size: 22),
+        Icon(item.icon, color: Colors.white, size: 15),
         const SizedBox(
           width: 10,
         ),
         Text(
           item.text,
           style: const TextStyle(
+            fontSize: 12,
             color: Colors.white,
           ),
         ),

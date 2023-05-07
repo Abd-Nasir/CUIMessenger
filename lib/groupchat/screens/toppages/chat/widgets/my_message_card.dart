@@ -4,8 +4,8 @@ import 'package:cui_messenger/groupchat/constants/colors.dart';
 import 'package:cui_messenger/groupchat/constants/constants.dart';
 import 'package:cui_messenger/groupchat/constants/message_enum.dart';
 import 'package:cui_messenger/groupchat/screens/toppages/chat/widgets/display_text_image_file.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
-
 
 class MyMessageCard extends StatelessWidget {
   final String message;
@@ -82,7 +82,7 @@ class MyMessageCard extends StatelessWidget {
                         bottomLeft: Radius.circular(15),
                         bottomRight: Radius.circular(15),
                       )),
-                      color: mainColor,
+                      color: Palette.cuiPurple,
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       child: Padding(
                           padding: const EdgeInsets.all(15),

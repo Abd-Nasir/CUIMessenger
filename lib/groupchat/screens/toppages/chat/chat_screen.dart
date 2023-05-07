@@ -17,6 +17,7 @@ import 'package:cui_messenger/groupchat/screens/toppages/chat/image_preview_send
 import 'package:cui_messenger/groupchat/screens/toppages/chat/widgets/message_reply_preview.dart';
 import 'package:cui_messenger/groupchat/screens/toppages/chat/widgets/my_message_card.dart';
 import 'package:cui_messenger/groupchat/screens/toppages/chat/widgets/sender_message_card.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -1375,7 +1376,12 @@ class __ChatListState extends State<_ChatList> {
                               if (!widget.isDateShown)
                                 getDateWithLines(dateInList),
                               InkWell(
+                                // onTap: () {
+                                //   print(
+                                //       "This is photourl ${widget.contactModel.photoUrl}");
+                                // },
                                 onLongPress: () {
+                                  // print("Hey there");
                                   widget.changeShowOptions();
                                   widget.messageId.add(messageData.messageId);
                                 },
@@ -1756,13 +1762,13 @@ class _MyTextFieldState extends State<MyTextField> {
                       },
                       child: const CircleAvatar(
                         backgroundColor: Colors.red,
-                        radius: 28,
+                        radius: 20,
                         child: Icon(
                           Icons.close,
                           // ? Icons.close
                           // : Icons.mic,
 
-                          size: 35,
+                          size: 20,
                           color: Colors.white,
                         ),
                       )),
@@ -1774,13 +1780,17 @@ class _MyTextFieldState extends State<MyTextField> {
                         sendTextMessage();
                       },
                       child: const CircleAvatar(
-                        radius: 28,
-                        child: Icon(
-                          FontAwesomeIcons.solidPaperPlane,
-                          // ? Icons.close
-                          // : Icons.mic,
+                        backgroundColor: Palette.cuiPurple,
+                        radius: 20,
+                        child: Center(
+                          child: Icon(
+                            Icons.send,
+                            // ? Icons.close
+                            // : Icons.mic,
 
-                          size: 25,
+                            size: 20,
+                            color: Palette.white,
+                          ),
                         ),
                       ))
                 ],
@@ -1925,7 +1935,7 @@ class _MyTextFieldState extends State<MyTextField> {
                                                           ),
                                                         ),
                                                         const Text(
-                                                          'Camera',
+                                                          'Image',
                                                         )
                                                       ],
                                                     ),
@@ -1942,14 +1952,14 @@ class _MyTextFieldState extends State<MyTextField> {
                                 },
                                 icon: const Icon(
                                   Icons.add_circle,
-                                  color: mainColor,
+                                  color: Palette.cuiPurple,
                                 ),
                               ),
                               IconButton(
                                 onPressed: toggleEmojiKeyboardContainer,
                                 icon: const Icon(
                                   Icons.emoji_emotions,
-                                  color: mainColor,
+                                  color: Palette.cuiPurple,
                                 ),
                               ),
                               IconButton(
@@ -1961,7 +1971,7 @@ class _MyTextFieldState extends State<MyTextField> {
                                 },
                                 icon: const Icon(
                                   Icons.mic_rounded,
-                                  color: mainColor,
+                                  color: Palette.cuiPurple,
                                 ),
                               ),
                             ],
@@ -1976,11 +1986,9 @@ class _MyTextFieldState extends State<MyTextField> {
                                   sendTextMessage();
                                 },
                                 icon: Icon(
-                                  isShowSendButton
-                                      ? FontAwesomeIcons.solidPaperPlane
-                                      : FontAwesomeIcons.paperPlane,
+                                  Icons.send,
                                   color: isShowSendButton
-                                      ? mainColor
+                                      ? Palette.cuiPurple
                                       : Colors.grey,
                                 ),
                               ),

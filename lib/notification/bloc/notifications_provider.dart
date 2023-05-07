@@ -1,5 +1,12 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:cui_messenger/notification/model/myNotification.dart';
 import 'package:cui_messenger/notification/model/notification.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 // import 'package:overlay_support/overlay_support.dart';
 // import 'package:safepall/screens/authentication/model/user.dart' as user_model;
 // import 'package:sendbird_sdk/sendbird_sdk.dart';
@@ -12,137 +19,75 @@ class NotificationProvider {
 
   // List<BaseMessage> messages = List.empty(growable: true);
 
-  Future<void> loadEmeNotifications(String userId) async {
-    // debugPrint("USer id in loadEMenitifu: $userId");
-    // await connectSendBird(userId);
+  Future<void> loadNotifications() async {
+    await FirebaseFirestore.instance
+        .collection('notifications')
+        .get()
+        .then((value) {
+      // value.docs.first;
+      print(value.docs.first.data());
+      notifications.clear();
+      value.docs.forEach((value) {
+        notifications.add(NotificationModel.fromJson(value.data()));
+      });
+    });
   }
 
-  // Future<void> connectSendBird(String userid) async {
-  //   try {
-  //     user = await sendBird.connect(userid);
-  //     // debugPrint("connect user: ${user!.toJson()}");
-  //     if (user!.profileUrl!.isEmpty) {
-  //       // debugPrint("Inside update user!");
-  //       user_model.User? userData = await Api.instance.getUserWithUID(userid);
-  //       // debugPrint("After update");
-  //       if (userData != null) {
-  //         await sendBird
-  //             .updateCurrentUserInfo(
-  //                 nickname: "${userData.firstName} ${userData.lastName}",
-  //                 fileInfo: FileInfo.fromUrl(url: userData.imageKey))
-  //             .then((value) => debugPrint("User data updated"));
-  //       }
-  //     }
-
-  //     debugPrint("User - Connected to Send Bird!");
-  //   } catch (error) {
-  //     debugPrint("Failed to connect with Send Bird api\n$error");
-  //   }
-  // }
-
-  // Future<void> loadUserNotifications() async {
-  //   try {
-  //     MessageListParams messageListParams = MessageListParams()..reverse = true;
-  //     messages = await currentChannel!.getMessagesByTimestamp(
-  //         DateTime.now().millisecondsSinceEpoch * 1000, messageListParams);
-  //   } catch (error) {
-  //     debugPrint("Error loading messages!\n$error");
-  //   }
-  // }
-
-  Future<void> getNotificatoinsList(String email) async {
-    // try {
-    //   var response = await Api.instance.getNotifications(email);
-    //   notifications = response;
-    //   notifications.sort((a, b) {
-    //     return b.createdAt.compareTo(a.createdAt);
-    //   });
-
-    //   debugPrint("Get EmeMessages");
-    // } catch (error) {
-    //   debugPrint(
-    //       "Error occured in loading notifications from database. Error: \n $error");
-    // }
+  void sendNotificationRange() {
+    fb.User? user = fb.FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance.collection("users").get().then((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        for (int i = 0; i < snapshot.docs.length; i++) {
+          if (snapshot.docs[i].data()['uid'] != user!.uid) {
+            getToken(snapshot.docs[i].data()['uid']);
+          }
+        }
+      }
+    });
   }
 
-  // Future<void> sendMessage(
-  //     {required String message,
-  //     String? customType,
-  //     required BuildContext context}) async {
-  //   try {
-  //     final params = UserMessageParams(
-  //       message: message,
-  //       customType: customType,
-  //     );
+  void getToken(String uid) {
+    String? token;
+    Future<QuerySnapshot<Map<String, dynamic>>> querySnapshot =
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .collection('token')
+            .get();
+    querySnapshot.then((snapshot) {
+      token = snapshot.docs.first.id;
+      sendNotification(token, "Hey there", "Notification Body");
+      // print(token);
+    });
+  }
 
-  //     final preMessage = currentChannel!.sendUserMessage(params,
-  //         onCompleted: (message, error) {
-  //       if (error != null) {
-  //         debugPrint("Send Message error");
-  //         showSimpleNotification(
-  //           Text("Error occurred while sending emergency message!"),
-  //           background: Palette.red.withOpacity(0.9),
-  //           duration: const Duration(seconds: 2),
-  //         );
-  //       } else {
-  //         showSimpleNotification(
-  //           const Text("Message Sent!"),
-  //           background: Palette.green.withOpacity(0.9),
-  //           duration: const Duration(seconds: 2),
-  //         );
-  //         debugPrint("message sent success!");
-  //       }
-  //     });
-  //   } catch (error) {
-  //     debugPrint("Error in sending message!\n$error");
-  //   }
-  // }
+  void sendNotification(String? token, String? title, String? body) {
+    createNotification(MyNotification(
+        to: token, notification: NotificationBody(title: title, body: body)));
+  }
 
-  // Future<GroupChannel> createChannel(List<String> userIds) async {
-  //   try {
-  //     user_model.User? response =
-  //         await Api.instance.getUserWithUID(userIds.last);
-  //     var channel;
-  //     if (response != null) {
-  //       final params = GroupChannelParams()
-  //         ..userIds = userIds
-  //         ..isDistinct = true
-  //         ..name = "${response.firstName} ${response.lastName}"
-  //         ..coverImage = FileInfo.fromUrl(url: response.profilePicture)
-  //         ..operatorUserIds = userIds;
-  //       channel = await GroupChannel.createChannel(params);
-  //       return channel;
-  //     }
-  //     debugPrint("Returning empty!");
-  //     return channel;
-  //   } catch (error) {
-  //     debugPrint('createChannel: ERROR: $error');
-  //     rethrow;
-  //   }
-  // }
+  Future<bool> createNotification(MyNotification notification) async {
+    try {
+      // print(order.billing!.firstName);
+      final url = Uri.parse('https://fcm.googleapis.com/fcm/send');
+      // var fbody = notification.toJson();
+      // print(fbody);
+      final body = jsonEncode(notification.toJson());
+      // print(body);
+      final response = await http.post(url, body: body, headers: {
+        "Content-Type": "application/json",
+        "Authorization":
+            "key =AAAA4wmJZQk:APA91bF0s_ccic5EdZZl_Pd39YOOnHRzYnr5A7IupsPvMNy3ERpAUHTRPZfHjeQjkmFZqfHomXEbUiIto9ItvQ2Yc_VMtUjyFk98xv6X8htx3fUQCOyY4vquerz9FS75391KIehSBHOn"
+      });
 
-  // Future<void> openChannel(GroupChannel channel) async {
-  //   try {
-  //     currentChannel = channel;
-  //     // loadUserMessages();
-  //     // The current user successfully enters the open channel.
-  //   } catch (error) {
-  //     // Handle error.
-  //     debugPrint("Error in open channel\n$error");
-  //   }
-  // }
-
-  // Future<List<GroupChannel>> getChannels() async {
-  //   try {
-  //     final query = GroupChannelListQuery()
-  //       ..userIdsIncludeIn = [user!.userId]
-  //       ..includeEmptyChannel = true
-  //       ..order = GroupChannelListOrder.latestLastMessage
-  //       ..limit = 15;
-  //     return await query.loadNext();
-  //   } catch (error) {
-  //     debugPrint('getGroupChannels: ERROR: $error');
-  //     return [];
-  //   }
-  // }
+      if (response.statusCode == 201) {
+        print('done');
+        return true;
+      }
+      print(response.body);
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
 }

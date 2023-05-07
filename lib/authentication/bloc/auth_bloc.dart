@@ -1,12 +1,13 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:overlay_support/overlay_support.dart';
+
 import 'package:permission_handler/permission_handler.dart';
-// import 'package:permission_handler/permission_handler.dart';
+
 import '/authentication/bloc/auth_event.dart';
 import '/authentication/bloc/auth_provider.dart';
 import '/authentication/bloc/auth_state.dart';
@@ -80,6 +81,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             if (user != null) {
               if (FirebaseAuth.instance.currentUser!.emailVerified) {
                 print("\nEmitting Logged in user!\n");
+                final token = await FirebaseMessaging.instance.getToken();
+                print("token");
+                FirebaseFirestore.instance
+                    .collection('registered-users')
+                    .doc(user.uid)
+                    .update({
+                  'token': token,
+                  // 'timestamp': FieldValue.serverTimestamp(),
+                });
                 emit(AuthStateLoggedIn(user));
               } else {
                 emit(AuthStateNeedsVerification(user));

@@ -10,56 +10,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     on<InitializeNotificationEvent>((event, emit) async {
       emit(
           NotificationStateLoading(notificationProvider: notificationProvider));
-      // await notificationProvider.connectSendBird(event.userId);
-      // await notificationProvider.loadEmeNotifications(event.userId);
-      emit(NotificationStateLoadSuccess(
-          notificationProvider: notificationProvider));
-    });
 
-    // SendBird Part
-    // on<StartNotificationChannelEvent>(
-    //   (event, emit) async {
-    //     GroupChannel channel =
-    //         await notificationProvider.createChannel(event.users);
-
-    //     // RouteGenerator.navigatorKey.currentState!
-    //     //     .pushNamed(notificationsRoute, arguments: channel);
-    //   },
-    // );
-
-    // on<LoadUserEmeMessageEvent>((event, emit) async {
-    //   emit(NotificationStateMessageLoading(
-    //       notificationProvider: notificationProvider));
-    //   await notificationProvider.loadUserNotifications();
-
-    //   emit(NotificationStateMessageLoaded(
-    //       notificationProvider: notificationProvider));
-    // });
-
-    on<UpdateEmeStateEvent>(
-      (event, emit) {
-        emit(NotificationStateMessageSending(
-            notificationProvider: notificationProvider));
-        emit(NotificationStateLoadSuccess(
-            notificationProvider: notificationProvider));
-      },
-    );
-
-    // Send Notifications using SendBird
-    // on<SendSMSEvent>(
-    //   (event, emit) async {
-    //     GroupChannel channel =
-    //         await notificationProvider.createChannel(event.userIds);
-    //     await notificationProvider.openChannel(channel);
-    //     notificationProvider.sendMessage(
-    //         message: event.message, context: event.context);
-    //   },
-    // );
-
-    on<LoadUserNotificationsEvent>((event, emit) async {
-      emit(
-          NotificationStateLoading(notificationProvider: notificationProvider));
-      await notificationProvider.getNotificatoinsList(event.email);
+      await notificationProvider.loadNotifications();
       emit(NotificationStateLoadSuccess(
           notificationProvider: notificationProvider));
     });

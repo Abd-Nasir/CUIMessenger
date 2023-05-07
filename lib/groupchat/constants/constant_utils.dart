@@ -77,29 +77,10 @@ getAvatarWithStatus(bool isGroupChat, ChatContactModel contactModel,
 
 getDateWithLines(dateInList) {
   var tempDate = DateFormat.MMMMEEEEd().format(DateTime.now());
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Row(children: [
-      Expanded(
-        child: Container(
-            margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-            child: const Divider(
-              color: Colors.black,
-              height: 36,
-            )),
-      ),
-      Text(dateInList == tempDate ? "Today" : dateInList,
-          style: const TextStyle(color: Colors.grey)),
-      Expanded(
-        child: Container(
-            margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-            child: const Divider(
-              color: Colors.black,
-              height: 36,
-            )),
-      ),
-    ]),
-  );
+  return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+    Text(dateInList == tempDate ? "Today" : dateInList,
+        style: const TextStyle(color: Colors.grey)),
+  ]);
 }
 
 // Widget getCallNotifierWidget(context) {
@@ -183,7 +164,7 @@ getMessageCard(var model, context, {bool isGroupChat = false}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
     child: Container(
-      height: 80,
+      height: 70,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(15)),
       child: ListTile(
@@ -209,16 +190,16 @@ getMessageCard(var model, context, {bool isGroupChat = false}) {
             isGroupChat
                 ? model.groupPic != ""
                     ? CircleAvatar(
-                        radius: 25,
+                        radius: 20,
                         backgroundImage: CachedNetworkImageProvider(
                           model.groupPic,
                           // maxWidth: 50,
                           // maxHeight: 50,
                         ))
                     : const CircleAvatar(
-                        radius: 25, child: Icon(Icons.groups_outlined))
+                        radius: 20, child: Icon(Icons.groups_outlined))
                 : showUsersImage(model.photoUrl == "",
-                    size: 25,
+                    size: 20,
                     picUrl: model.photoUrl != ""
                         ? model.photoUrl
                         : 'assets/user.png'),
@@ -249,7 +230,7 @@ getMessageCard(var model, context, {bool isGroupChat = false}) {
               // "model."
               // "name",
               style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 15,
                   //  bodyTextOverflow: TextOverflow.ellipsis,
                   fontWeight:
                       model.lastMessageBy != firebaseAuth.currentUser!.uid

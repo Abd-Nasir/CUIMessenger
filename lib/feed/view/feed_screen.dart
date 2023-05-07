@@ -50,68 +50,71 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Palette.cuiOffWhite,
-      appBar: AppBar(
-        elevation: 0,
+    return SafeArea(
+      bottom: false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Palette.cuiOffWhite,
-        centerTitle: true,
-        title: const Text(
-          'Feed',
-          style: TextStyle(fontSize: 20, color: Colors.black),
-        ),
-        automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(_createRoute());
-              },
-              child: const Icon(
-                Icons.post_add_sharp,
-                size: 26.0,
-                color: Palette.cuiPurple,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Palette.cuiOffWhite,
+          centerTitle: true,
+          title: const Text(
+            'Feed',
+            style: TextStyle(fontSize: 20, color: Colors.black),
+          ),
+          automaticallyImplyLeading: false,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(_createRoute());
+                },
+                child: const Icon(
+                  Icons.post_add_sharp,
+                  size: 26.0,
+                  color: Palette.cuiPurple,
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
+        body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              BlocProvider.of<PostBloc>(context)
+                  .add(const LoadPostsFromDatabase());
+            },
+            child: ListView.builder(
+                itemCount: state.postProvider.posts.length,
+                itemBuilder: (BuildContext context, index) {
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    elevation: 4,
+                    margin: const EdgeInsets.only(
+                      top: 20,
+                      left: 20,
+                      right: 20,
+                      bottom: 0,
+                    ),
+                    child: postCard(
+                      // context: context,
+                      mediaQuery: mediaQuery,
+                      post: state.postProvider.posts[index],
+                    ),
+                  );
+                }),
+          );
+        }),
       ),
-      body: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-        return RefreshIndicator(
-          onRefresh: () async {
-            BlocProvider.of<PostBloc>(context)
-                .add(const LoadPostsFromDatabase());
-          },
-          child: ListView.builder(
-              itemCount: state.postProvider.posts.length,
-              itemBuilder: (BuildContext context, index) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  elevation: 4,
-                  margin: const EdgeInsets.only(
-                    top: 20,
-                    left: 20,
-                    right: 20,
-                    bottom: 0,
-                  ),
-                  child: postCard(
-                    context: context,
-                    mediaQuery: mediaQuery,
-                    post: state.postProvider.posts[index],
-                  ),
-                );
-              }),
-        );
-      }),
     );
   }
 
   Widget postCard(
       {required Post post,
-      required BuildContext context,
+      // required BuildContext context,
       required MediaQueryData mediaQuery}) {
     var currentUser = BlocProvider.of<AuthBloc>(context).state.user!;
     return Column(

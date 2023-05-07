@@ -1,6 +1,7 @@
 import 'package:cui_messenger/groupchat/constants/colors.dart';
 import 'package:cui_messenger/groupchat/constants/message_enum.dart';
 import 'package:cui_messenger/groupchat/screens/toppages/chat/widgets/display_text_image_file.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class SenderMessageCard extends StatelessWidget {
@@ -33,7 +34,7 @@ class SenderMessageCard extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: ConstrainedBox(
           // width: MediaQuery.of(context).size.width / 1.25,
           // // constraints: BoxConstraints(
@@ -57,7 +58,7 @@ class SenderMessageCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(3.0),
+                      padding: const EdgeInsets.all(0),
                       child: Text(
                         date == "null" ? "" : date,
                         style: const TextStyle(
@@ -77,15 +78,26 @@ class SenderMessageCard extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
                         children: [
-                          if(isGroupChat)
+                          if (isGroupChat)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 8.0, left: 10, right: 15),
+                              child: Text(
+                                username,
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.clip,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Palette.cuiPurple),
+                              ),
+                            ),
                           Padding(
-                            padding: const EdgeInsets.only(top:8.0,left:15,right: 15),
-                            child: Text(username,textAlign: TextAlign.start,overflow: TextOverflow.clip,style: TextStyle(fontWeight: FontWeight.bold,color: mainColor),),
-                          )
-                          ,Padding(
-                              // padding: const EdgeInsets.only(
-                              //     left: 10, right: 30, top: 5, bottom: 5),
-                              padding: const EdgeInsets.all(15),
+                              padding: EdgeInsets.only(
+                                  top: isGroupChat ? 0 : 10,
+                                  left: 30,
+                                  right: 30,
+                                  bottom: 10),
+                              // padding: const EdgeInsets.all(15),
                               child: DisplayTextImageGIF(
                                   photoUrl: photoUrl,
                                   date: date,

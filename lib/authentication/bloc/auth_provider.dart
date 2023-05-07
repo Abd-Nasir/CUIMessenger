@@ -54,9 +54,9 @@ class AuthProvider {
           .then((value) {
         value.docs.forEach((user) {
           if (user.data()["uid"] == userCredential.user!.uid) {
-            print("This is user \n\n ${user.data()}\n");
+            // print("This is user \n\n ${user.data()}\n");
             userData = UserData.fromJson(user.data());
-            print("This is email ${userData!.email}");
+            // print("This is email ${userData!.email}");
           }
         });
       });

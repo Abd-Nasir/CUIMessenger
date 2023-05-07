@@ -2,8 +2,8 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cui_messenger/groupchat/constants/colors.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
-
 
 class PlayAudio extends StatefulWidget {
   final String audioUrl;
@@ -24,6 +24,7 @@ class _PlayAudioState extends State<PlayAudio> {
   final AudioPlayer audioPlayer = AudioPlayer();
   @override
   void initState() {
+    print("This is photoUrl ${widget.photoUrl}\n\n");
     super.initState();
     audioPlayer.setSourceUrl(widget.audioUrl);
     audioPlayer.onPlayerComplete.listen((it) {
@@ -70,7 +71,7 @@ class _PlayAudioState extends State<PlayAudio> {
                       icon: Icon(
                         isPlaying ? Icons.pause_circle : Icons.play_circle,
                         color: widget.isSender ? Colors.white : Colors.black,
-                        size: 35,
+                        size: 30,
                       ),
                     ),
                   ],
@@ -91,6 +92,7 @@ class _PlayAudioState extends State<PlayAudio> {
                                 stream: audioPlayer.onDurationChanged,
                                 builder: (context, snapshots) {
                                   return ProgressBar(
+                                    thumbColor: Palette.white,
                                     thumbRadius: 8,
                                     timeLabelTextStyle:
                                         const TextStyle(color: Colors.white),
@@ -130,7 +132,8 @@ class _PlayAudioState extends State<PlayAudio> {
                   },
                   icon: Icon(
                     isPlaying ? Icons.pause_circle : Icons.play_circle,
-                    color: widget.isSender ? Colors.white : Colors.black,
+                    color:
+                        widget.isSender ? Palette.hintGrey : Palette.cuiPurple,
                     size: 35,
                   ),
                 ),
@@ -150,10 +153,12 @@ class _PlayAudioState extends State<PlayAudio> {
                                 stream: audioPlayer.onDurationChanged,
                                 builder: (context, snapshots) {
                                   return ProgressBar(
+                                    thumbColor: Palette.cuiPurple,
                                     thumbRadius: 8,
                                     timeLabelTextStyle:
                                         const TextStyle(color: mainColor),
-                                    baseBarColor: mainColor.withOpacity(0.5),
+                                    baseBarColor:
+                                        Palette.cuiPurple.withOpacity(0.5),
                                     progress: snapshot.data ?? Duration.zero,
                                     buffered: Duration.zero,
                                     total: snapshots.data ?? Duration.zero,
@@ -172,9 +177,10 @@ class _PlayAudioState extends State<PlayAudio> {
                 child: CircleAvatar(
                   radius: 25,
                   backgroundImage: widget.photoUrl == ""
-                      ? const AssetImage(
-                          'assets/user.png',
-                        )
+                      ? null
+                      // const AssetImage(
+                      //     'assets/user.png',
+                      //   )
                       : CachedNetworkImageProvider(
                           widget.photoUrl,
                         ) as ImageProvider,

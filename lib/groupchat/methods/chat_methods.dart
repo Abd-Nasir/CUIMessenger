@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/groupchat/constants/constant_utils.dart';
 import 'package:cui_messenger/groupchat/constants/constants.dart';
@@ -10,6 +11,7 @@ import 'package:cui_messenger/groupchat/methods/info_storage_methods.dart';
 import 'package:cui_messenger/groupchat/models/chat_model.dart';
 import 'package:cui_messenger/groupchat/models/group.dart';
 import 'package:cui_messenger/groupchat/models/user_model.dart';
+import 'package:cui_messenger/notification/bloc/notifications_provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -173,7 +175,12 @@ class ChatMethods {
           log(element);
           // getting token of all the people in the group
           String token = await getUserNotificationToken(element);
-          // sendNotification(element, token, "You have a new message");
+          NotificationProvider().sendNotification(
+              token,
+              group.name,
+              messageType.type == "text"
+                  ? text
+                  : "${message.senderUsername} sent an ${StringUtils.capitalize(messageType.type)}");
           //adding the message to the collection of infos
           if (message.type == MessageEnum.link) {
             InfoStorage().storeLink(timeSent, text, element, isGroupChat);
@@ -225,7 +232,12 @@ class ChatMethods {
             );
 
         String token = await getUserNotificationToken(recieverUserId);
-        // sendNotification(recieverUserId, token, "You have a new message");
+        NotificationProvider().sendNotification(
+            token,
+            senderUsername,
+            messageType.type == "text"
+                ? text
+                : "sent an ${StringUtils.capitalize(messageType.type)}");
         //adding the message to the collection of infos
         if (message.type == MessageEnum.link) {
           InfoStorage().storeLink(timeSent, text, recieverUserId, isGroupChat);
@@ -355,18 +367,19 @@ class ChatMethods {
           contactMsg, timeSent, messageId, recieverUserId, isGroupChat);
 
       _saveMessageToMessageSubcollection(
-          recieverUserId: recieverUserId,
-          text: messageEnum == MessageEnum.file
-              ? "$contactMsg@@@$imageUrl"
-              : imageUrl,
-          timeSent: timeSent,
-          messageId: messageId,
-          username: senderUserData.username,
-          messageType: messageEnum,
-          messageReply: messageReply,
-          recieverUserName: recieverUserData?.username,
-          senderUsername: senderUserData.username,
-          isGroupChat: isGroupChat);
+        recieverUserId: recieverUserId,
+        text: messageEnum == MessageEnum.file
+            ? "$contactMsg@@@$imageUrl"
+            : imageUrl,
+        timeSent: timeSent,
+        messageId: messageId,
+        username: senderUserData.username,
+        messageType: messageEnum,
+        messageReply: messageReply,
+        recieverUserName: recieverUserData?.username,
+        senderUsername: senderUserData.username,
+        isGroupChat: isGroupChat,
+      );
     } catch (e) {
       showFloatingFlushBar(context, "Error", e.toString());
     }

@@ -12,7 +12,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:any_link_preview/any_link_preview.dart';
 
-
 class DisplayTextImageGIF extends StatelessWidget {
   final String photoUrl;
   final String message;
