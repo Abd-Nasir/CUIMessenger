@@ -33,7 +33,10 @@ class NotificationProvider {
 
   void sendNotificationRange() {
     fb.User? user = fb.FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance.collection("users").get().then((snapshot) {
+    FirebaseFirestore.instance
+        .collection("registered-users")
+        .get()
+        .then((snapshot) {
       if (snapshot.docs.isNotEmpty) {
         for (int i = 0; i < snapshot.docs.length; i++) {
           if (snapshot.docs[i].data()['uid'] != user!.uid) {

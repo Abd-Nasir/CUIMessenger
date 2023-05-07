@@ -96,6 +96,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   .add(const LoadPostsFromDatabase());
             },
             child: ListView.builder(
+                reverse: true,
                 itemCount: state.postProvider.posts.length,
                 itemBuilder: (BuildContext context, index) {
                   return Card(

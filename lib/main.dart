@@ -88,7 +88,7 @@ class _MyAppState extends State<MyApp> {
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
+          title: 'CUI Messenger',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
