@@ -428,7 +428,7 @@ class _ChatScreenState extends State<ChatScreen>
                                 icon: const Icon(
                                   Icons.arrow_back_ios_new_rounded,
                                   size: 20,
-                                  color: mainColor,
+                                  color: Palette.cuiPurple,
                                 )),
                             InkWell(
                               onTap: openProfile,

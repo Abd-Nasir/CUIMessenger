@@ -104,41 +104,40 @@ class _AddPeopleState extends State<AddPeople> {
                                         child: getForwardCard(data, context))
                                     : InkWell(
                                         onTap: () async {
-                                          
                                           DocumentSnapshot document =
                                               await getDocumentById(
                                                   userInfo.uid);
 
                                           // print(document.data['']);
 
-                                          // setState(() {
-                                          //   if (widget.usersList!
-                                          //       .contains(data.uid)) {
-                                          //     // usersModelList.remove(data);
+                                          setState(() {
+                                            if (widget.usersList!
+                                                .contains(data.uid)) {
+                                              // usersModelList.remove(data);
 
-                                          //     widget.usersList!
-                                          //         .remove(data.uid);
-                                          //     var list = [];
-                                          //     print(widget.usersList);
-                                          //     // for (int x = 0;
-                                          //     //     x < widget.usersList!.length;
-                                          //     //     x++) {
-                                          //     //       if()
-                                          //     //   list.add(data.uid);
-                                          //     // }
-                                          //     list.add(data.uid);
-                                          //     print(data.uid);
-                                          //     FirebaseFirestore.instance
-                                          //         .collection('groups')
-                                          //         .doc(userInfo.uid)
-                                          //         .update({
-                                          //       'membersUid': widget.usersList
-                                          //     });
-                                          //   } else {
-                                          //     // usersModelList.add(data);
-                                          //     widget.usersList!.add(data.uid);
-                                          //   }
-                                          // });
+                                              widget.usersList!
+                                                  .remove(data.uid);
+                                              var list = [];
+                                              print(widget.usersList);
+                                              // for (int x = 0;
+                                              //     x < widget.usersList!.length;
+                                              //     x++) {
+                                              //       if()
+                                              //   list.add(data.uid);
+                                              // }
+                                              list.add(data.uid);
+                                              print(data.uid);
+                                              FirebaseFirestore.instance
+                                                  .collection('groups')
+                                                  .doc(userInfo.uid)
+                                                  .update({
+                                                'membersUid': widget.usersList
+                                              });
+                                            } else {
+                                              // usersModelList.add(data);
+                                              widget.usersList!.add(data.uid);
+                                            }
+                                          });
                                         },
                                         child: getPeopleCard(
                                             data,

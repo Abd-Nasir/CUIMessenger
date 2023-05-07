@@ -194,12 +194,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        AddPeople(context, peopleUid, refresh)));
-            // showPeopleForTask(context, peopleUid, refresh);
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) =>
+            //             AddPeople(context, peopleUid, refresh)));
+            showPeopleForTask(context, peopleUid, refresh);
           },
           label: const Text('Add People'),
           icon: const Icon(Icons.people),

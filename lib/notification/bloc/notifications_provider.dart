@@ -24,8 +24,6 @@ class NotificationProvider {
         .collection('notifications')
         .get()
         .then((value) {
-      // value.docs.first;
-      print(value.docs.first.data());
       notifications.clear();
       value.docs.forEach((value) {
         notifications.add(NotificationModel.fromJson(value.data()));

@@ -6,8 +6,7 @@ abstract class NotificationEvent {
 }
 
 class InitializeNotificationEvent extends NotificationEvent {
-  final String userId;
-  const InitializeNotificationEvent({required this.userId}) : super();
+  const InitializeNotificationEvent() : super();
 }
 
 class CreateChatChannelEvent extends NotificationEvent {

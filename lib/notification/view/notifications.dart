@@ -87,13 +87,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        NotificationProvider().sendNotification(
-                            "e-evl-sGSwC1f2OAEdr5kS:APA91bE2xFtqjUcnEnRRzl5mYaIPjOwI4pAVMZl3sv1oLSbKtPA2xse3o_hz2dWz0gCxGSoiJ4Vyf7hRKhCdEMowYuwMyo_dbpcRmUWtQ38VbE9GdYHJHBLixphi1cozzFpHJmw2iMqV",
-                            "Kona Bandar",
-                            "Kona bander is chutu");
-
-                        // ));
-                        // BlocProvider.of<NotificationBloc>(context).add(event)
+                        BlocProvider.of<NotificationBloc>(context)
+                            .add(InitializeNotificationEvent());
                       },
                       icon: const Icon(
                         Icons.refresh,
@@ -126,8 +121,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 // height: mediaQuery.size.height * 0.82,
                 child: BlocBuilder<NotificationBloc, NotificationState>(
                     builder: (context, state) {
+                  if (NotificationState is NotificationStateLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Palette.cuiPurple,
+                      ),
+                    );
+                  }
                   return isLoading
-                      ? Center(
+                      ? const Center(
                           child: CircularProgressIndicator(),
                         )
                       : RefreshIndicator(

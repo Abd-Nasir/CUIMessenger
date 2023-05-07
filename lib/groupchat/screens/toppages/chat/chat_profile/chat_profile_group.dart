@@ -8,6 +8,7 @@ import 'package:cui_messenger/groupchat/constants/utils.dart';
 import 'package:cui_messenger/groupchat/methods/storage_methods.dart';
 import 'package:cui_messenger/groupchat/models/group.dart';
 import 'package:cui_messenger/groupchat/screens/group/screens/users_screen.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cui_messenger/groupchat/models/group.dart' as model;
@@ -113,7 +114,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: scaffoldBackgroundColor,
+      // backgroundColor: scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
@@ -166,14 +167,22 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
             width: size.width / 1.2,
             height: 250,
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                      color: Palette.cuiBlue.withOpacity(0.10),
+                      offset: Offset(2, 2),
+                      blurRadius: 5,
+                      spreadRadius: 5)
+                ]),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    Container(
                       height: 130,
                       width: 130,
                       child: Stack(
@@ -187,6 +196,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                                     if (snapshot.connectionState ==
                                         ConnectionState.done) {
                                       return CircleAvatar(
+                                          backgroundColor: Palette.cuiOffWhite,
                                           radius: 80,
                                           backgroundImage:
                                               CachedNetworkImageProvider(
@@ -195,6 +205,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                                     }
                                     if (snapshot.hasData) {
                                       return CircleAvatar(
+                                          // backgroundColor: Palette.cuiOffWhite,
                                           radius: 80,
                                           backgroundImage:
                                               CachedNetworkImageProvider(
@@ -240,7 +251,9 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                         child: TextField(
                           controller: groupNameController,
                           style: const TextStyle(
-                              fontWeight: FontWeight.w800, fontSize: 20),
+                              color: Palette.cuiPurple,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20),
                           textAlign: TextAlign.center,
                           // overflow: TextOverflow.visible,
                           // style: const TextStyle(

@@ -45,6 +45,15 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   postOptions? selectedMenu;
   int _counter = 0;
+  // bool isLoading = true;
+  @override
+  void initState() {
+    // Future.delayed(Duration(seconds: 1)).then((value) {
+    //   isLoading = false;
+    //   setState(() {});
+    // });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +62,7 @@ class _FeedScreenState extends State<FeedScreen> {
     return SafeArea(
       bottom: false,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         backgroundColor: Palette.cuiOffWhite,
         appBar: AppBar(
           elevation: 0,
@@ -255,6 +264,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         (context, url, downloadProgress) => Center(
                             child: CircularProgressIndicator(
                                 value: downloadProgress.progress)),
+                    // placeholder: (context, url) => CircularProgressIndicator(),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                   ),
@@ -276,8 +286,16 @@ class _FeedScreenState extends State<FeedScreen> {
               ),
               image: post.imageUrl != ""
                   ? DecorationImage(
-                      image: NetworkImage(
+                      image: CachedNetworkImageProvider(
+                        // imageUrl:
                         post.imageUrl!,
+                        // fit: BoxFit.cover,
+                        // progressIndicatorBuilder:
+                        //     (context, url, downloadProgress) => Center(
+                        //         child: CircularProgressIndicator(
+                        //             value: downloadProgress.progress)),
+                        // errorWidget: (context, url, error) =>
+                        //     const Icon(Icons.error),
                       ),
                       fit: BoxFit.cover,
                     )
@@ -300,6 +318,9 @@ class _FeedScreenState extends State<FeedScreen> {
                         .collection('likes')
                         .snapshots(),
                     builder: (context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

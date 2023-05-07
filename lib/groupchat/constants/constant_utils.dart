@@ -20,6 +20,7 @@ import 'package:cui_messenger/groupchat/screens/bottom_pages.dart/contacts_scree
 import 'package:cui_messenger/groupchat/screens/search_screen.dart';
 import 'package:cui_messenger/groupchat/screens/toppages/chat/chat_screen.dart';
 import 'package:cui_messenger/groupchat/utils/helper_widgets.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -38,7 +39,7 @@ MessageReply? messageReply;
 math.Random random = math.Random();
 
 getAvatarWithStatus(bool isGroupChat, ChatContactModel contactModel,
-    {double size = 22}) {
+    {double size = 20}) {
   return Stack(
     children: [
       isGroupChat
@@ -51,7 +52,12 @@ getAvatarWithStatus(bool isGroupChat, ChatContactModel contactModel,
                     // maxHeight: 50,
                   ))
               : CircleAvatar(
-                  radius: size, child: const Icon(Icons.groups_outlined))
+                  backgroundColor: Palette.hintGrey,
+                  radius: size,
+                  child: const Icon(
+                    Icons.groups_2,
+                    color: Palette.white,
+                  ))
           : showUsersImage(contactModel.photoUrl == "",
               picUrl: contactModel.photoUrl, size: size),
       if (!isGroupChat)
