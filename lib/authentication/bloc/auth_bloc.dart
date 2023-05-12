@@ -6,8 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:permission_handler/permission_handler.dart';
-
 import '/authentication/bloc/auth_event.dart';
 import '/authentication/bloc/auth_provider.dart';
 import '/authentication/bloc/auth_state.dart';
@@ -19,35 +17,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEventInitialize>((event, emit) async {
       // print("Auth Bloc Event Initialized");
       // Check Notifications and Exit App
-      if (await Permission.notification.isDenied) {
-        print("Permission is denied");
-        // Request Notification Access again
-        PermissionStatus status = await Permission.notification.request();
-        print("This is status $status");
-        // await openAppSettings();
-        // if (await Permission.notification.isDenied) {
-        //   emit(const AuthStateNotificationError(null));
-        // }
-      }
-      if (await Permission.notification.isPermanentlyDenied) {
-        await openAppSettings().then((value) {
-          print(value);
-        });
-        if (await Permission.notification.isPermanentlyDenied) {
-          print("Permanently denied");
-          emit(const AuthStateNotificationError(null));
-        }
-      }
+      // if (await Permission.notification.isDenied) {
+      //   // print("Permission is denied");
+      //   // Request Notification Access again
+      //   PermissionStatus status = await Permission.notification.request();
+      //   // print("This is status $status");
+      //   // await openAppSettings();
+      //   // if (await Permission.notification.isDenied) {
+      //   //   emit(const AuthStateNotificationError(null));
+      //   // }
+      // }
+      // if (await Permission.notification.isPermanentlyDenied) {
+      //   await openAppSettings().then((value) {
+      //     print(value);
+      //   });
+      //   if (await Permission.notification.isPermanentlyDenied) {
+      //     print("Permanently denied");
+      //     emit(const AuthStateNotificationError(null));
+      //   }
+      // }
       // if (await Permission.notification.isGranted) {
-      print("isGranted");
+
       emit(const AuthStateLoading(null));
       await provider.initialize().then((value) async {
         // final fbuser = provider.currentUser;
         final user = provider.userData;
 
-        print("Printing user in auth bloc initialization: \n$user");
         if (FirebaseAuth.instance.currentUser != null) {
           if (FirebaseAuth.instance.currentUser!.emailVerified) {
+            final token = await FirebaseMessaging.instance.getToken();
+            // print("token");
+            FirebaseFirestore.instance
+                .collection('registered-users')
+                .doc(user!.uid)
+                .update({
+              'token': token,
+              // 'timestamp': FieldValue.serverTimestamp(),
+            });
             emit(AuthStateLoggedIn(user));
           } else if (!FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateNeedsVerification(user));
@@ -77,12 +83,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await provider
               .studentLogin(email: event.email, password: event.password)
               .then((user) async {
-            print(user);
+            // print(user);
             if (user != null) {
               if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                print("\nEmitting Logged in user!\n");
+                // print("\nEmitting Logged in user!\n");
                 final token = await FirebaseMessaging.instance.getToken();
-                print("token");
                 FirebaseFirestore.instance
                     .collection('registered-users')
                     .doc(user.uid)
@@ -97,14 +102,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 //     .pushNamedAndRemoveUntil(verifyMailRoute, (route) => false);
               }
             } else {
-              print("in else failure");
               emit(AuthStateStudentLoginFailure(
                   Exception("Unknown error occurred. Please try again later!"),
                   null));
             }
           });
         } catch (error) {
-          print("Here");
           emit(AuthStateStudentLoginFailure(
               Exception("Unknown error occurred"), null));
         }
@@ -116,15 +119,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const AuthStateLoading(null));
 
         try {
-          print("Inside log in");
           await provider
               .teacherLogin(email: event.email, password: event.password)
               .then((user) async {
             // final user = provider.currentUser;
-            print(user);
+
             if (user != null) {
               if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                print("\nEmitting Logged in user!\n");
                 emit(AuthStateLoggedIn(user));
               } else {
                 emit(AuthStateNeedsVerification(user));
@@ -132,14 +133,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 //     .pushNamedAndRemoveUntil(verifyMailRoute, (route) => false);
               }
             } else {
-              print("in else failure");
               emit(AuthStateFacultyLoginFailure(
                   Exception("Unknown error occurred. Please try again later!"),
                   null));
             }
           });
         } catch (error) {
-          print("Here");
           emit(AuthStateFacultyLoginFailure(
               Exception("Unknown error occurred"), null));
         }
@@ -285,7 +284,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<ResendVerificationMail>((event, emit) async {
-      print("Email sending");
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
     });
 
@@ -295,7 +293,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await provider.initialize().then((value) {
           final user = provider.userData;
 
-          print("Printing user in auth bloc initialization: \n$user");
           if (FirebaseAuth.instance.currentUser != null) {
             if (FirebaseAuth.instance.currentUser!.emailVerified) {
               emit(AuthStateLoggedIn(user));

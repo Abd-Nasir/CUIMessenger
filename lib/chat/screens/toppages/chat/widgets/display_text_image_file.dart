@@ -5,6 +5,7 @@ import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/message_enum.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/play_audio.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/show_file_preview.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_image_viewer/gallery_image_viewer.dart';
 import 'package:jumping_dot/jumping_dot.dart';
@@ -86,7 +87,7 @@ class DisplayTextImageGIF extends StatelessWidget {
                     child: JumpingDots(
                       color: isSender
                           ? (Colors.white.withOpacity(0.4))
-                          : mainColor.withOpacity(0.4),
+                          : Palette.cuiPurple.withOpacity(0.4),
                       radius: 8,
                       numberOfDots: 3,
                     ),
@@ -97,7 +98,7 @@ class DisplayTextImageGIF extends StatelessWidget {
                       // cursorColor: Colors.red,
                       selectionColor: isSender
                           ? (Colors.white.withOpacity(0.4))
-                          : mainColor.withOpacity(0.4),
+                          : Palette.cuiPurple.withOpacity(0.4),
                       selectionHandleColor: Colors.red,
                     ),
                     child: Text(

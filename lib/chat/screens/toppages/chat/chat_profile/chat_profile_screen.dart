@@ -5,7 +5,8 @@ import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/models/chat_model.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -39,14 +40,15 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
     log("Value = " + controlValue.value.toString());
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: scaffoldBackgroundColor,
+      backgroundColor: Palette.cuiOffWhite,
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
         title: const Text(
           "User Profile",
-          style: TextStyle(color: mainTextColor, fontWeight: FontWeight.bold),
+          style:
+              TextStyle(color: Palette.cuiPurple, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -136,7 +138,7 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
                 //             children: [
                 //               const Icon(
                 //                 Icons.phone,
-                //                 color: mainColor,
+                //                 color: Palette.cuiPurple,
                 //               ),
                 //               Text(
                 //                 data.contact == ""
@@ -153,7 +155,7 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
                 //           //     children: [
                 //           //       const Icon(
                 //           //         Icons.phone,
-                //           //         color: mainColor,
+                //           //         color: Palette.cuiPurple,
                 //           //       ),
                 //           //       Text(
                 //           //         data.contactEmail,
@@ -167,7 +169,7 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
                 //             children: [
                 //               const Icon(
                 //                 Icons.location_on,
-                //                 color: mainColor,
+                //                 color: Palette.cuiPurple,
                 //               ),
                 //               Text(
                 //                 data.location == ""
@@ -209,7 +211,7 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
                 //               children: [
                 //                 const Icon(
                 //                   Icons.phone,
-                //                   color: mainColor,
+                //                   color: Palette.cuiPurple,
                 //                 ),
                 //                 Text(
                 //                   data.contact,
@@ -224,7 +226,7 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
                 //           //     children: [
                 //           //       const Icon(
                 //           //         Icons.phone,
-                //           //         color: mainColor,
+                //           //         color: Palette.cuiPurple,
                 //           //       ),
                 //           //       Text(
                 //           //         data.contactEmail,
@@ -239,7 +241,7 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
                 //               children: [
                 //                 const Icon(
                 //                   Icons.location_on,
-                //                   color: mainColor,
+                //                   color: Palette.cuiPurple,
                 //                 ),
                 //                 Text(
                 //                   data.location,
@@ -391,9 +393,9 @@ class TopWidget extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            data.username == ""
+                            data.firstName == ""
                                 ? "Nothing to show"
-                                : data.username,
+                                : data.firstName,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.visible,
                             style: const TextStyle(
@@ -436,7 +438,8 @@ class TopWidget extends StatelessWidget {
                       child: Text(
                         "To-do",
                         style: TextStyle(
-                            color: isTodo == 0 ? mainColor : Colors.black),
+                            color:
+                                isTodo == 0 ? Palette.cuiPurple : Colors.black),
                       )),
                   TextButton(
                       onPressed: () {
@@ -448,7 +451,8 @@ class TopWidget extends StatelessWidget {
                       child: Text(
                         "Media",
                         style: TextStyle(
-                            color: isTodo == 1 ? mainColor : Colors.black),
+                            color:
+                                isTodo == 1 ? Palette.cuiPurple : Colors.black),
                       )),
                   TextButton(
                       onPressed: () {
@@ -460,7 +464,8 @@ class TopWidget extends StatelessWidget {
                       child: Text(
                         "Files",
                         style: TextStyle(
-                            color: isTodo == 2 ? mainColor : Colors.black),
+                            color:
+                                isTodo == 2 ? Palette.cuiPurple : Colors.black),
                       )),
                 ],
               );

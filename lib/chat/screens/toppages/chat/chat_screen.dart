@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -9,7 +8,7 @@ import 'package:cui_messenger/chat/constants/message_enum.dart';
 import 'package:cui_messenger/chat/constants/utils.dart';
 import 'package:cui_messenger/chat/methods/chat_methods.dart';
 import 'package:cui_messenger/chat/models/chat_model.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/chat_profile/chat_profile_group.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/chat_profile/chat_profile_screen.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/forward_message_screen.dart';
@@ -18,10 +17,10 @@ import 'package:cui_messenger/chat/screens/toppages/chat/widgets/message_reply_p
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/my_message_card.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/sender_message_card.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+
 import 'package:audio_waveforms/audio_waveforms.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 
 import 'package:path_provider/path_provider.dart';
 
@@ -80,7 +79,7 @@ class _ChatScreenState extends State<ChatScreen>
   getdata() async {
     if (!isGroupChat) {
       var doc = await firebaseFirestore
-          .collection('users')
+          .collection('registered-users')
           .doc(widget.contactModel.contactId)
           .get();
       user = doc.data() as Map<dynamic, dynamic>;
@@ -90,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen>
     } else {
       Map<dynamic, dynamic> values = {
         'name': widget.contactModel.name,
-        'photoUrl': widget.contactModel.photoUrl,
+        'profile-picture': widget.contactModel.profilePicture,
       };
       // CALLERDATA = values;
     }
@@ -164,7 +163,7 @@ class _ChatScreenState extends State<ChatScreen>
             context: context,
             text: element.text,
             recieverUserId: widget.contactModel.contactId,
-            senderUser: userInfo,
+            senderUser: userInfo!,
             messageReply: null,
             isGroupChat: isGroupChat);
       } else {
@@ -172,7 +171,7 @@ class _ChatScreenState extends State<ChatScreen>
             context: context,
             fileUrl: element.text,
             recieverUserId: widget.contactModel.contactId,
-            senderUserData: userInfo,
+            senderUserData: userInfo!,
             messageEnum: element.type,
             messageReply: null,
             isGroupChat: isGroupChat);
@@ -488,8 +487,8 @@ class _ChatScreenState extends State<ChatScreen>
                         //                   Icons.call,
                         //                   size: 25,
                         //                   color: boolValue
-                        //                       ? mainColorFaded
-                        //                       : mainColor,
+                        //                       ? Palette.cuiPurpleFaded
+                        //                       : Palette.cuiPurple,
                         //                 ),
                         //               )),
                         //           InkWell(
@@ -509,8 +508,8 @@ class _ChatScreenState extends State<ChatScreen>
                         //                   Icons.videocam,
                         //                   size: 30,
                         //                   color: boolValue
-                        //                       ? mainColorFaded
-                        //                       : mainColor,
+                        //                       ? Palette.cuiPurpleFaded
+                        //                       : Palette.cuiPurple,
                         //                 ),
                         //               )),
                         //           DropdownButtonHideUnderline(
@@ -549,7 +548,7 @@ class _ChatScreenState extends State<ChatScreen>
                         //                 decoration: BoxDecoration(
                         //                   borderRadius:
                         //                       BorderRadius.circular(4),
-                        //                   color: mainColor,
+                        //                   color: Palette.cuiPurple,
                         //                 ),
                         //                 elevation: 8,
                         //                 offset: const Offset(0, 8),
@@ -819,7 +818,7 @@ class _ChatScreenState extends State<ChatScreen>
                                                                           .contactModel),
                                                                   photoUrl: widget
                                                                       .contactModel
-                                                                      .photoUrl,
+                                                                      .profilePicture,
                                                                   message:
                                                                       messageData
                                                                           .text,
@@ -1389,7 +1388,8 @@ class __ChatListState extends State<_ChatList> {
                                     avatarWidget: getAvatarWithStatus(
                                         widget.isGroupChat,
                                         widget.contactModel),
-                                    photoUrl: widget.contactModel.photoUrl,
+                                    photoUrl:
+                                        widget.contactModel.profilePicture,
                                     message: messageData.text,
                                     date: timeSent,
                                     type: messageData.type,
@@ -1590,7 +1590,7 @@ class _MyTextFieldState extends State<MyTextField> {
           context: context,
           text: _messageController.text.trim(),
           recieverUserId: widget.model.contactId,
-          senderUser: userInfo,
+          senderUser: userInfo!,
           messageReply: null,
           isGroupChat: widget.isGroupChat,
         );
@@ -1650,7 +1650,7 @@ class _MyTextFieldState extends State<MyTextField> {
         file: file,
         recieverUserId: widget.model.contactId,
         messageEnum: messageEnum,
-        senderUserData: userInfo,
+        senderUserData: userInfo!,
         messageReply: null,
         isGroupChat: widget.isGroupChat);
   }
@@ -1724,7 +1724,8 @@ class _MyTextFieldState extends State<MyTextField> {
       children: [
         if (messageReply != null)
           MessageReplyPreview(
-              photoUrl: widget.model.photoUrl, messageReply: messageReply),
+              photoUrl: widget.model.profilePicture,
+              messageReply: messageReply),
         Row(
           children: [
             if (isRecording)
@@ -1736,15 +1737,15 @@ class _MyTextFieldState extends State<MyTextField> {
                     enableGesture: false,
                     padding: const EdgeInsets.all(20),
                     waveStyle: const WaveStyle(
-                      waveColor: mainColor,
+                      waveColor: Palette.cuiPurple,
                       waveThickness: 5,
                       backgroundColor: Colors.black,
                       showDurationLabel: true,
                       spacing: 8.0,
-                      durationStyle: TextStyle(color: mainColor),
+                      durationStyle: TextStyle(color: Palette.cuiPurple),
                       showBottom: true,
                       extendWaveform: true,
-                      durationLinesColor: mainColor,
+                      durationLinesColor: Palette.cuiPurple,
                       showMiddleLine: false,
                       //   gradient: ui.Gradient.linear(
                       //     const Offset(70, 50),
@@ -1855,7 +1856,7 @@ class _MyTextFieldState extends State<MyTextField> {
                                     context: context,
                                     builder: (context) {
                                       return Container(
-                                        color: scaffoldBackgroundColor,
+                                        color: Palette.cuiOffWhite,
                                         child: Wrap(
                                           children: [
                                             Container(
@@ -1876,8 +1877,8 @@ class _MyTextFieldState extends State<MyTextField> {
                                                           decoration:
                                                               BoxDecoration(
                                                             border: Border.all(
-                                                                color:
-                                                                    mainColor),
+                                                                color: Palette
+                                                                    .cuiPurple),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -1891,7 +1892,8 @@ class _MyTextFieldState extends State<MyTextField> {
                                                               Icons
                                                                   .document_scanner_sharp,
                                                               size: 35,
-                                                              color: mainColor,
+                                                              color: Palette
+                                                                  .cuiPurple,
                                                             ),
                                                           ),
                                                         ),
@@ -1915,8 +1917,8 @@ class _MyTextFieldState extends State<MyTextField> {
                                                           decoration:
                                                               BoxDecoration(
                                                             border: Border.all(
-                                                                color:
-                                                                    mainColor),
+                                                                color: Palette
+                                                                    .cuiPurple),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -1930,7 +1932,8 @@ class _MyTextFieldState extends State<MyTextField> {
                                                               Icons
                                                                   .camera_enhance_rounded,
                                                               size: 35,
-                                                              color: mainColor,
+                                                              color: Palette
+                                                                  .cuiPurple,
                                                             ),
                                                           ),
                                                         ),
@@ -2038,7 +2041,7 @@ class _MyTextFieldState extends State<MyTextField> {
             return Container(
               decoration: BoxDecoration(
                   border: Border.all(
-                    color: whiteColor,
+                    color: Palette.cuiOffWhite,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(20))),
               child: Card(
@@ -2091,7 +2094,8 @@ class _TabSwitchState extends State<_TabSwitch> {
                 height: 50,
                 width: size.width / 1.2 * 0.5,
                 decoration: BoxDecoration(
-                    color: mainColor, borderRadius: BorderRadius.circular(35)),
+                    color: Palette.cuiPurple,
+                    borderRadius: BorderRadius.circular(35)),
               ),
             ),
             Row(
@@ -2101,7 +2105,7 @@ class _TabSwitchState extends State<_TabSwitch> {
                     child: Text(
                       "Chats",
                       style: TextStyle(
-                          color: isChat ? Colors.white : mainColor,
+                          color: isChat ? Colors.white : Palette.cuiPurple,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -2111,7 +2115,7 @@ class _TabSwitchState extends State<_TabSwitch> {
                     child: Text(
                       "To Do's",
                       style: TextStyle(
-                          color: isChat ? mainColor : Colors.white,
+                          color: isChat ? Palette.cuiPurple : Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
                   ),

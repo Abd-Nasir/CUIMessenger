@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cui_messenger/chat/constants/constants.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 

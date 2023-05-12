@@ -3,7 +3,7 @@ import 'package:cui_messenger/chat/constants/message_enum.dart';
 class ChatContactModel {
   final String contactId;
   final String name;
-  final String photoUrl;
+  final String profilePicture;
   final DateTime timeSent;
   final String lastMessage;
   final String lastMessageBy;
@@ -13,7 +13,7 @@ class ChatContactModel {
   ChatContactModel({
     required this.contactId,
     required this.name,
-    required this.photoUrl,
+    required this.profilePicture,
     required this.timeSent,
     required this.lastMessage,
     required this.lastMessageBy,
@@ -25,7 +25,7 @@ class ChatContactModel {
     return {
       'contactId': contactId,
       'senderName': name,
-      'photoUrl': photoUrl,
+      'profile-picture': profilePicture,
       'timeSent': timeSent.millisecondsSinceEpoch,
       'lastMessage': lastMessage,
       'lastMessageBy': lastMessageBy,
@@ -38,7 +38,7 @@ class ChatContactModel {
     return ChatContactModel(
       contactId: map['contactId'],
       name: map['senderName'],
-      photoUrl: map['photoUrl'],
+      profilePicture: map['profile-picture'],
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
       lastMessage: map['lastMessage'],
       lastMessageBy: map['lastMessageBy'],

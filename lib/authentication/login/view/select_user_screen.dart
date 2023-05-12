@@ -26,7 +26,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
       value.docs.forEach((notice) {
         notices.add(notice.data());
       });
-      print(notices);
+      // print(notices);
     });
     setState(() {
       isLoading = false;
@@ -52,7 +52,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             const Text(
               'Welcome to',
               style: TextStyle(
@@ -61,7 +61,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             const Text(
               "CUI Messenger",
               style: TextStyle(

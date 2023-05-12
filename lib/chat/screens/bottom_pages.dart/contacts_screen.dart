@@ -1,6 +1,6 @@
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/methods/chat_methods.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:flutter/material.dart';
 
 class ContactsScreen extends StatefulWidget {
@@ -25,22 +25,22 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 child: CircularProgressIndicator(),
               );
             }
-            if (snapshot.data == null) {
-              // return const Center(
-              //   child: Text("Nothing to show you"),
-              // );
-              return getNewContactPrompt(context);
-            }
-            if (snapshot.data!.isEmpty) {
-              // return const Center(
-              //   child: Text("Nothing to show you"),
-              // );
-              return getNewContactPrompt(context);
-            }
+            // if (snapshot.data == null) {
+            //   // return const Center(
+            //   //   child: Text("Nothing to show you"),
+            //   // );
+            //   return getNewContactPrompt(context);
+            // }
+            // if (snapshot.data!.isEmpty) {
+            //   // return const Center(
+            //   //   child: Text("Nothing to show you"),
+            //   // );
+            //   return getNewContactPrompt(context);
+            // }
             List<UserModel> temp = [];
             if (widget.value != null) {
               for (var element in snapshot.data!) {
-                if (element.username.contains(widget.value!)) {
+                if (element.firstName.contains(widget.value!)) {
                   temp.add(element);
                 }
               }

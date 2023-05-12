@@ -1,7 +1,7 @@
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/methods/chat_methods.dart';
 import 'package:cui_messenger/chat/models/chat_model.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -73,8 +73,8 @@ class _ForwardMessageScreenState extends State<ForwardMessageScreen> {
                                       message: widget.messageList,
                                       contactModel: ChatContactModel(
                                           contactId: data.uid,
-                                          name: data.username,
-                                          photoUrl: data.photoUrl,
+                                          name: data.firstName,
+                                          profilePicture: data.profilePicture,
                                           timeSent: DateTime.now(),
                                           lastMessageBy: "",
                                           lastMessageId: "",

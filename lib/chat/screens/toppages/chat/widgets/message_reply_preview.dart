@@ -2,6 +2,7 @@ import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/message_reply.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/display_text_image_file.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 
 class MessageReplyPreview extends StatefulWidget {
@@ -20,9 +21,9 @@ class _MessageReplyPreviewState extends State<MessageReplyPreview> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(8),
-      decoration: const BoxDecoration(
-        color: mainColorFaded,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: Palette.cuiPurple.withOpacity(0.25),
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
         ),

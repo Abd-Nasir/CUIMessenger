@@ -130,7 +130,8 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
         ],
         title: const Text(
           "Group Info",
-          style: TextStyle(color: mainTextColor, fontWeight: FontWeight.bold),
+          style:
+              TextStyle(color: Palette.cuiPurple, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -239,7 +240,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                                 shape: const CircleBorder(),
                                 child: const Icon(
                                   Icons.camera_alt_outlined,
-                                  color: mainColor,
+                                  color: Palette.cuiPurple,
                                 ),
                               )),
                         ],
@@ -316,13 +317,13 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                       title: const Text("Add Group Members"),
                       trailing: Container(
                         decoration: BoxDecoration(
-                            color: mainColor.withOpacity(0.1),
+                            color: Palette.cuiPurple.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(50)),
                         width: 45,
                         height: 45,
                         child: const Icon(
                           Icons.arrow_forward_ios,
-                          color: mainColor,
+                          color: Palette.cuiPurple,
                         ),
                       ),
                     ),
@@ -337,13 +338,13 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                       title: const Text("See Group Members"),
                       trailing: Container(
                         decoration: BoxDecoration(
-                            color: mainColor.withOpacity(0.1),
+                            color: Palette.cuiPurple.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(50)),
                         width: 45,
                         height: 45,
                         child: const Icon(
                           Icons.arrow_forward_ios,
-                          color: mainColor,
+                          color: Palette.cuiPurple,
                         ),
                       ),
                     ),

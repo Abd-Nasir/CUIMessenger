@@ -1,37 +1,23 @@
-import 'dart:developer';
-import 'dart:io';
+// import 'dart:developer';
+// import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:another_flushbar/flushbar.dart';
-import 'package:avatar_stack/avatar_stack.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/constants/message_reply.dart';
 import 'package:cui_messenger/chat/methods/chat_methods.dart';
-import 'package:cui_messenger/chat/methods/contact_methods.dart';
 import 'package:cui_messenger/chat/methods/firestore_methods.dart';
-import 'package:cui_messenger/chat/models/call_model.dart';
 import 'package:cui_messenger/chat/models/chat_model.dart';
 import 'package:cui_messenger/chat/models/group.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/chat/screens/bottom_pages.dart/contacts_screen.dart';
-
-import 'package:cui_messenger/chat/screens/search_screen.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/chat_screen.dart';
 import 'package:cui_messenger/chat/utils/helper_widgets.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:open_store/open_store.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:uuid/uuid.dart';
-
-import 'package:timeago/timeago.dart' as timeago;
 
 //value to store if its replying or not
 MessageReply? messageReply;
@@ -43,11 +29,11 @@ getAvatarWithStatus(bool isGroupChat, ChatContactModel contactModel,
   return Stack(
     children: [
       isGroupChat
-          ? contactModel.photoUrl != ""
+          ? contactModel.profilePicture != ""
               ? CircleAvatar(
                   radius: size,
                   backgroundImage: CachedNetworkImageProvider(
-                    contactModel.photoUrl,
+                    contactModel.profilePicture,
                     // maxWidth: 50,
                     // maxHeight: 50,
                   ))
@@ -58,8 +44,8 @@ getAvatarWithStatus(bool isGroupChat, ChatContactModel contactModel,
                     Icons.groups_2,
                     color: Palette.white,
                   ))
-          : showUsersImage(contactModel.photoUrl == "",
-              picUrl: contactModel.photoUrl, size: size),
+          : showUsersImage(contactModel.profilePicture == "",
+              picUrl: contactModel.profilePicture, size: size),
       if (!isGroupChat)
         StreamBuilder<bool>(
             stream: ChatMethods().getOnlineStream(contactModel.contactId),
@@ -93,9 +79,9 @@ getDateWithLines(dateInList) {
 //   return Container(
 //     height: 35,
 //     width: MediaQuery.of(context).size.width,
-//     decoration: const BoxDecoration(color: mainColor),
+//     decoration: const BoxDecoration(color: Palette.cuiPurple),
 //     child: Scaffold(
-//       backgroundColor: mainColor,
+//       backgroundColor: Palette.cuiPurple,
 //       body: InkWell(
 //         onTap: () {
 //           // Navigator.push(context,
@@ -120,9 +106,9 @@ void showFloatingFlushBar(
   Flushbar(
     borderRadius: BorderRadius.circular(8),
     duration: const Duration(seconds: 1),
-    backgroundGradient: const LinearGradient(
-      colors: [mainColor, mainColorFaded],
-      stops: [0.6, 1],
+    backgroundGradient: LinearGradient(
+      colors: [Palette.cuiPurple, Palette.cuiPurple.withOpacity(0.25)],
+      stops: const [0.6, 1],
     ),
     boxShadows: const [
       BoxShadow(
@@ -146,7 +132,7 @@ showToastMessage(String toastText) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
-      backgroundColor: mainColor,
+      backgroundColor: Palette.cuiPurple,
       textColor: Colors.white,
       fontSize: 16.0);
 }
@@ -180,7 +166,8 @@ getMessageCard(var model, context, {bool isGroupChat = false}) {
                     contactModel: ChatContactModel(
                       contactId: isGroupChat ? model.groupId : model.contactId,
                       name: model.name,
-                      photoUrl: isGroupChat ? model.groupPic : model.photoUrl,
+                      profilePicture:
+                          isGroupChat ? model.groupPic : model.profilePicture,
                       timeSent: DateTime.now(),
                       lastMessageBy: "",
                       lastMessageId: '',
@@ -204,10 +191,10 @@ getMessageCard(var model, context, {bool isGroupChat = false}) {
                         ))
                     : const CircleAvatar(
                         radius: 20, child: Icon(Icons.groups_outlined))
-                : showUsersImage(model.photoUrl == "",
+                : showUsersImage(model.profilePicture == "",
                     size: 20,
-                    picUrl: model.photoUrl != ""
-                        ? model.photoUrl
+                    picUrl: model.profilePicture != ""
+                        ? model.profilePicture
                         : 'assets/user.png'),
             if (!isGroupChat)
               StreamBuilder<bool>(
@@ -285,7 +272,7 @@ getMessageCard(var model, context, {bool isGroupChat = false}) {
                 Icons.circle,
                 color: model.lastMessageBy != firebaseAuth.currentUser!.uid
                     ? !seen
-                        ? mainColor
+                        ? Palette.cuiPurple
                         : Colors.transparent
                     : Colors.transparent,
                 size: 14,
@@ -461,164 +448,6 @@ void showNewMessage(BuildContext context) async {
               ])));
 }
 
-showAddToContact(BuildContext context, UserModel model) async {
-  var size = MediaQuery.of(context).size;
-  return await showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: ((context) => SimpleDialog(
-              title: Row(
-                children: [
-                  const Expanded(child: Center(child: Text("Add to Contact"))),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                      },
-                      icon: const Icon(Icons.close))
-                ],
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
-              contentPadding: const EdgeInsets.all(8),
-              children: [
-                SizedBox(
-                  height: size.height / 2,
-                  width: size.width,
-                  child: Scaffold(
-                      body: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                            radius: 50,
-                            backgroundImage:
-                                CachedNetworkImageProvider(model.photoUrl)),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          model.username,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Text(
-                            model.bio != "" ? model.bio : "Nothing to Show",
-                            overflow: TextOverflow.visible,
-                            style: const TextStyle(fontWeight: FontWeight.w300),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on,
-                                color: mainColor,
-                              ),
-                              Text(
-                                model.location != ""
-                                    ? model.location
-                                    : "Nothing to Show",
-                                overflow: TextOverflow.visible,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w300),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.phone,
-                                color: mainColor,
-                              ),
-                              Text(
-                                model.contact != ""
-                                    ? model.contact
-                                    : "Nothing to Show",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.email,
-                                color: mainColor,
-                              ),
-                              Text(
-                                model.email,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        ElevatedButton(
-                            onPressed: () async {
-                              String res =
-                                  await ContactMethods().addContact(model.uid);
-                              if (res == "success") {
-                                Navigator.pop(context);
-                                //getting the userInfo
-                                fetchUserInfo();
-                              } else {
-                                showFloatingFlushBar(context, "Error", res);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 0, 0, 0),
-                              minimumSize: const Size(306, 54),
-                            ),
-                            child: Text(
-                              userInfo.contacts.contains(model.uid)
-                                  ? "Remove"
-                                  : 'Add',
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 1),
-                                  fontFamily: 'Poppins',
-                                  fontSize: 15,
-                                  letterSpacing:
-                                      0 /*percentages not used in flutter. defaulting to zero*/,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1),
-                            )),
-                      ],
-                    ),
-                  )),
-                ),
-              ])));
-}
-
 fetchUserInfo() async {
   {
     await firebaseFirestore
@@ -696,9 +525,9 @@ showPeopleForTask(BuildContext context, List usersList, VoidCallback refresh,
                                                                   contactId:
                                                                       data.uid,
                                                                   name: data
-                                                                      .username,
-                                                                  photoUrl: data
-                                                                      .photoUrl,
+                                                                      .firstName,
+                                                                  profilePicture: data
+                                                                      .profilePicture,
                                                                   timeSent:
                                                                       DateTime
                                                                           .now(),
@@ -742,7 +571,7 @@ showPeopleForTask(BuildContext context, List usersList, VoidCallback refresh,
                                 //         // showPeopleForTask(context, people);
                                 //       },
                                 //       style: ElevatedButton.styleFrom(
-                                //         backgroundColor: mainColor,
+                                //         backgroundColor: Palette.cuiPurple,
                                 //         shape: RoundedRectangleBorder(
                                 //           borderRadius:
                                 //               BorderRadius.circular(8),
@@ -1053,7 +882,7 @@ showPeopleForTask(BuildContext context, List usersList, VoidCallback refresh,
 //               model.isIncoming
 //                   ? Icons.call_received_rounded
 //                   : Icons.call_made_rounded,
-//               color: model.isIncoming ? Colors.orange : mainColor,
+//               color: model.isIncoming ? Colors.orange : Palette.cuiPurple,
 //               size: 18,
 //             ),
 //             Text(
@@ -1069,7 +898,7 @@ showPeopleForTask(BuildContext context, List usersList, VoidCallback refresh,
 //               children: [
 //                 Container(
 //                   decoration: BoxDecoration(
-//                       color: mainColor.withOpacity(0.1),
+//                       color: Palette.cuiPurple.withOpacity(0.1),
 //                       borderRadius: BorderRadius.circular(50)),
 //                   width: 45,
 //                   height: 45,
@@ -1078,7 +907,7 @@ showPeopleForTask(BuildContext context, List usersList, VoidCallback refresh,
 //                   model.isAudioCall
 //                       ? Icons.call_rounded
 //                       : Icons.video_call_rounded,
-//                   color: mainColor,
+//                   color: Palette.cuiPurple,
 //                 ),
 //               ],
 //             )),
@@ -1098,8 +927,8 @@ getContactCard(UserModel model, context, bool isChat,
               builder: (context) => ChatScreen(
                     contactModel: ChatContactModel(
                         contactId: model.uid,
-                        name: model.username,
-                        photoUrl: model.photoUrl,
+                        name: model.firstName,
+                        profilePicture: model.profilePicture,
                         timeSent: DateTime.now(),
                         lastMessageBy: "",
                         lastMessageId: "",
@@ -1116,12 +945,12 @@ getContactCard(UserModel model, context, bool isChat,
             children: [
               CircleAvatar(
                   radius: 25,
-                  backgroundImage: (model.photoUrl == ""
+                  backgroundImage: (model.profilePicture == ""
                       ? const AssetImage(
                           'assets/user.png',
                         )
                       : CachedNetworkImageProvider(
-                          model.photoUrl,
+                          model.profilePicture,
                           // maxWidth: 50,
                           // maxHeight: 50,
                           // fit: BoxFit.fitHeight,
@@ -1145,33 +974,33 @@ getContactCard(UserModel model, context, bool isChat,
             ],
           ),
           title: Text(
-            model.username,
+            model.firstName,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          subtitle: Row(
-            children: [
-              //   Icon(
-              //     Icons.message_rounded,
-              //     color: model.isIncoming ? Colors.orange : mainColor,
-              //     size: 18,
-              //   ),
-              Text(
-                model.location,
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
+          // subtitle: Row(
+          // children: [
+          //   Icon(
+          //     Icons.message_rounded,
+          //     color: model.isIncoming ? Colors.orange : Palette.cuiPurple,
+          //     size: 18,
+          //   ),
+          // Text(
+          //   model.location,
+          //   style:
+          //       const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          // ),
+          // ],
+          // ),
           trailing: shouldShow
               ? Container(
                   decoration: BoxDecoration(
-                      color: mainColor.withOpacity(0.1),
+                      color: Palette.cuiPurple.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(50)),
                   width: 45,
                   height: 45,
                   child: Icon(
                     isChat ? Icons.message_rounded : Icons.call,
-                    color: mainColor,
+                    color: Palette.cuiPurple,
                   ),
                 )
               : const Text(""),
@@ -1192,12 +1021,12 @@ getForwardCard(UserModel model, context) {
             children: [
               CircleAvatar(
                   radius: 35,
-                  backgroundImage: (model.photoUrl == ""
+                  backgroundImage: (model.profilePicture == ""
                       ? const AssetImage(
                           'assets/user.png',
                         )
                       : CachedNetworkImageProvider(
-                          model.photoUrl,
+                          model.profilePicture,
                           // maxWidth: 50,
                           // maxHeight: 50,
                           // fit: BoxFit.fitHeight,
@@ -1221,27 +1050,27 @@ getForwardCard(UserModel model, context) {
             ],
           ),
           title: Text(
-            model.username,
+            model.firstName,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          subtitle: Row(
-            children: [
-              Text(
-                model.location,
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
+          // subtitle: Row(
+          //   children: [
+          //     Text(
+          //       model.location,
+          //       style:
+          //           const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          //     ),
+          //   ],
+          // ),
           trailing: Container(
             decoration: BoxDecoration(
-                color: mainColor.withOpacity(0.1),
+                color: Palette.cuiPurple.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(50)),
             width: 45,
             height: 45,
             child: const Icon(
               Icons.arrow_forward_ios,
-              color: mainColor,
+              color: Palette.cuiPurple,
             ),
           )),
     ),
@@ -1297,7 +1126,7 @@ getForwardCard(UserModel model, context) {
 //                         color: Colors.black),
 //                   ),
 //                   circularStrokeCap: CircularStrokeCap.round,
-//                   progressColor: mainColor,
+//                   progressColor: Palette.cuiPurple,
 //                 ),
 //                 Column(
 //                   children: [
@@ -1491,12 +1320,12 @@ getPeopleCard(UserModel model, context, bool isSelected) {
             children: [
               CircleAvatar(
                   radius: 25,
-                  backgroundImage: (model.photoUrl == ""
+                  backgroundImage: (model.profilePicture == ""
                       ? const AssetImage(
                           'assets/user.png',
                         )
                       : CachedNetworkImageProvider(
-                          model.photoUrl,
+                          model.profilePicture,
                           // maxWidth: 50,
                           // maxHeight: 50,
                           // fit: BoxFit.fitHeight,
@@ -1504,27 +1333,27 @@ getPeopleCard(UserModel model, context, bool isSelected) {
             ],
           ),
           title: Text(
-            model.username,
+            model.firstName,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          subtitle: Row(
-            children: [
-              Text(
-                model.location,
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
+          // subtitle: Row(
+          //   children: [
+          //     Text(
+          //       model.location,
+          //       style:
+          //           const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          //     ),
+          // ],
+          // ),
           trailing: Container(
             decoration: BoxDecoration(
-                color: mainColor.withOpacity(0.1),
+                color: Palette.cuiPurple.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(50)),
             width: 45,
             height: 45,
             child: Icon(
               isSelected ? Icons.circle : Icons.circle,
-              color: isSelected ? mainColor : Colors.grey,
+              color: isSelected ? Palette.cuiPurple : Colors.grey,
             ),
           )),
     ),
@@ -1561,23 +1390,23 @@ getPeopleCard(UserModel model, context, bool isSelected) {
 //             },
 //             child: Container(
 //                 decoration: BoxDecoration(
-//                     // color: mainColor.withOpacity(0.1),
+//                     // color: Palette.cuiPurple.withOpacity(0.1),
 //                     borderRadius: BorderRadius.circular(10)),
 //                 width: 45,
 //                 height: 45,
 //                 child: Icon(
 //                   FontAwesomeIcons.circleCheck,
-//                   color: model.isCompleted ? mainColor : Colors.grey,
+//                   color: model.isCompleted ? Palette.cuiPurple : Colors.grey,
 //                 )),
 //             // child: Container(
 //             //     decoration: BoxDecoration(
-//             //         color: mainColor.withOpacity(0.1),
+//             //         color: Palette.cuiPurple.withOpacity(0.1),
 //             //         borderRadius: BorderRadius.circular(50)),
 //             //     width: 45,
 //             //     height: 45,
 //             //     child: Icon(
 //             //       Icons.circle,
-//             //       color: model.isCompleted ? mainColor : Colors.grey,
+//             //       color: model.isCompleted ? Palette.cuiPurple : Colors.grey,
 //             //     )),
 //           ),
 //           title: Text(
@@ -1679,41 +1508,6 @@ getNewChatPrompt(context) {
   );
 }
 
-//returs a widget that acts as a prompt
-getNewContactPrompt(context) {
-  return Center(
-    child: Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: SizedBox(
-        height: 150,
-        child: Card(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  "You dont have any contacts\nAdd a contact",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SearchScreen()));
-                  },
-                  child: const Text('Add a contact')),
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
 Future<String> getImage(String id, bool isGroup) async {
   if (isGroup) {
     return await firebaseFirestore
@@ -1733,7 +1527,7 @@ Future<String> getImage(String id, bool isGroup) async {
         .then((value) {
       UserModel val = UserModel.getValuesFromSnap(value);
 
-      return val.photoUrl;
+      return val.profilePicture;
     });
   }
 }
@@ -1759,7 +1553,7 @@ Future<List<String>> fetchImageUrlsFromUid(List peopleUid) async {
   List<String> peopleImages = [];
   for (var element in peopleUid) {
     UserModel temp = await FirestoreMethods().getUserInformationOther(element);
-    peopleImages.add(temp.photoUrl);
+    peopleImages.add(temp.profilePicture);
   }
   return peopleImages;
 }

@@ -74,7 +74,7 @@ class SenderMessageCard extends StatelessWidget {
                         bottomLeft: Radius.circular(15),
                         bottomRight: Radius.circular(15),
                       )),
-                      color: senderChatCardColor,
+                      color: Palette.cuiPurple,
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
                         children: [

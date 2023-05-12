@@ -10,7 +10,7 @@ import 'package:cui_messenger/chat/constants/message_reply.dart';
 import 'package:cui_messenger/chat/methods/info_storage_methods.dart';
 import 'package:cui_messenger/chat/models/chat_model.dart';
 import 'package:cui_messenger/chat/models/group.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/notification/bloc/notifications_provider.dart';
 
 import 'package:flutter/material.dart';
@@ -36,8 +36,8 @@ class ChatMethods {
     recieverUserData = UserModel.getValuesFromSnap(userDataMap);
 
     var senderChatContact = ChatContactModel(
-        name: recieverUserData.username,
-        photoUrl: recieverUserData.photoUrl,
+        name: recieverUserData.firstName,
+        profilePicture: recieverUserData.profilePicture,
         contactId: recieverUserData.uid,
         timeSent: timeSent,
         lastMessage: text,
@@ -74,8 +74,8 @@ class ChatMethods {
 // users -> reciever user id => chats -> current user id -> set data
       var recieverChatContact = ChatContactModel(
           // name: senderUserData.username,
-          name: senderUserData.username,
-          photoUrl: senderUserData.photoUrl,
+          name: senderUserData.firstName,
+          profilePicture: senderUserData.profilePicture,
           contactId: senderUserData.uid,
           timeSent: timeSent,
           lastMessage: text,
@@ -97,8 +97,8 @@ class ChatMethods {
 
       // users -> current user id  => chats -> reciever user id -> set data
       var senderChatContact = ChatContactModel(
-          name: recieverUserData!.username,
-          photoUrl: recieverUserData.photoUrl,
+          name: recieverUserData!.firstName,
+          profilePicture: recieverUserData.profilePicture,
           contactId: recieverUserData.uid,
           timeSent: timeSent,
           lastMessage: text,
@@ -304,10 +304,10 @@ class ChatMethods {
           timeSent: timeSent,
           messageType: val,
           messageId: messageId,
-          username: senderUser.username,
+          username: senderUser.firstName,
           messageReply: messageReply,
-          recieverUserName: recieverUserData?.username,
-          senderUsername: senderUser.username,
+          recieverUserName: recieverUserData?.firstName,
+          senderUsername: senderUser.firstName,
           isGroupChat: isGroupChat);
     } catch (e) {
       showFloatingFlushBar(context, "Error", e.toString());
@@ -373,11 +373,11 @@ class ChatMethods {
             : imageUrl,
         timeSent: timeSent,
         messageId: messageId,
-        username: senderUserData.username,
+        username: senderUserData.firstName,
         messageType: messageEnum,
         messageReply: messageReply,
-        recieverUserName: recieverUserData?.username,
-        senderUsername: senderUserData.username,
+        recieverUserName: recieverUserData?.firstName,
+        senderUsername: senderUserData.firstName,
         isGroupChat: isGroupChat,
       );
     } catch (e) {
@@ -451,11 +451,11 @@ class ChatMethods {
           text: fileUrl,
           timeSent: timeSent,
           messageId: messageId,
-          username: senderUserData.username,
+          username: senderUserData.firstName,
           messageType: messageEnum,
           messageReply: messageReply,
-          recieverUserName: recieverUserData?.username,
-          senderUsername: senderUserData.username,
+          recieverUserName: recieverUserData?.firstName,
+          senderUsername: senderUserData.firstName,
           isGroupChat: isGroupChat);
     } catch (e) {
       showFloatingFlushBar(context, "Error", e.toString());

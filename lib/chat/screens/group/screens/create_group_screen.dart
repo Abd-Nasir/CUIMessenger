@@ -1,14 +1,12 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/constants/utils.dart';
 import 'package:cui_messenger/chat/methods/storage_methods.dart';
 import 'package:cui_messenger/chat/models/group.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
-import 'package:cui_messenger/chat/screens/group/screens/users_screen.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:uuid/uuid.dart';
@@ -203,7 +201,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           },
           label: const Text('Add People'),
           icon: const Icon(Icons.people),
-          backgroundColor: mainColor,
+          backgroundColor: Palette.cuiPurple,
         ));
   }
 }

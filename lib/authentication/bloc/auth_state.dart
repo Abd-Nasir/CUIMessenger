@@ -1,10 +1,8 @@
-import 'package:cui_messenger/authentication/model/user.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-// import '/authentication/model/user.dart';
 
 class AuthState extends Equatable {
-  final UserData? user;
+  final UserModel? user;
 
   const AuthState(this.user);
 
@@ -13,50 +11,50 @@ class AuthState extends Equatable {
 }
 
 class AuthStateLoading extends AuthState {
-  const AuthStateLoading(UserData? user) : super(user);
+  const AuthStateLoading(UserModel? user) : super(user);
 }
 
 class AuthStateStudentLogin extends AuthState {
-  const AuthStateStudentLogin(UserData? user) : super(user);
+  const AuthStateStudentLogin(UserModel? user) : super(user);
 }
 
 class AuthStateTeacherLogin extends AuthState {
-  const AuthStateTeacherLogin(UserData? user) : super(user);
+  const AuthStateTeacherLogin(UserModel? user) : super(user);
 }
 
 class AuthStateLoggedIn extends AuthState {
-  const AuthStateLoggedIn(UserData? user) : super(user);
+  const AuthStateLoggedIn(UserModel? user) : super(user);
 }
 
 class AuthStateLoggedOut extends AuthState {
-  const AuthStateLoggedOut(UserData? user) : super(user);
+  const AuthStateLoggedOut(UserModel? user) : super(user);
 }
 
 class AuthStateNeedsVerification extends AuthState {
-  const AuthStateNeedsVerification(UserData? user) : super(user);
+  const AuthStateNeedsVerification(UserModel? user) : super(user);
 }
 
 class AuthStateStudentLoginFailure extends AuthState {
   final Exception exception;
-  const AuthStateStudentLoginFailure(this.exception, UserData? user)
+  const AuthStateStudentLoginFailure(this.exception, UserModel? user)
       : super(user);
 }
 
 class AuthStateFacultyLoginFailure extends AuthState {
   final Exception exception;
-  const AuthStateFacultyLoginFailure(this.exception, UserData? user)
+  const AuthStateFacultyLoginFailure(this.exception, UserModel? user)
       : super(user);
 }
 
 class AuthStateLogOutFailure extends AuthState {
   final Exception exception;
-  const AuthStateLogOutFailure(this.exception, UserData? user) : super(user);
+  const AuthStateLogOutFailure(this.exception, UserModel? user) : super(user);
 }
 
 class AuthStateNotificationError extends AuthState {
-  const AuthStateNotificationError(UserData? user) : super(user);
+  const AuthStateNotificationError(UserModel? user) : super(user);
 }
 
 class AuthStateLocationError extends AuthState {
-  const AuthStateLocationError(UserData? user) : super(user);
+  const AuthStateLocationError(UserModel? user) : super(user);
 }

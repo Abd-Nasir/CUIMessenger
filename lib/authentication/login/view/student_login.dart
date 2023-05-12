@@ -4,7 +4,7 @@ import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +21,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool passwordVisible = false;
 
-  final _firebaseInstance = FirebaseAuth.instance;
+  // final firebaseInstance = FirebaseAuth.instance;
   void signIn() {
     try {
       if (formKey.currentState!.validate()) {
@@ -167,10 +167,10 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                             filled: true,
                             fillColor: Colors.white,
                             labelText: 'Password',
-                            labelStyle:
-                                TextStyle(color: Palette.cuiBlue, fontSize: 18),
+                            labelStyle: const TextStyle(
+                                color: Palette.cuiBlue, fontSize: 18),
                             hintText: 'Enter Password',
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15))),

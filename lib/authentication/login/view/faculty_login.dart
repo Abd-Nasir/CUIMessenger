@@ -161,10 +161,10 @@ class _FacultyLoginScreenState extends State<FacultyLoginScreen> {
                           filled: true,
                           fillColor: Colors.white,
                           labelText: 'Password',
-                          labelStyle:
-                              TextStyle(color: Palette.cuiBlue, fontSize: 18),
+                          labelStyle: const TextStyle(
+                              color: Palette.cuiBlue, fontSize: 18),
                           hintText: 'Enter Password',
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),

@@ -27,7 +27,7 @@ class _ImagePreviewSendingState extends State<ImagePreviewSending> {
         file: widget.imagePath,
         recieverUserId: widget.contactId,
         messageEnum: MessageEnum.image,
-        senderUserData: userInfo,
+        senderUserData: userInfo!,
         messageReply: null,
         isGroupChat: widget.isGroupChat);
   }

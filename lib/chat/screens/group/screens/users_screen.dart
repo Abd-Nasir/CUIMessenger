@@ -3,9 +3,9 @@ import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/methods/chat_methods.dart';
 import 'package:cui_messenger/chat/models/chat_model.dart';
-import 'package:cui_messenger/chat/models/user_model.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/chat_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class AddPeople extends StatefulWidget {
@@ -82,23 +82,22 @@ class _AddPeopleState extends State<AddPeople> {
                                         onTap: () {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ChatScreen(
-                                                      contactModel:
-                                                          ChatContactModel(
+                                                builder:
+                                                    (context) => ChatScreen(
+                                                          contactModel: ChatContactModel(
                                                               contactId:
                                                                   data.uid,
-                                                              name:
-                                                                  data.username,
-                                                              photoUrl:
-                                                                  data.photoUrl,
+                                                              name: data
+                                                                  .firstName,
+                                                              profilePicture: data
+                                                                  .profilePicture,
                                                               timeSent: DateTime
                                                                   .now(),
                                                               lastMessageBy: "",
                                                               lastMessageId: "",
                                                               isSeen: false,
                                                               lastMessage: ""),
-                                                    )),
+                                                        )),
                                           );
                                         },
                                         child: getForwardCard(data, context))
@@ -106,7 +105,7 @@ class _AddPeopleState extends State<AddPeople> {
                                         onTap: () async {
                                           DocumentSnapshot document =
                                               await getDocumentById(
-                                                  userInfo.uid);
+                                                  userInfo!.uid);
 
                                           // print(document.data['']);
 
@@ -129,7 +128,7 @@ class _AddPeopleState extends State<AddPeople> {
                                               print(data.uid);
                                               FirebaseFirestore.instance
                                                   .collection('groups')
-                                                  .doc(userInfo.uid)
+                                                  .doc(userInfo!.uid)
                                                   .update({
                                                 'membersUid': widget.usersList
                                               });

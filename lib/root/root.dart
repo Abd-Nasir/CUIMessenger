@@ -1,38 +1,15 @@
-import 'dart:async';
-import 'package:cui_messenger/chatnotusing/view/chat_home_screen.dart';
 import 'package:cui_messenger/feed/view/feed_screen.dart';
-import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/screens/group/screens/create_group_screen.dart';
-import 'package:cui_messenger/chat/screens/search_screen.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/chat_list_screen.dart';
 import 'package:cui_messenger/notification/view/notifications.dart';
 import 'package:cui_messenger/settings/view/settings.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:cui_messenger/authentication/model/user.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import '/authentication/model/user.dart';
-// import 'package:safepall/screens/chat/view/chat_home_screen.dart';
-// import 'package:safepall/screens/contacts/bloc/contact_bloc.dart';
-// import 'package:safepall/screens/contacts/bloc/contact_event.dart';
-// import 'package:safepall/screens/contacts/bloc/contact_state.dart';
-// import 'package:safepall/screens/contacts/model/add_location_model.dart';
-// import 'package:safepall/screens/contacts/model/contact.dart';
-// import 'package:safepall/screens/contacts/view/contacts_list.dart';
-// import 'package:safepall/screens/feeds/view/feed_screen.dart';
 import '/helpers/style/colors.dart';
-import '/home/homepage.dart';
-// import 'package:safepall/screens/lang/app_localization.dart';
-// import 'package:safepall/screens/maps/bloc/map_bloc.dart';
-// import 'package:safepall/screens/maps/bloc/map_event.dart';
-// import 'package:safepall/screens/maps/view/maps_screen.dart';
-// import 'package:safepall/screens/notifications/bloc/notifications_bloc.dart';
-// import 'package:safepall/screens/notifications/bloc/notifications_event.dart';
-// import '../settings/view/settings.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({Key? key}) : super(key: key);
@@ -195,7 +172,7 @@ class _RootPageState extends State<RootPage> {
 }
 
 class MenuItemsHome {
-  static List<MenuItem> firstItems = [newChat, newContact, newGroup];
+  static List<MenuItem> firstItems = [newChat, newGroup];
   // static List<MenuItem> secondItems = [logout];
 
   static var newChat = const MenuItem(
@@ -203,8 +180,8 @@ class MenuItemsHome {
     icon: FontAwesomeIcons.commentDots,
   );
 
-  static var newContact =
-      const MenuItem(text: 'New Contact', icon: Icons.people);
+  // static var newContact =
+  //     const MenuItem(text: 'New Contact', icon: Icons.people);
 
   static var newGroup =
       const MenuItem(text: "New Group", icon: Icons.groups_rounded);
@@ -231,13 +208,9 @@ class MenuItemsHome {
     BuildContext context,
     MenuItem item,
     Function newChatCallBack,
-    // Function newCallCallBack,
   ) {
     if (item == MenuItemsHome.newChat) {
       newChatCallBack(context);
-    } else if (item == MenuItemsHome.newContact) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const SearchScreen()));
     } else if (item == MenuItemsHome.newGroup) {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => const CreateGroupScreen()));

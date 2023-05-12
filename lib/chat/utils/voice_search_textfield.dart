@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
@@ -72,7 +73,7 @@ class _VoiceSearchTextFieldState extends State<VoiceSearchTextField> {
             },
             decoration: InputDecoration(
               filled: true,
-              fillColor: greyColor.withOpacity(0.1),
+              fillColor: Palette.grey.withOpacity(0.1),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
               labelText: 'Search',

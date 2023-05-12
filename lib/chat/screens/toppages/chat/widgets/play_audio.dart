@@ -155,8 +155,8 @@ class _PlayAudioState extends State<PlayAudio> {
                                   return ProgressBar(
                                     thumbColor: Palette.cuiPurple,
                                     thumbRadius: 8,
-                                    timeLabelTextStyle:
-                                        const TextStyle(color: mainColor),
+                                    timeLabelTextStyle: const TextStyle(
+                                        color: Palette.cuiPurple),
                                     baseBarColor:
                                         Palette.cuiPurple.withOpacity(0.5),
                                     progress: snapshot.data ?? Duration.zero,

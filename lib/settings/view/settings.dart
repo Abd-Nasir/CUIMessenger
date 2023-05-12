@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/bloc/auth_provider.dart';
 import 'package:cui_messenger/authentication/model/user.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -26,7 +27,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool emergencyAlarm = false;
-  UserData? currentUser;
+  UserModel? currentUser;
   // late String imageUrl = "http://cdn.onlinewebfonts.com/svg/img_401900.png";
 
   @override

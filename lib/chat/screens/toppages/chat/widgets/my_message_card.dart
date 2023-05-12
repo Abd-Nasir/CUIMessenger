@@ -87,7 +87,7 @@ class MyMessageCard extends StatelessWidget {
                       child: Padding(
                           padding: const EdgeInsets.all(15),
                           child: DisplayTextImageGIF(
-                              photoUrl: userInfo.photoUrl,
+                              photoUrl: userInfo!.profilePicture,
                               message: message,
                               type: type,
                               isSender: true)),

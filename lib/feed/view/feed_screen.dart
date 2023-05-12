@@ -11,7 +11,7 @@ import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
+
 import 'new_post_screen.dart';
 
 enum postOptions { editPost, deletePost }
@@ -44,14 +44,14 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   postOptions? selectedMenu;
-  int _counter = 0;
-  // bool isLoading = true;
+
+  bool isLoading = true;
   @override
   void initState() {
-    // Future.delayed(Duration(seconds: 1)).then((value) {
-    //   isLoading = false;
-    //   setState(() {});
-    // });
+    Future.delayed(Duration(seconds: 1)).then((value) {
+      isLoading = false;
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -95,27 +95,33 @@ class _FeedScreenState extends State<FeedScreen> {
               BlocProvider.of<PostBloc>(context)
                   .add(const LoadPostsFromDatabase());
             },
-            child: ListView.builder(
-                reverse: true,
-                itemCount: state.postProvider.posts.length,
-                itemBuilder: (BuildContext context, index) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 4,
-                    margin: const EdgeInsets.only(
-                      top: 20,
-                      left: 20,
-                      right: 20,
-                      bottom: 0,
+            child: isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: Palette.cuiPurple,
                     ),
-                    child: postCard(
-                      // context: context,
-                      mediaQuery: mediaQuery,
-                      post: state.postProvider.posts[index],
-                    ),
-                  );
-                }),
+                  )
+                : ListView.builder(
+                    reverse: true,
+                    itemCount: state.postProvider.posts.length,
+                    itemBuilder: (BuildContext context, index) {
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        elevation: 4,
+                        margin: const EdgeInsets.only(
+                          top: 20,
+                          left: 20,
+                          right: 20,
+                          bottom: 0,
+                        ),
+                        child: postCard(
+                          // context: context,
+                          mediaQuery: mediaQuery,
+                          post: state.postProvider.posts[index],
+                        ),
+                      );
+                    }),
           );
         }),
       ),
