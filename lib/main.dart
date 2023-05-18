@@ -10,6 +10,7 @@ import 'package:cui_messenger/feed/bloc/post_provider.dart';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/notification/bloc/notifications_bloc.dart';
+import 'package:cui_messenger/notification/bloc/notifications_event.dart';
 import 'package:cui_messenger/notification/bloc/notifications_provider.dart';
 import 'package:cui_messenger/settings/bloc/settings_bloc.dart';
 import 'package:cui_messenger/settings/bloc/settings_event.dart';
@@ -68,15 +69,6 @@ void main() async {
       setting = Setting(
         chatNotifications: false,
         noticeNotification: false,
-        // languageCode: "es",
-        // countryCode: "ES",
-        // fingerprint: false,
-        // emeAlarm: false,
-        // dangerzoneAlert: false,
-        // opensFirst: true,
-        // notifications: status[Permission.notification] !=
-        //     PermissionStatus.permanentlyDenied,
-        // geoFenceActive: false,
       );
     } else {
       setting = settingMap;
@@ -149,9 +141,8 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<NotificationBloc>(
             lazy: true,
-            create: (context) => NotificationBloc(
-              notificationProvider..loadNotifications(),
-            ),
+            create: (context) => NotificationBloc(notificationProvider)
+              ..add(const InitializeNotificationEvent()),
           ),
           BlocProvider<SettingsBloc>(
             lazy: true,

@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
 
 import 'package:cui_messenger/notification/model/myNotification.dart';
+import 'package:cui_messenger/notification/model/notices.dart';
 import 'package:cui_messenger/notification/model/notification.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:firebase_auth/firebase_auth.dart' as fb;
 // import 'package:overlay_support/overlay_support.dart';
 // import 'package:safepall/screens/authentication/model/user.dart' as user_model;
 // import 'package:sendbird_sdk/sendbird_sdk.dart';
@@ -17,6 +17,7 @@ class NotificationProvider {
   // User? user;
   // GroupChannel? currentChannel;
   List<NotificationModel> notifications = [];
+  List<NoticesModel> notices = [];
 
   // List<BaseMessage> messages = List.empty(growable: true);
 
@@ -32,21 +33,18 @@ class NotificationProvider {
     });
   }
 
-  // void sendNotificationRange() {
-  //   fb.User? user = fb.FirebaseAuth.instance.currentUser;
-  //   FirebaseFirestore.instance
-  //       .collection("registered-users")
-  //       .get()
-  //       .then((snapshot) {
-  //     if (snapshot.docs.isNotEmpty) {
-  //       for (int i = 0; i < snapshot.docs.length; i++) {
-  //         if (snapshot.docs[i].data()['uid'] != user!.uid) {
-  //           getToken(snapshot.docs[i].data()['uid']);
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
+  Future<void> loadNotices() async {
+    await FirebaseFirestore.instance
+        .collection('public-noticeboard')
+        .get()
+        .then((value) {
+      print(value.docs.first.data());
+      notices.clear();
+      for (var value in value.docs) {
+        notices.add(NoticesModel.fromJson(value.data()));
+      }
+    });
+  }
 
   void getToken(String uid) {
     String? token;

@@ -1,9 +1,19 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/authentication/bloc/auth_event.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:folder_file_saver/folder_file_saver.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:path_provider/path_provider.dart';
+
+import '../../../notification/bloc/notifications_bloc.dart';
+import '../../../notification/bloc/notifications_event.dart';
+import '../../../notification/bloc/notifications_state.dart';
 
 class SelectUserScreen extends StatefulWidget {
   const SelectUserScreen({super.key});
@@ -16,28 +26,34 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
   bool isTeacher = false;
   bool isStudent = false;
   final List<Map> notices = [];
-  bool isLoading = true;
+  bool isLoading = false;
 
-  void loadNotices() async {
-    await FirebaseFirestore.instance
-        .collection("public-noticeboard")
-        .get()
-        .then((value) {
-      value.docs.forEach((notice) {
-        notices.add(notice.data());
-      });
-      // print(notices);
-    });
+  void loading() async {
+    // await FirebaseFirestore.instance
+    //     .collection("public-noticeboard")
+    //     .get()
+    //     .then((value) {
+    //   value.docs.forEach((notice) {
+    //     notices.add(notice.data());
+    //   });
+    //   // print(notices);
+    // });
     setState(() {
-      isLoading = false;
+      isLoading = true;
+    });
+    Future.delayed(const Duration(seconds: 2)).then((value) {
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
   @override
   void initState() {
     // Future.delayed(const Duration(seconds: 0), () {
-    loadNotices();
+    // loadNotices();
     // });
+    loading();
 
     super.initState();
   }
@@ -112,42 +128,182 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                         color: Palette.white,
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: mediaQuery.size.width * 0.03),
-                        height: mediaQuery.size.height * 0.33,
-                        child: isLoading
-                            ? const Center(
-                                child: CircularProgressIndicator(
-                                  color: Palette.yellow,
-                                ),
-                              )
-                            : ListView.builder(
-                                itemCount: notices.length,
-                                itemBuilder: ((context, index) {
-                                  return Column(
-                                    // mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        notices[index]["noticeTitle"],
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            color: Palette.yellow,
-                                            fontWeight: FontWeight.bold),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: mediaQuery.size.width * 0.03),
+                          height: mediaQuery.size.height * 0.33,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                              top: mediaQuery.size.height * 0.01,
+                            ),
+                            width: mediaQuery.size.width,
+                            // height: mediaQuery.size.height * 0.82,
+                            child: BlocBuilder<NotificationBloc,
+                                NotificationState>(builder: (context, state) {
+                              if (NotificationState
+                                  is NotificationStateLoadSuccess) {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Palette.yellow,
+                                  ),
+                                );
+                              }
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  BlocProvider.of<NotificationBloc>(context)
+                                      .add(const InitializeNotificationEvent());
+                                },
+                                child: isLoading
+                                    ? const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Palette.yellow,
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        itemCount: state.notificationProvider
+                                            .notices.length,
+                                        itemBuilder: ((context, index) {
+                                          return Column(
+                                            // mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                state.notificationProvider
+                                                    .notices[index].noticeTitle,
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    color: Palette.yellow,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                state.notificationProvider
+                                                    .notices[index].noticeText,
+                                                style: const TextStyle(
+                                                    color: Palette.white),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              if (state
+                                                      .notificationProvider
+                                                      .notices[index]
+                                                      .fileName !=
+                                                  "")
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    print("ontap");
+                                                    File checkFile = File(
+                                                        "/storage/emulated/0/Documents/CUI Messenger /Documents/${state.notificationProvider.notices[index].fileName}");
+
+                                                    if (await checkFile
+                                                        .exists()) {
+                                                      print("exists");
+                                                      showSimpleNotification(
+                                                        const Text(
+                                                          "document-already-saved",
+                                                          style: TextStyle(
+                                                            color:
+                                                                Palette.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        background: Palette
+                                                            .orange
+                                                            .withOpacity(0.9),
+                                                        slideDismissDirection:
+                                                            DismissDirection
+                                                                .startToEnd,
+                                                      );
+                                                    } else {
+                                                      var response = await Dio().get(
+                                                          state
+                                                              .notificationProvider
+                                                              .notices[index]
+                                                              .fileUrl!,
+                                                          options: Options(
+                                                              responseType:
+                                                                  ResponseType
+                                                                      .bytes));
+                                                      print(
+                                                          "Response: $response");
+                                                      // final iosDirectory =
+                                                      //     await getApplicationSupportDirectory();
+                                                      final dir = Platform.isIOS
+                                                          ? await getApplicationSupportDirectory()
+                                                          : await getApplicationDocumentsDirectory();
+                                                      print(dir.path);
+                                                      File savedFile = await File(
+                                                              "${dir.path}/${state.notificationProvider.notices[index].fileName}")
+                                                          .writeAsBytes(
+                                                              response.data);
+
+                                                      if (Platform.isAndroid) {
+                                                        final result1 =
+                                                            await FolderFileSaver
+                                                                .saveFileIntoCustomDir(
+                                                                    dirNamed:
+                                                                        "/Documents",
+                                                                    filePath:
+                                                                        savedFile
+                                                                            .path,
+                                                                    removeOriginFile:
+                                                                        true);
+                                                        print(result1);
+                                                        if (result1 != null) {
+                                                          showSimpleNotification(
+                                                            const Text(
+                                                              "Document already saved in app directory!",
+                                                              style: TextStyle(
+                                                                color: Palette
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            background: Palette
+                                                                .green
+                                                                .withOpacity(
+                                                                    0.9),
+                                                            slideDismissDirection:
+                                                                DismissDirection
+                                                                    .startToEnd,
+                                                          );
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.download_outlined,
+                                                        color: Palette.yellow,
+                                                        size: 18,
+                                                      ),
+                                                      Text(
+                                                        state
+                                                            .notificationProvider
+                                                            .notices[index]
+                                                            .fileName!,
+                                                        style: const TextStyle(
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline,
+                                                            color:
+                                                                Palette.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              const SizedBox(height: 20),
+                                            ],
+                                          );
+                                        }),
                                       ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        " ${notices[index]["noticeText"]}",
-                                        style: const TextStyle(
-                                            color: Palette.white),
-                                      ),
-                                      const SizedBox(height: 20),
-                                    ],
-                                  );
-                                }),
-                              ),
-                      ),
+                              );
+                            }),
+                          ))
                     ],
                   )),
             ),

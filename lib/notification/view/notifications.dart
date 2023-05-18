@@ -1,15 +1,12 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:folder_file_saver/folder_file_saver.dart';
-import 'package:http/http.dart' as http;
 // import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 // import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/notification/bloc/notifications_bloc.dart';
 import 'package:cui_messenger/notification/bloc/notifications_event.dart';
-import 'package:cui_messenger/notification/bloc/notifications_provider.dart';
 import 'package:cui_messenger/notification/bloc/notifications_state.dart';
-import 'package:cui_messenger/notification/model/myNotification.dart';
 // import 'package:flowder/flowder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,32 +39,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
     super.initState();
   }
 
-  // Future<void> initPlatformState() async {
-  //   _setPath();
-  //   if (!mounted) return;
-  // }
-
-  // void _setPath() async {
-  //   Directory _path = await getApplicationDocumentsDirectory();
-  //   String localPath = '${_path.path}${Platform.pathSeparator}Download';
-  //   final savedDir = Directory(localPath);
-  //   bool hasExisted = await savedDir.exists();
-  //   if (!hasExisted) {
-  //     savedDir.create();
-  //   }
-  //   path = localPath;
-  //   print('Path is $path');
-  // }
-
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
 
     return Scaffold(
-      // backgroundColor:
-      // BlocProvider.of<SettingsBloc>(context).state.provider.isDarkMode!
-      //     ? Palette.black
-      //     : Palette.white,
       body: SafeArea(
         bottom: false,
         child: Container(
@@ -131,8 +107,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         )
                       : RefreshIndicator(
                           onRefresh: () async {
-                            BlocProvider.of<NotificationBloc>(context)
-                                .add(const LoadUserEmeMessageEvent());
+                            //   BlocProvider.of<NotificationBloc>(context)
+                            //       .add(const LoadUserEmeMessageEvent());
                           },
                           child: ListView.builder(
                             shrinkWrap: true,
@@ -271,46 +247,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                       }
                                     }
                                   },
-                                  // onTap: () async {
-                                  //   final url = state.notificationProvider
-                                  //       .notifications[index].fileUrl!;
-                                  //   print(url);
-                                  //   final response =
-                                  //       await http.get(Uri.parse(url));
-                                  //   print("response $response");
-                                  //   final bytes = response.bodyBytes;
-                                  //   final String fileName =
-                                  //       url.substring(url.lastIndexOf("/") + 1);
-                                  //   print(fileName);
-
-                                  //   final directory =
-                                  //       await getApplicationDocumentsDirectory();
-                                  //   print(directory);
-                                  //   final file =
-                                  //       File('${directory.path}/$fileName');
-
-                                  //   var here = await file.writeAsBytes(bytes);
-                                  //   print(here.path);
-                                  //   // var options = DownloaderUtils(
-                                  //   //   progressCallback: (current, total) {
-                                  //   //     final progress =
-                                  //   //         (current / total) * 100;
-                                  //   //     print('Downloading: $progress');
-                                  //   //   },
-                                  //   //   file: File('$path/loremipsum.pdf'),
-                                  //   //   progress: ProgressImplementation(),
-                                  //   //   onDone: () {
-                                  //   //     print('done');
-                                  //   //     OpenFile.open('$path/loremipsum.pdf');
-                                  //   //   },
-                                  //   //   deleteOnCancel: true,
-                                  //   // );
-                                  //   // await Flowder.download(
-                                  //   //   state.notificationProvider
-                                  //   //       .notifications[index].fileUrl!,
-                                  //   //   options,
-                                  //   // );
-                                  // },
                                 ),
                               );
                             },

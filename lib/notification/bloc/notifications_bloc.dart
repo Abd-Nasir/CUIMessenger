@@ -12,6 +12,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
           NotificationStateLoading(notificationProvider: notificationProvider));
 
       await notificationProvider.loadNotifications();
+      await notificationProvider.loadNotices();
       emit(NotificationStateLoadSuccess(
           notificationProvider: notificationProvider));
     });
