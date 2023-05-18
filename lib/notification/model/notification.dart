@@ -4,6 +4,7 @@ class NotificationModel {
   late String message;
   // late String userImage;
   late String? fileUrl;
+  late String? fileName;
   late DateTime createdAt;
 
   NotificationModel({
@@ -11,26 +12,27 @@ class NotificationModel {
     required this.title,
     required this.message,
     required this.fileUrl,
+    required this.fileName,
     required this.createdAt,
   });
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    message = json['message'];
-    fileUrl = json['file-url'] ?? "";
-
+    id = json['notificationId'];
+    title = json['notificationTitle'];
+    message = json['notificationText'];
+    fileUrl = json['fileUrl'] ?? "";
+    fileName = json['fileName'] ?? "";
     createdAt = DateTime.parse(json['createdAt']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
 
-    data['id'] = id;
-
-    data['title'] = title;
-    data['message'] = message;
-    data['file-url'] = fileUrl ?? "";
+    data['notificationId'] = id;
+    data['notificationTitle'] = title;
+    data['notificationText'] = message;
+    data['fileUrl'] = fileUrl ?? "";
+    data['fileName'] = fileName ?? "";
     data['createdAt'] = createdAt.toIso8601String();
 
     return data;

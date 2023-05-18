@@ -1,4 +1,3 @@
-import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/message_reply.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/display_text_image_file.dart';

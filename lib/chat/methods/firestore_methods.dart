@@ -1,46 +1,8 @@
-import 'dart:developer';
-
 import 'package:cui_messenger/chat/constants/constants.dart';
 
 import 'package:cui_messenger/authentication/model/user_model.dart';
 
 class FirestoreMethods {
-  // setNotificationHistory(String receiver, String senderId,
-  //     String notificationTitle, String notificationSubtitle) async {
-  //   NotificationModel model = NotificationModel(
-  //       notificationTitle: notificationTitle,
-  //       datePublished: DateTime.now(),
-  //       uid: senderId,
-  //       notificationSubtitle: notificationSubtitle);
-  //   await firebaseFirestore
-  //       .collection('users')
-  //       .doc(receiver)
-  //       .collection('notifications')
-  //       .doc()
-  //       .set(model.toJson());
-  // }
-
-  // Future<List<NotificationModel>> getNotificationsList() {
-  //   return firebaseFirestore
-  //       .collection('users')
-  //       .doc(firebaseAuth.currentUser!.uid)
-  //       .collection('notifications')
-  //       .orderBy('datePublished', descending: true)
-  //       .get()
-  //       .then((event) async {
-  //     List<NotificationModel> contacts = [];
-  //     for (var document in event.docs) {
-  //       try {
-  //         var chatContact = NotificationModel.fromSnap(document);
-  //         contacts.add(chatContact);
-  //       } catch (e) {
-  //         log(e.toString());
-  //       }
-  //     }
-  //     return contacts;
-  //   });
-  // }
-
   void setUserStateCall(bool isInCall) async {
     await firebaseFirestore
         .collection('registered-users')
@@ -49,22 +11,6 @@ class FirestoreMethods {
       'isInCall': isInCall,
     });
   }
-
-  // //adding an appointment
-  // Future<String> addAppoinment(AppointmentModel model) async {
-  //   String res = "Some error occurred";
-  //   try {
-  //     //if the fields are not empty than registering the user
-  //     await firebaseFirestore
-  //         .collection("appointment")
-  //         .doc()
-  //         .set(model.toJson());
-  //     res = "Success";
-  //   } on FirebaseAuthException catch (err) {
-  //     res = err.message.toString();
-  //   }
-  //   return res;
-  // }
 
   // //adding a record
   // Future<String> addRecord(String name, RecordsModel model) async {

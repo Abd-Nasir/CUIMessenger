@@ -154,10 +154,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user != null) {
           if (FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateLoggedIn(user));
-            // print("Pushing to home page!");]
-            //TODO: Push to homepage
-            // RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
-            //     home, (route) => route.isFirst);
           } else {
             FirebaseAuth.instance.currentUser!.sendEmailVerification();
             emit(AuthStateNeedsVerification(user));
@@ -178,10 +174,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user != null) {
           if (FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateLoggedIn(user));
-            // print("Pushing to home page!");]
-            //TODO: Push to homepage
-            // RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
-            //     home, (route) => route.isFirst);
           } else {
             FirebaseAuth.instance.currentUser!.sendEmailVerification();
             emit(AuthStateNeedsVerification(user));

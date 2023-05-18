@@ -30,7 +30,7 @@ class _CommentBoxState extends State<CommentBox> {
           iconTheme: const IconThemeData(color: Colors.black),
           elevation: 0,
           title: const Text(
-            'Comments',
+            'Suggestions',
             style: TextStyle(fontSize: 20, color: Colors.black),
           ),
           backgroundColor: Palette.cuiOffWhite,
@@ -44,8 +44,10 @@ class _CommentBoxState extends State<CommentBox> {
                 .snapshots(),
             builder: (context, AsyncSnapshot snapshot) {
               var data = snapshot.data.docs;
-
-              if (snapshot.hasData) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.data.docs.length > 0) {
                 return Column(
                   children: [
                     Expanded(
@@ -151,7 +153,7 @@ class _CommentBoxState extends State<CommentBox> {
                                                   Container(
                                                     width:
                                                         mediaQuery.size.width *
-                                                            0.75,
+                                                            0.72,
                                                     // color: Palette.cuiBlue,
                                                     padding:
                                                         const EdgeInsets.only(
@@ -170,42 +172,206 @@ class _CommentBoxState extends State<CommentBox> {
                                         ),
                                         SizedBox(
                                           // height: mediaQuery.size.height * 0.18,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              IconButton(
-                                                splashRadius: 5,
-                                                icon: const Icon(
-                                                    Icons.arrow_drop_up),
-                                                iconSize: 30,
-                                                color: Palette.grey,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _counter++;
-                                                  });
-                                                },
-                                              ),
-                                              Text(
-                                                '$_counter',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              IconButton(
-                                                splashRadius: 5,
-                                                icon: const Icon(
-                                                    Icons.arrow_drop_down),
-                                                iconSize: 30,
-                                                color: Palette.grey,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _counter--;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
+                                          child: StreamBuilder(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection("posts")
+                                                  .doc(widget.postId)
+                                                  .collection('comments')
+                                                  .doc(comment.commentId)
+                                                  .collection('likes')
+                                                  .snapshots(),
+                                              builder: (context,
+                                                  AsyncSnapshot snapshot) {
+                                                return Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                            '${snapshot.data.docs.length}'),
+                                                        StreamBuilder(
+                                                            stream: FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    "posts")
+                                                                .doc(widget
+                                                                    .postId)
+                                                                .collection(
+                                                                    'comments')
+                                                                .doc(comment
+                                                                    .commentId)
+                                                                .collection(
+                                                                    'likes')
+                                                                .doc(currentUser
+                                                                    .uid)
+                                                                .snapshots(),
+                                                            builder: (context,
+                                                                AsyncSnapshot
+                                                                    iconSnapshot) {
+                                                              return IconButton(
+                                                                splashRadius: 2,
+                                                                icon: const Icon(
+                                                                    Icons
+                                                                        .thumb_up_alt_rounded),
+                                                                iconSize: 20,
+                                                                color: iconSnapshot
+                                                                            .data
+                                                                            ?.data() !=
+                                                                        null
+                                                                    ? Palette
+                                                                        .yellow
+                                                                    : Palette
+                                                                        .grey,
+                                                                onPressed: () {
+                                                                  final likeRef = FirebaseFirestore
+                                                                      .instance
+                                                                      .collection(
+                                                                          "posts")
+                                                                      .doc(widget
+                                                                          .postId)
+                                                                      .collection(
+                                                                          'comments')
+                                                                      .doc(comment
+                                                                          .commentId)
+                                                                      .collection(
+                                                                          'likes')
+                                                                      .doc(currentUser
+                                                                          .uid);
+
+                                                                  likeRef
+                                                                      .get()
+                                                                      .then(
+                                                                          (value) {
+                                                                    if (value
+                                                                            .data() ==
+                                                                        null) {
+                                                                      likeRef
+                                                                          .set({
+                                                                        "uid": currentUser
+                                                                            .uid,
+                                                                        "name": currentUser.firstName +
+                                                                            currentUser.lastName,
+                                                                      });
+                                                                      FirebaseFirestore
+                                                                          .instance
+                                                                          .collection(
+                                                                              "posts")
+                                                                          .doc(widget
+                                                                              .postId)
+                                                                          .collection(
+                                                                              'comments')
+                                                                          .doc(comment
+                                                                              .commentId)
+                                                                          .collection(
+                                                                              'dislikes')
+                                                                          .doc(currentUser
+                                                                              .uid)
+                                                                          .delete();
+                                                                    } else {
+                                                                      likeRef
+                                                                          .delete();
+                                                                    }
+                                                                  });
+                                                                },
+                                                              );
+                                                            }),
+                                                      ],
+                                                    ),
+                                                    StreamBuilder(
+                                                        stream:
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    "posts")
+                                                                .doc(widget
+                                                                    .postId)
+                                                                .collection(
+                                                                    'comments')
+                                                                .doc(comment
+                                                                    .commentId)
+                                                                .collection(
+                                                                    'dislikes')
+                                                                .snapshots(),
+                                                        builder: (context,
+                                                            AsyncSnapshot
+                                                                dislikeSnapshot) {
+                                                          return Row(
+                                                            children: [
+                                                              Text(
+                                                                  '${dislikeSnapshot.data.docs.length}'),
+                                                              StreamBuilder(
+                                                                  stream: FirebaseFirestore
+                                                                      .instance
+                                                                      .collection(
+                                                                          "posts")
+                                                                      .doc(widget
+                                                                          .postId)
+                                                                      .collection(
+                                                                          'comments')
+                                                                      .doc(comment
+                                                                          .commentId)
+                                                                      .collection(
+                                                                          'dislikes')
+                                                                      .doc(currentUser
+                                                                          .uid)
+                                                                      .snapshots(),
+                                                                  builder: (context,
+                                                                      AsyncSnapshot
+                                                                          iconSnapshot) {
+                                                                    return IconButton(
+                                                                      splashRadius:
+                                                                          5,
+                                                                      icon: const Icon(
+                                                                          Icons
+                                                                              .thumb_down_alt_rounded),
+                                                                      iconSize:
+                                                                          20,
+                                                                      color: iconSnapshot.data?.data() !=
+                                                                              null
+                                                                          ? Palette
+                                                                              .cuiPurple
+                                                                          : Palette
+                                                                              .grey,
+                                                                      onPressed:
+                                                                          () {
+                                                                        final dislikeRef = FirebaseFirestore
+                                                                            .instance
+                                                                            .collection("posts")
+                                                                            .doc(widget.postId)
+                                                                            .collection('comments')
+                                                                            .doc(comment.commentId)
+                                                                            .collection('dislikes')
+                                                                            .doc(currentUser.uid);
+                                                                        dislikeRef
+                                                                            .get()
+                                                                            .then((value) {
+                                                                          if (value.data() ==
+                                                                              null) {
+                                                                            dislikeRef.set({
+                                                                              "uid": currentUser.uid,
+                                                                              "name": currentUser.firstName + currentUser.lastName,
+                                                                            });
+                                                                            FirebaseFirestore.instance.collection("posts").doc(widget.postId).collection('comments').doc(comment.commentId).collection('likes').doc(currentUser.uid).delete();
+                                                                          } else {
+                                                                            dislikeRef.delete();
+                                                                          }
+                                                                        });
+
+                                                                        // setState(() {
+                                                                        //   _counter++;
+                                                                        // });
+                                                                      },
+                                                                    );
+                                                                  }),
+                                                            ],
+                                                          );
+                                                        }),
+                                                  ],
+                                                );
+                                              }),
                                         )
                                       ],
                                     ),
@@ -267,10 +433,11 @@ class _CommentBoxState extends State<CommentBox> {
                     SizedBox(height: 10)
                   ],
                 );
+              } else {
+                return const Center(
+                  child: Text("No Comments Available !"),
+                );
               }
-              return const Center(
-                child: Text("No Comments Available !"),
-              );
             }));
   }
 }

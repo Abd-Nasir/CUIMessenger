@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/constants/message_enum.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/display_text_image_file.dart';

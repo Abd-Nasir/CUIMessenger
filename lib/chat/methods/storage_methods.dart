@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/methods/firestore_methods.dart';
@@ -18,7 +18,7 @@ class StorageMethods {
     //uploadTask info
     UploadTask uploadTask = ref.putData(file);
     //Taking the snapshot to fetch url of the image
-    TaskSnapshot taskSnapshot = await uploadTask.snapshot;
+    TaskSnapshot taskSnapshot = uploadTask.snapshot;
     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     log("upload success");
     return downloadUrl;
@@ -73,7 +73,7 @@ class StorageMethods {
 
   Future<void> deleteImageFromStorage(String photoUrl) async {
     {
-      Reference photoRef = await FirebaseStorage.instance.refFromURL(photoUrl);
+      Reference photoRef = FirebaseStorage.instance.refFromURL(photoUrl);
       await photoRef.delete();
       FirestoreMethods().addPhotoToFirestore(url: "");
       showToastMessage("Profile Removed");

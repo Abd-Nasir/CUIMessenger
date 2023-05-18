@@ -1,14 +1,21 @@
-import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
-import 'package:cui_messenger/helpers/routes/routegenerator.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:folder_file_saver/folder_file_saver.dart';
+import 'package:http/http.dart' as http;
+// import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
+// import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/notification/bloc/notifications_bloc.dart';
 import 'package:cui_messenger/notification/bloc/notifications_event.dart';
 import 'package:cui_messenger/notification/bloc/notifications_provider.dart';
 import 'package:cui_messenger/notification/bloc/notifications_state.dart';
 import 'package:cui_messenger/notification/model/myNotification.dart';
+// import 'package:flowder/flowder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:open_file/open_file.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:path_provider/path_provider.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -21,6 +28,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   String langCode = "en";
   BuildContext? myContext;
   bool isLoading = true;
+  String? path;
 
   @override
   void initState() {
@@ -29,37 +37,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
         isLoading = false;
       });
     });
+    // initPlatformState();
 
     super.initState();
   }
 
-  // String parseMessage(String message) {
-  //   String toReturn = "";
-  //   String temp = message.substring(0,
-  //       message.contains("\nPin") ? message.indexOf("\nPin") : message.length);
+  // Future<void> initPlatformState() async {
+  //   _setPath();
+  //   if (!mounted) return;
+  // }
 
-  //   List<String> tempList = temp.split(":");
-
-  //   if (tempList.first == "Help Needed!\nCurrent Address" ||
-  //       tempList.first == "¡Ayuda!\nUbicación actual") {
-  //     toReturn =
-  //         "${AppLocalizations.instance.tr("help_needed_current_address")}:${tempList.last}";
+  // void _setPath() async {
+  //   Directory _path = await getApplicationDocumentsDirectory();
+  //   String localPath = '${_path.path}${Platform.pathSeparator}Download';
+  //   final savedDir = Directory(localPath);
+  //   bool hasExisted = await savedDir.exists();
+  //   if (!hasExisted) {
+  //     savedDir.create();
   //   }
-
-  //   if (temp.contains("left Safety Zone")) {
-  //     temp = temp.replaceAll(
-  //         "left Safety Zone", AppLocalizations.instance.tr('left-safety-zone'));
-  //   }
-
-  //   if (toReturn.isEmpty) {
-  //     toReturn = temp;
-  //   }
-
-  // print("Message Otiginal: $temp");
-  // print("Message Return: $toReturn");
-  // print("Message: $temp");
-
-  //   return toReturn;
+  //   path = localPath;
+  //   print('Path is $path');
   // }
 
   @override
@@ -168,38 +165,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
 
-                                  // leading: Container(
-                                  //   decoration: BoxDecoration(
-                                  //     color: Palette.white,
-                                  //     borderRadius:
-                                  //         BorderRadius.circular(500),
-                                  //   ),
-                                  //   width: mediaQuery.size.width * 0.14,
-                                  //   height: mediaQuery.size.width * 0.14,
-                                  //   child: ClipRRect(
-                                  //     borderRadius:
-                                  //         BorderRadius.circular(500),
-                                  //     child: CachedNetworkImage(
-                                  //       imageUrl: "",
-                                  //       // imageUrl: state.notificationProvider.notifications[index].,
-                                  //       fit: BoxFit.cover,
-                                  //       progressIndicatorBuilder: (context,
-                                  //               url, downloadProgress) =>
-                                  //           Center(
-                                  //               child:
-                                  //                   CircularProgressIndicator(
-                                  //                       value:
-                                  //                           downloadProgress
-                                  //                               .progress)),
-                                  //       errorWidget:
-                                  //           (context, url, error) =>
-                                  //               const Icon(
-                                  //         Icons.error,
-                                  //         color: Palette.darkBlue,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   title: Padding(
                                     padding: const EdgeInsets.only(bottom: 5.0),
                                     child: Text(
@@ -244,26 +209,108 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                     ),
                                   ),
                                   onTap: () async {
-                                    // if (!await launchUrl(
-                                    //     Uri.parse(mapLink.trim()))) {
-                                    //   showSimpleNotification(
-                                    //     slideDismissDirection:
-                                    //         DismissDirection
-                                    //             .horizontal,
-                                    //     Text(
-                                    //       AppLocalizations.of(context)
-                                    //           .translate(
-                                    //               'cant_open_location'),
-                                    //       style: const TextStyle(
-                                    //           color: Palette.white),
-                                    //     ),
-                                    //     background: Palette.orange
-                                    //         .withOpacity(0.9),
-                                    //     duration: const Duration(
-                                    //         seconds: 3),
-                                    //   );
-                                    // }
+                                    print("ontap");
+                                    File checkFile = File(
+                                        "/storage/emulated/0/Documents/CUI Messenger /Documents/loremIpsum");
+
+                                    if (await checkFile.exists()) {
+                                      print("exists");
+                                      showSimpleNotification(
+                                        const Text(
+                                          "document-already-saved",
+                                          style: TextStyle(
+                                            color: Palette.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        background:
+                                            Palette.orange.withOpacity(0.9),
+                                        slideDismissDirection:
+                                            DismissDirection.startToEnd,
+                                      );
+                                    } else {
+                                      var response = await Dio().get(
+                                          state.notificationProvider
+                                              .notifications[index].fileUrl!,
+                                          options: Options(
+                                              responseType:
+                                                  ResponseType.bytes));
+                                      print("Response: $response");
+                                      // final iosDirectory =
+                                      //     await getApplicationSupportDirectory();
+                                      final dir = Platform.isIOS
+                                          ? await getApplicationSupportDirectory()
+                                          : await getApplicationDocumentsDirectory();
+                                      print(dir.path);
+                                      File savedFile =
+                                          await File("${dir.path}/nothingIpsum")
+                                              .writeAsBytes(response.data);
+
+                                      if (Platform.isAndroid) {
+                                        final result1 = await FolderFileSaver
+                                            .saveFileIntoCustomDir(
+                                                dirNamed: "/Documents",
+                                                filePath: savedFile.path,
+                                                removeOriginFile: true);
+                                        print(result1);
+                                        if (result1 != null) {
+                                          showSimpleNotification(
+                                            const Text(
+                                              "Document already saved in app directory!",
+                                              style: TextStyle(
+                                                color: Palette.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            background:
+                                                Palette.green.withOpacity(0.9),
+                                            slideDismissDirection:
+                                                DismissDirection.startToEnd,
+                                          );
+                                        }
+                                      }
+                                    }
                                   },
+                                  // onTap: () async {
+                                  //   final url = state.notificationProvider
+                                  //       .notifications[index].fileUrl!;
+                                  //   print(url);
+                                  //   final response =
+                                  //       await http.get(Uri.parse(url));
+                                  //   print("response $response");
+                                  //   final bytes = response.bodyBytes;
+                                  //   final String fileName =
+                                  //       url.substring(url.lastIndexOf("/") + 1);
+                                  //   print(fileName);
+
+                                  //   final directory =
+                                  //       await getApplicationDocumentsDirectory();
+                                  //   print(directory);
+                                  //   final file =
+                                  //       File('${directory.path}/$fileName');
+
+                                  //   var here = await file.writeAsBytes(bytes);
+                                  //   print(here.path);
+                                  //   // var options = DownloaderUtils(
+                                  //   //   progressCallback: (current, total) {
+                                  //   //     final progress =
+                                  //   //         (current / total) * 100;
+                                  //   //     print('Downloading: $progress');
+                                  //   //   },
+                                  //   //   file: File('$path/loremipsum.pdf'),
+                                  //   //   progress: ProgressImplementation(),
+                                  //   //   onDone: () {
+                                  //   //     print('done');
+                                  //   //     OpenFile.open('$path/loremipsum.pdf');
+                                  //   //   },
+                                  //   //   deleteOnCancel: true,
+                                  //   // );
+                                  //   // await Flowder.download(
+                                  //   //   state.notificationProvider
+                                  //   //       .notifications[index].fileUrl!,
+                                  //   //   options,
+                                  //   // );
+                                  // },
                                 ),
                               );
                             },

@@ -1,7 +1,6 @@
-import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cui_messenger/chat/constants/colors.dart';
+
 import 'package:cui_messenger/chat/constants/message_enum.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/play_audio.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/show_file_preview.dart';

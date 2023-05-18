@@ -1,7 +1,7 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cui_messenger/chat/constants/colors.dart';
+
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 

@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/constants/message_enum.dart';
@@ -17,21 +16,16 @@ import 'package:cui_messenger/chat/screens/toppages/chat/widgets/message_reply_p
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/my_message_card.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/sender_message_card.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
-
 import 'package:audio_waveforms/audio_waveforms.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-// import 'package:uuid/uuid.dart';
 
 import 'package:path_provider/path_provider.dart';
 

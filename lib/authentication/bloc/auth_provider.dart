@@ -51,13 +51,13 @@ class AuthProvider {
           // .where('username', isEqualTo: searchController.text)
           .get()
           .then((value) {
-        value.docs.forEach((user) {
+        for (var user in value.docs) {
           if (user.data()["uid"] == userCredential.user!.uid) {
             // print("This is user \n\n ${user.data()}\n");
             userData = UserModel.fromJson(user.data());
             // print("This is email ${userData!.email}");
           }
-        });
+        }
       });
       return userData;
     }
@@ -92,13 +92,13 @@ class AuthProvider {
             // .where('username', isEqualTo: searchController.text)
             .get()
             .then((value) {
-          value.docs.forEach((user) {
+          for (var user in value.docs) {
             if (user.data()["uid"] == userCredential.user!.uid) {
               // print("This is user \n\n ${user.data()}\n");
               userData = UserModel.fromJson(user.data());
               // print("This is email ${userData!.email}");
             }
-          });
+          }
         });
         return userData;
       }
@@ -152,13 +152,13 @@ class AuthProvider {
             // .where('username', isEqualTo: searchController.text)
             .get()
             .then((value) {
-          value.docs.forEach((user) {
+          for (var user in value.docs) {
             if (user.data()["uid"] == userCredential.user!.uid) {
               // print("This is user \n\n ${user.data()}\n");
               userData = UserModel.fromJson(user.data());
               // print("This is email ${userData!.email}");
             }
-          });
+          }
         });
         return userData;
       }

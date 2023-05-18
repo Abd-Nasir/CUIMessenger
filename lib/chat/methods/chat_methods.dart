@@ -811,9 +811,9 @@ class ChatMethods {
 
     //deleting the subcollections
     ref.collection("messages").get().then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         doc.reference.delete();
-      });
+      }
     });
     ref.delete();
     // doc.update(

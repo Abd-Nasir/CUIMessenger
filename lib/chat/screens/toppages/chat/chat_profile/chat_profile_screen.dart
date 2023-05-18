@@ -1,13 +1,11 @@
 import 'dart:developer';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/models/chat_model.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 
 class ChatProfileScreen extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 
 import 'package:cui_messenger/notification/model/myNotification.dart';
 import 'package:cui_messenger/notification/model/notification.dart';
@@ -25,41 +26,45 @@ class NotificationProvider {
         .get()
         .then((value) {
       notifications.clear();
-      value.docs.forEach((value) {
+      for (var value in value.docs) {
         notifications.add(NotificationModel.fromJson(value.data()));
-      });
-    });
-  }
-
-  void sendNotificationRange() {
-    fb.User? user = fb.FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
-        .collection("registered-users")
-        .get()
-        .then((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        for (int i = 0; i < snapshot.docs.length; i++) {
-          if (snapshot.docs[i].data()['uid'] != user!.uid) {
-            getToken(snapshot.docs[i].data()['uid']);
-          }
-        }
       }
     });
   }
 
+  // void sendNotificationRange() {
+  //   fb.User? user = fb.FirebaseAuth.instance.currentUser;
+  //   FirebaseFirestore.instance
+  //       .collection("registered-users")
+  //       .get()
+  //       .then((snapshot) {
+  //     if (snapshot.docs.isNotEmpty) {
+  //       for (int i = 0; i < snapshot.docs.length; i++) {
+  //         if (snapshot.docs[i].data()['uid'] != user!.uid) {
+  //           getToken(snapshot.docs[i].data()['uid']);
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
+
   void getToken(String uid) {
     String? token;
-    Future<QuerySnapshot<Map<String, dynamic>>> querySnapshot =
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(uid)
-            .collection('token')
-            .get();
-    querySnapshot.then((snapshot) {
-      token = snapshot.docs.first.id;
-      sendNotification(token, "Hey there", "Notification Body");
-      // print(token);
+
+    FirebaseFirestore.instance
+        .collection('registered-users')
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        UserModel userModel = UserModel.fromJson(element.data());
+        token = userModel.token;
+        sendNotification(token, "Hey there", "Notification Body");
+      });
     });
+
+    // token = snapshot.docs.first.id;
+
+    // print(token);
   }
 
   void sendNotification(String? token, String? title, String? body) {

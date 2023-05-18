@@ -130,7 +130,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        notices[index]["title"],
+                                        notices[index]["noticeTitle"],
                                         style: const TextStyle(
                                             fontSize: 18,
                                             color: Palette.yellow,
@@ -138,7 +138,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                                       ),
                                       const SizedBox(height: 5),
                                       Text(
-                                        " ${notices[index]["text"]}",
+                                        " ${notices[index]["noticeText"]}",
                                         style: const TextStyle(
                                             color: Palette.white),
                                       ),

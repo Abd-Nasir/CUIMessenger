@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_auth: ^4.2.1
-  provider: ^6.0.5
+  # provider: ^6.0.5
   firebase_core: ^2.4.0
   firebase_storage: ^11.0.8
   cloud_firestore: ^4.3.1
@@ -50,13 +50,11 @@ dependencies:
   permission_handler: ^10.2.0
 
   cupertino_icons: ^1.0.2
-  material_color_gen: ^2.0.0
-  flutter_native_splash: ^2.2.16
-  # cached_network_image: ^3.2.3
+  # material_color_gen: ^2.0.0
+  # flutter_native_splash: ^2.2.16
   intl: ^0.17.0
-
-  firebase_analytics: ^10.1.0
-  email_validator: ^2.1.17
+  # firebase_analytics: ^10.1.0
+  # email_validator: ^2.1.17
   uuid: ^3.0.7
   file_picker: ^5.2.4
   emoji_picker_flutter: ^1.5.1
@@ -65,22 +63,20 @@ dependencies:
   audioplayers: ^3.0.1
   audio_video_progress_bar: ^1.0.0
   any_link_preview: ^3.0.0
-  url_launcher: ^6.1.10
+  # url_launcher: ^6.1.10
  
   path: ^1.8.2
   flutter_cache_manager_dio: ^3.0.0
   open_filex: ^4.3.2
   fluttertoast: ^8.2.1
-  date_time_picker: ^2.1.0
-  percent_indicator: ^4.2.2
-  timeago: ^3.3.0
-  flutter_staggered_grid_view: 0.4.0
-  transparent_image: ^2.0.1
-  timezone: ^0.9.1
+  # date_time_picker: ^2.1.0
+  # percent_indicator: ^4.2.2
+  # timeago: ^3.3.0
+  # flutter_staggered_grid_view: 0.4.0
+  # transparent_image: ^2.0.1
+  # timezone: ^0.9.1
   gallery_image_viewer: ^1.2.0
-
-  flutter_keyboard_visibility: ^5.4.0
-  
+  # flutter_keyboard_visibility: ^5.4.0
   flutter_foreground_task: ^4.1.0
   shared_preferences: ^2.0.20
   font_awesome_flutter: ^10.4.0
@@ -94,6 +90,15 @@ dependencies:
   avatar_stack: ^1.2.0
   http: ^0.13.5
   basic_utils: ^5.5.4
+  path_provider: ^2.0.15
+  folder_file_saver: ^2.0.5
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  
+  # flowder: ^0.2.0
+  # open_file: ^3.3.1
+  
+  
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -103,6 +108,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner:
+  hive_generator: ^2.0.0
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

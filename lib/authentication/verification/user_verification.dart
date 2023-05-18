@@ -6,8 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import '/helpers/routes/routegenerator.dart';
-import '/helpers/routes/routenames.dart';
+
 import '/helpers/style/colors.dart';
 import '/helpers/style/custom_widgets.dart';
 // import 'package:safepall/screens/authentication/bloc/auth_bloc.dart';
@@ -99,7 +98,7 @@ class _VerifyMailState extends State<VerifyMail> {
                 onTap: () {
                   BlocProvider.of<AuthBloc>(context)
                       .add(const ResendVerificationMail());
-                  //TODO: Resend Verification Email
+
                   setState(() {
                     resendToken = false;
                     resendDuration = const Duration(seconds: 60);
@@ -118,7 +117,6 @@ class _VerifyMailState extends State<VerifyMail> {
                 text: "Continue",
                 mediaQuery: mediaQuery,
                 onTap: () {
-                  //TODO: Check Verification email
                   BlocProvider.of<AuthBloc>(context)
                       .add(const CheckEmailVerified());
                 },

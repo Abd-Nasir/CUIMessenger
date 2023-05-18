@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/bloc/auth_provider.dart';
 import 'package:cui_messenger/authentication/model/user.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
+import 'package:cui_messenger/settings/bloc/settings_bloc.dart';
+import 'package:cui_messenger/settings/bloc/settings_event.dart';
+import 'package:cui_messenger/settings/bloc/settings_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -48,6 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return SafeArea(
       bottom: false,
       child: Container(
+        color: Palette.white,
         padding: EdgeInsets.only(
           top: mediaQuery.size.width * 0.04,
           left: mediaQuery.size.width * 0.04,
@@ -89,173 +93,181 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SizedBox(height: mediaQuery.size.height * 0.02),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // createInformationTile(
-                    //   mediaQuery: mediaQuery,
-                    //   color: Palette.frenchBlue,
-                    //   tileText: "Notification",
-                    //   icon: Icons.notifications_none,
-                    //   onTap: () {},
-                    // ),
-                    // createInformationTile(
-                    //   mediaQuery: mediaQuery,
-                    //   color: Palette.language,
-                    //   tileText: AppLocalizations.of(context)
-                    //       .translate('emergency_list_messages'),
-                    //   icon: Icons.emergency,
-                    //   onTap: () {
-                    //     RouteGenerator.navigatorKey.currentState!
-                    //         .pushNamed(emergencyListRoute);
-                    //   },
-                    // ),
-                    // createInformationTile(
-                    //   mediaQuery: mediaQuery,
-                    //   color: Palette.privacyPolicy,
-                    //   tileText: AppLocalizations.of(context)
-                    //       .translate('payment_details'),
-                    //   icon: Icons.payment,
-                    //   onTap: () {
-                    //     RouteGenerator.navigatorKey.currentState!
-                    //         .pushNamed(paymentDetailsRoute);
-                    //   },
-                    // ),
-                    createSettingTile(
-                      mediaQuery: mediaQuery,
-                      color: Palette.location,
-                      tileText: "Chat Notification",
-                      icon: Icons.location_on_outlined,
-                      switchValue: false,
-                      switchOnChaged: (value) {
-                        setState(() {
-                          // BlocProvider.of<SettingsBloc>(context)
-                          //     .add(const ChangeLocationEvent());
-                        });
-                      },
-                    ),
-                    createSettingTile(
-                      mediaQuery: mediaQuery,
-                      color: Palette.faceid,
-                      tileText: "Disable Notifices Notifications",
-                      icon: Icons.face_unlock_outlined,
-                      switchValue: false,
-                      switchOnChaged: (value) {
-                        // setState(() {
-                        //   BlocProvider.of<SettingsBloc>(context)
-                        //       .add(const ChangeFaceIDEvent());
-                        // });
-                      },
-                    ),
-                    createInformationTile(
-                      mediaQuery: mediaQuery,
-                      color: Palette.help,
-                      tileText: "Help",
-                      icon: Icons.help,
-                      onTap: () {
-                        // RouteGenerator.navigatorKey.currentState!
-                        //     .pushNamed(helpPageRoute);
-                      },
-                    ),
-                    createInformationTile(
-                      mediaQuery: mediaQuery,
-                      color: Palette.blueInformation,
-                      tileText: "About App",
-                      icon: Icons.info,
-                    ),
-                    createInformationTile(
-                      mediaQuery: mediaQuery,
-                      color: Palette.logOut,
-                      tileText: "Logout",
-                      icon: Icons.logout,
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          backgroundColor: Palette.white,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: mediaQuery.size.width * 0.06,
-                              vertical: mediaQuery.size.height * 0.02),
-                          title: const Text(
-                            "Log out",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Palette.textColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
+            BlocConsumer<SettingsBloc, SettingsState>(
+                listener: (context, state) {
+              if (state is SettingStateNotificationUpdated) {
+                setState(() {});
+              }
+            }, builder: (context, state) {
+              return Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // createInformationTile(
+                      //   mediaQuery: mediaQuery,
+                      //   color: Palette.frenchBlue,
+                      //   tileText: "Notification",
+                      //   icon: Icons.notifications_none,
+                      //   onTap: () {},
+                      // ),
+                      // createInformationTile(
+                      //   mediaQuery: mediaQuery,
+                      //   color: Palette.language,
+                      //   tileText: AppLocalizations.of(context)
+                      //       .translate('emergency_list_messages'),
+                      //   icon: Icons.emergency,
+                      //   onTap: () {
+                      //     RouteGenerator.navigatorKey.currentState!
+                      //         .pushNamed(emergencyListRoute);
+                      //   },
+                      // ),
+                      // createInformationTile(
+                      //   mediaQuery: mediaQuery,
+                      //   color: Palette.privacyPolicy,
+                      //   tileText: AppLocalizations.of(context)
+                      //       .translate('payment_details'),
+                      //   icon: Icons.payment,
+                      //   onTap: () {
+                      //     RouteGenerator.navigatorKey.currentState!
+                      //         .pushNamed(paymentDetailsRoute);
+                      //   },
+                      // ),
+                      createSettingTile(
+                        mediaQuery: mediaQuery,
+                        color: Palette.location,
+                        tileText: "Chat Notification",
+                        icon: Icons.location_on_outlined,
+                        switchValue: state.settings.chatNotifications,
+                        switchOnChaged: (value) {
+                          setState(() {
+                            BlocProvider.of<SettingsBloc>(context)
+                                .add(const ChangeNotificationsEvent());
+                          });
+                        },
+                      ),
+                      createSettingTile(
+                        mediaQuery: mediaQuery,
+                        color: Palette.faceid,
+                        tileText: "Disable Notifices Notifications",
+                        icon: Icons.face_unlock_outlined,
+                        switchValue: false,
+                        switchOnChaged: (value) {
+                          // setState(() {
+                          //   BlocProvider.of<SettingsBloc>(context)
+                          //       .add(const ChangeFaceIDEvent());
+                          // });
+                        },
+                      ),
+                      createInformationTile(
+                        mediaQuery: mediaQuery,
+                        color: Palette.help,
+                        tileText: "Help",
+                        icon: Icons.help,
+                        onTap: () {
+                          // RouteGenerator.navigatorKey.currentState!
+                          //     .pushNamed(helpPageRoute);
+                        },
+                      ),
+                      createInformationTile(
+                        mediaQuery: mediaQuery,
+                        color: Palette.blueInformation,
+                        tileText: "About App",
+                        icon: Icons.info,
+                      ),
+                      createInformationTile(
+                        mediaQuery: mediaQuery,
+                        color: Palette.logOut,
+                        tileText: "Logout",
+                        icon: Icons.logout,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            backgroundColor: Palette.white,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: mediaQuery.size.width * 0.06,
+                                vertical: mediaQuery.size.height * 0.02),
+                            title: const Text(
+                              "Log out",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Palette.textColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
                             ),
-                          ),
-                          content: const Text(
-                            "Are you sure you want to log out?",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Palette.textColor,
-                              fontSize: 14.0,
+                            content: const Text(
+                              "Are you sure you want to log out?",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Palette.textColor,
+                                fontSize: 14.0,
+                              ),
                             ),
-                          ),
-                          actions: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    RouteGenerator.navigatorKey.currentState!
-                                        .pop('dialog');
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0, horizontal: 12.0),
-                                    child: const Text(
-                                      "Cancel",
-                                      style: TextStyle(
-                                          color: Palette.textColor,
-                                          fontSize: 12.0),
+                            actions: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      RouteGenerator.navigatorKey.currentState!
+                                          .pop('dialog');
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0, horizontal: 12.0),
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(
+                                            color: Palette.textColor,
+                                            fontSize: 12.0),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    RouteGenerator.navigatorKey.currentState!
-                                        .pop('dialog');
-                                    // RouteGenerator.navigatorKey.currentState!
-                                    //     .pushNamedAndRemoveUntil(
-                                    //         logInRoute, (route) => false);
-                                    BlocProvider.of<AuthBloc>(context)
-                                        .add(const AuthLogoutEvent());
-                                  },
-                                  child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0, horizontal: 16.0),
-                                      decoration: BoxDecoration(
-                                        color: Palette.red,
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            offset: const Offset(0.0, 0.0),
-                                            blurRadius: 16.0,
-                                            color:
-                                                Palette.red.withOpacity(0.25),
-                                          ),
-                                        ],
-                                      ),
-                                      child: const Text(
-                                        "Logout",
-                                        style: TextStyle(
-                                            color: Palette.white,
-                                            fontSize: 12.0),
-                                      )),
-                                ),
-                              ],
-                            )
-                          ],
+                                  GestureDetector(
+                                    onTap: () {
+                                      RouteGenerator.navigatorKey.currentState!
+                                          .pop('dialog');
+                                      // RouteGenerator.navigatorKey.currentState!
+                                      //     .pushNamedAndRemoveUntil(
+                                      //         logInRoute, (route) => false);
+                                      BlocProvider.of<AuthBloc>(context)
+                                          .add(const AuthLogoutEvent());
+                                    },
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0, horizontal: 16.0),
+                                        decoration: BoxDecoration(
+                                          color: Palette.red,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              offset: const Offset(0.0, 0.0),
+                                              blurRadius: 16.0,
+                                              color:
+                                                  Palette.red.withOpacity(0.25),
+                                            ),
+                                          ],
+                                        ),
+                                        child: const Text(
+                                          "Logout",
+                                          style: TextStyle(
+                                              color: Palette.white,
+                                              fontSize: 12.0),
+                                        )),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),

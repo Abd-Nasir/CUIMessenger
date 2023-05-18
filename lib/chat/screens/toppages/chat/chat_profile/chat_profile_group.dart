@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cui_messenger/chat/constants/colors.dart';
+
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/constants/utils.dart';
@@ -10,7 +10,7 @@ import 'package:cui_messenger/chat/models/group.dart';
 import 'package:cui_messenger/chat/screens/group/screens/users_screen.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
+
 import 'package:cui_messenger/chat/models/group.dart' as model;
 // import 'package:yourteam/models/group.dart' as model;
 
@@ -173,7 +173,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                 boxShadow: [
                   BoxShadow(
                       color: Palette.cuiBlue.withOpacity(0.10),
-                      offset: Offset(2, 2),
+                      offset: const Offset(2, 2),
                       blurRadius: 5,
                       spreadRadius: 5)
                 ]),
@@ -183,7 +183,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 130,
                       width: 130,
                       child: Stack(
