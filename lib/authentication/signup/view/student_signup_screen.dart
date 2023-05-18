@@ -6,11 +6,12 @@ import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as dp;
 import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 // import 'package:safepall/screens/authentication/bloc/auth_bloc.dart';
@@ -318,15 +319,18 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
                       keyboardType: TextInputType.datetime,
                       readOnly: true,
                       onTap: () {
-                        DatePicker.showDatePicker(context,
-                            showTitleActions: true,
-                            minTime: DateTime(1900, 1, 1),
-                            maxTime: DateTime.now(),
-                            currentTime: dateTime, onConfirm: (date) {
-                          dateTime = date;
-                          dateOfBirthController.text =
-                              "${date.day}-${date.month}-${date.year}";
-                        });
+                        DateTimePicker(
+                          type: DateTimePickerType.date,
+                        );
+                        // DatePicker.showDatePicker(context,
+                        //     showTitleActions: true,
+                        //     minTime: DateTime(1900, 1, 1),
+                        //     maxTime: DateTime.now(),
+                        //     currentTime: dateTime, onConfirm: (date) {
+                        //   dateTime = date;
+                        //   dateOfBirthController.text =
+                        //       "${date.day}-${date.month}-${date.year}";
+                        // });
                       },
                       validator: (value) {
                         if (value!.isEmpty) {
