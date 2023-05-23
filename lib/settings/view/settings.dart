@@ -104,24 +104,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     children: [
                       // createInformationTile(
                       //   mediaQuery: mediaQuery,
-                      //   color: Palette.frenchBlue,
-                      //   tileText: "Notification",
-                      //   icon: Icons.notifications_none,
-                      //   onTap: () {},
-                      // ),
-                      // createInformationTile(
-                      //   mediaQuery: mediaQuery,
-                      //   color: Palette.language,
-                      //   tileText: AppLocalizations.of(context)
-                      //       .translate('emergency_list_messages'),
-                      //   icon: Icons.emergency,
-                      //   onTap: () {
-                      //     RouteGenerator.navigatorKey.currentState!
-                      //         .pushNamed(emergencyListRoute);
-                      //   },
-                      // ),
-                      // createInformationTile(
-                      //   mediaQuery: mediaQuery,
                       //   color: Palette.privacyPolicy,
                       //   tileText: AppLocalizations.of(context)
                       //       .translate('payment_details'),
@@ -150,12 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         tileText: "Disable Notifices Notifications",
                         icon: Icons.face_unlock_outlined,
                         switchValue: false,
-                        switchOnChaged: (value) {
-                          // setState(() {
-                          //   BlocProvider.of<SettingsBloc>(context)
-                          //       .add(const ChangeFaceIDEvent());
-                          // });
-                        },
+                        switchOnChaged: (value) {},
                       ),
                       createInformationTile(
                         mediaQuery: mediaQuery,

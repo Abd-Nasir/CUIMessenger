@@ -67,7 +67,7 @@ getAvatarWithStatus(bool isGroupChat, ChatContactModel contactModel,
   );
 }
 
-getDateWithLines(dateInList) {
+Widget showDateWithLines(dateInList) {
   var tempDate = DateFormat.MMMMEEEEd().format(DateTime.now());
   return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
     Text(dateInList == tempDate ? "Today" : dateInList,
@@ -75,33 +75,7 @@ getDateWithLines(dateInList) {
   ]);
 }
 
-// Widget getCallNotifierWidget(context) {
-//   return Container(
-//     height: 35,
-//     width: MediaQuery.of(context).size.width,
-//     decoration: const BoxDecoration(color: Palette.cuiPurple),
-//     child: Scaffold(
-//       backgroundColor: Palette.cuiPurple,
-//       body: InkWell(
-//         onTap: () {
-//           // Navigator.push(context,
-//           //     MaterialPageRoute(builder: (context) => const DialScreen()));
-//         },
-//         child: SizedBox(
-//           height: 35,
-//           width: MediaQuery.of(context).size.width,
-//           child: const Center(
-//               child: Text(
-//             "Ongoing Call",
-//             style: TextStyle(color: Colors.white, fontSize: 18),
-//           )),
-//         ),
-//       ),
-//     ),
-//   );
-// }
-
-void showFloatingFlushBar(
+showFloatingFlushBar(
     BuildContext context, String upMessage, String downMessage) {
   Flushbar(
     borderRadius: BorderRadius.circular(8),
@@ -137,11 +111,7 @@ showToastMessage(String toastText) {
       fontSize: 16.0);
 }
 
-getRandom() {
-  return random.nextInt(3) + 0;
-}
-
-getMessageCard(var model, context, {bool isGroupChat = false}) {
+Widget getMessageCard(var model, context, {bool isGroupChat = false}) {
   // Group model = models;
   bool seen = false;
   if (isGroupChat) {

@@ -307,12 +307,12 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                     elevation: 3,
                     child: ListTile(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    AddPeople(context, peopleUid, refresh)));
-                        // showPeopleForTask(context, peopleUid, refresh);
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             AddPeople(context, peopleUid, refresh)));
+                        showPeopleForTask(context, peopleUid, refresh);
                       },
                       title: const Text("Add Group Members"),
                       trailing: Container(

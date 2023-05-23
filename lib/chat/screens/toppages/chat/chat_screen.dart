@@ -15,6 +15,7 @@ import 'package:cui_messenger/chat/screens/toppages/chat/image_preview_sending.d
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/message_reply_preview.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/my_message_card.dart';
 import 'package:cui_messenger/chat/screens/toppages/chat/widgets/sender_message_card.dart';
+import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -66,7 +67,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   getNotificationToken(String uid) async {
     UserModel model = UserModel.getValuesFromSnap(
-        await firebaseFirestore.collection('users').doc(uid).get());
+        await firebaseFirestore.collection('registered-users').doc(uid).get());
     tokensList.add(model.token);
   }
 
@@ -81,10 +82,10 @@ class _ChatScreenState extends State<ChatScreen>
       usermodel = UserModel.getValuesFromSnap(doc);
       if (mounted) setState(() {});
     } else {
-      Map<dynamic, dynamic> values = {
-        'name': widget.contactModel.name,
-        'profile-picture': widget.contactModel.profilePicture,
-      };
+      // Map<dynamic, dynamic> values = {
+      //   'name': widget.contactModel.name,
+      //   'profile-picture': widget.contactModel.profilePicture,
+      // };
       // CALLERDATA = values;
     }
   }
@@ -322,34 +323,17 @@ class _ChatScreenState extends State<ChatScreen>
           //   leading: const Icon(Icons.edit),
           //   onTap: () => Navigator.of(context).pop(),
           // ),
-          if (_getBoolCreateCheck())
-            // ListTile(
-            //   title: const Text('Add to Task'),
-            //   leading: const Icon(Icons.add_circle_outline),
-            //   onTap: () {
-            //     Navigator.of(context).pop();
 
-            //     Navigator.of(context)
-            //         .push(MaterialPageRoute(
-            //             builder: (context) => AddTask(
-            //                   taskTitle: taskTitleTemp,
-            //                 )))
-            //         .whenComplete(() {
-            //       setStateToNormal();
-            //     });
-            //     isDismissed = false;
-            //   },
-            // ),
-            if (_getBoolCopyCheck())
-              ListTile(
-                title: const Text('Copy Text'),
-                leading: const Icon(Icons.content_copy),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  copyTextToClipboard();
-                  isDismissed = false;
-                },
-              ),
+          if (_getBoolCopyCheck())
+            ListTile(
+              title: const Text('Copy Text'),
+              leading: const Icon(Icons.content_copy),
+              onTap: () {
+                Navigator.of(context).pop();
+                copyTextToClipboard();
+                isDismissed = false;
+              },
+            ),
           ListTile(
             title: const Text('Forward'),
             leading: const Icon(FontAwesomeIcons.arrowUpFromBracket),
@@ -410,158 +394,39 @@ class _ChatScreenState extends State<ChatScreen>
                     elevation: 2,
                     toolbarHeight: 65,
                     title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(
-                                  Icons.arrow_back_ios_new_rounded,
-                                  size: 20,
-                                  color: Palette.cuiPurple,
-                                )),
-                            InkWell(
-                              onTap: openProfile,
-                              child: Row(
+                        IconButton(
+                            onPressed: () {
+                              RouteGenerator.navigatorKey.currentState!.pop();
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              size: 20,
+                              color: Palette.cuiPurple,
+                            )),
+                        InkWell(
+                          onTap: openProfile,
+                          child: Row(
+                            children: [
+                              getAvatarWithStatus(
+                                  isGroupChat, widget.contactModel),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  getAvatarWithStatus(
-                                      isGroupChat, widget.contactModel),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.contactModel.name,
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
+                                  Text(
+                                    widget.contactModel.name,
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                        // ValueListenableBuilder(
-                        //     valueListenable:
-                        //         appValueNotifier.globalisCallOnGoing,
-                        //     builder: (context, boolValue, widget) {
-                        //       return Row(
-                        //         children: [
-                        //           InkWell(
-                        //               onTap: !boolValue
-                        //                   ? () async {
-                        //                       appValueNotifier.setToInitial();
-                        //                       callValueNotifiers
-                        //                           .setToInitial();
-                        //                       await callsetting(
-                        //                           calltype: true);
-                        //                       // CallMethods().makeCall(
-                        //                       //     context,
-                        //                       //     widget.contactModel.name,
-                        //                       //     widget.contactModel.contactId,
-                        //                       //     widget.contactModel.photoUrl);
-                        //                       // Navigator.of(context).push(MaterialPageRoute(
-                        //                       //     builder: (context) => const CallScreen(
-                        //                       //         // model: widget.contactModel,
-                        //                       //         // isAudioCall: true,
-                        //                       //         )));
-                        //                     }
-                        //                   : null,
-                        //               child: Padding(
-                        //                 padding: const EdgeInsets.all(8.0),
-                        //                 child: Icon(
-                        //                   Icons.call,
-                        //                   size: 25,
-                        //                   color: boolValue
-                        //                       ? Palette.cuiPurpleFaded
-                        //                       : Palette.cuiPurple,
-                        //                 ),
-                        //               )),
-                        //           InkWell(
-                        //               onTap: !boolValue
-                        //                   ? () async {
-                        //                       appValueNotifier.setToInitial();
-                        //                       callValueNotifiers
-                        //                           .setToInitial();
-
-                        //                       await callsetting(
-                        //                           calltype: false);
-                        //                     }
-                        //                   : null,
-                        //               child: Padding(
-                        //                 padding: const EdgeInsets.all(8.0),
-                        //                 child: Icon(
-                        //                   Icons.videocam,
-                        //                   size: 30,
-                        //                   color: boolValue
-                        //                       ? Palette.cuiPurpleFaded
-                        //                       : Palette.cuiPurple,
-                        //                 ),
-                        //               )),
-                        //           DropdownButtonHideUnderline(
-                        //             child: DropdownButton2(
-                        //               customButton: const Padding(
-                        //                 padding: EdgeInsets.all(4.0),
-                        //                 child: Icon(
-                        //                   Icons.more_vert,
-                        //                   size: 25,
-                        //                   color: Colors.black,
-                        //                 ),
-                        //               ),
-                        //               items: [
-                        //                 ...MenuItems.firstItems.map(
-                        //                   (item) =>
-                        //                       DropdownMenuItem<MenuItem>(
-                        //                     value: item,
-                        //                     child: MenuItems.buildItem(item),
-                        //                   ),
-                        //                 ),
-                        //                 const DropdownMenuItem<Divider>(
-                        //                     enabled: false, child: Divider()),
-                        //               ],
-                        //               onChanged: (value) {
-                        //                 MenuItems.onChanged(
-                        //                     context,
-                        //                     value as MenuItem,
-                        //                     openProfile,
-                        //                     _showDeleteDialog,
-                        //                     _showBlockDialog);
-                        //               },
-                        //               dropdownStyleData: DropdownStyleData(
-                        //                 width: 160,
-                        //                 padding: const EdgeInsets.symmetric(
-                        //                     vertical: 6),
-                        //                 decoration: BoxDecoration(
-                        //                   borderRadius:
-                        //                       BorderRadius.circular(4),
-                        //                   color: Palette.cuiPurple,
-                        //                 ),
-                        //                 elevation: 8,
-                        //                 offset: const Offset(0, 8),
-                        //               ),
-                        //               menuItemStyleData: MenuItemStyleData(
-                        //                 customHeights: [
-                        //                   ...List<double>.filled(
-                        //                       MenuItems.firstItems.length,
-                        //                       48),
-                        //                   8,
-                        //                 ],
-                        //                 padding: const EdgeInsets.only(
-                        //                     left: 16, right: 16),
-                        //               ),
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       );
-                        //     })
                       ],
                     ),
                   ),
@@ -746,7 +611,7 @@ class _ChatScreenState extends State<ChatScreen>
                                                           return Column(
                                                             children: [
                                                               if (!isDateShown)
-                                                                getDateWithLines(
+                                                                showDateWithLines(
                                                                     dateInList),
                                                               InkWell(
                                                                 onTap: () {
@@ -792,7 +657,7 @@ class _ChatScreenState extends State<ChatScreen>
                                                         return Column(
                                                           children: [
                                                             if (!isDateShown)
-                                                              getDateWithLines(
+                                                              showDateWithLines(
                                                                   dateInList),
                                                             InkWell(
                                                               onTap: () {
@@ -868,35 +733,6 @@ class _ChatScreenState extends State<ChatScreen>
                                               }),
                                         ),
                                       ),
-                                      // ValueListenableBuilder(
-                                      //     valueListenable: showLoadingOption,
-                                      //     builder: (context, value, widget) {
-                                      //       if (value) {
-                                      //         return Align(
-                                      //           alignment: Alignment.topCenter,
-                                      //           child: ElevatedButton(
-                                      //             style: ElevatedButton.styleFrom(
-                                      //                 elevation: 5,
-                                      //                 shape: RoundedRectangleBorder(
-                                      //                     borderRadius: BorderRadius.circular(25))),
-                                      //             child: const Text("Swipe Down To Load Previous Messages"),
-                                      //             onPressed: () {},
-                                      //           ),
-                                      //         );
-                                      //         // return Align(
-                                      //         //   alignment: Alignment.topCenter,
-                                      //         //   child: ElevatedButton(
-                                      //         //     style: ElevatedButton.styleFrom(
-                                      //         //         elevation: 5,
-                                      //         //         shape: RoundedRectangleBorder(
-                                      //         //             borderRadius: BorderRadius.circular(25))),
-                                      //         //     child: const Text("Swipe Down To "),
-                                      //         //     onPressed: () {},
-                                      //         //   ),
-                                      //         // );
-                                      //       }
-                                      //       return Container();
-                                      //     }),
                                     ],
                                   )),
                                   MyTextField(
@@ -1343,7 +1179,7 @@ class __ChatListState extends State<_ChatList> {
                             return Column(
                               children: [
                                 if (!widget.isDateShown)
-                                  getDateWithLines(dateInList),
+                                  showDateWithLines(dateInList),
                                 InkWell(
                                   onLongPress: () {
                                     widget.changeShowOptions();
@@ -1367,7 +1203,7 @@ class __ChatListState extends State<_ChatList> {
                           return Column(
                             children: [
                               if (!widget.isDateShown)
-                                getDateWithLines(dateInList),
+                                showDateWithLines(dateInList),
                               InkWell(
                                 // onTap: () {
                                 //   print(

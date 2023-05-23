@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
@@ -59,20 +60,25 @@ class _ShowFilePreviewState extends State<ShowFilePreview> {
         // file = changeFileNameOnly(file,fileName)
         OpenFilex.open(file.path);
       },
-      child: SizedBox(
+      child: Container(
+          // color: Palette.aliceBlue,
           height: 50,
+          // width: ,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
                 Icons.file_open,
                 color: widget.isSender ? Colors.white : Colors.black,
               ),
-              Text(
-                fileName,
-                style: TextStyle(
-                    color: widget.isSender ? Colors.white : Colors.black,
-                    fontWeight: FontWeight.bold),
+              Expanded(
+                child: Text(
+                  fileName,
+                  overflow: TextOverflow.clip,
+                  style: TextStyle(
+                      color: widget.isSender ? Colors.white : Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
               )
             ],
           )),

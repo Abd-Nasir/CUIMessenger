@@ -181,6 +181,14 @@ class _CommentBoxState extends State<CommentBox> {
                                                   .snapshots(),
                                               builder: (context,
                                                   AsyncSnapshot snapshot) {
+                                                if (!snapshot.hasData) {
+                                                  return const Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Palette.cuiPurple,
+                                                    ),
+                                                  );
+                                                }
                                                 return Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
@@ -210,6 +218,16 @@ class _CommentBoxState extends State<CommentBox> {
                                                             builder: (context,
                                                                 AsyncSnapshot
                                                                     iconSnapshot) {
+                                                              if (!iconSnapshot
+                                                                  .hasData) {
+                                                                Center(
+                                                                  child:
+                                                                      CircularProgressIndicator(
+                                                                    color: Palette
+                                                                        .cuiPurple,
+                                                                  ),
+                                                                );
+                                                              }
                                                               return IconButton(
                                                                 splashRadius: 2,
                                                                 icon: const Icon(
@@ -297,6 +315,16 @@ class _CommentBoxState extends State<CommentBox> {
                                                         builder: (context,
                                                             AsyncSnapshot
                                                                 dislikeSnapshot) {
+                                                          if (!dislikeSnapshot
+                                                              .hasData) {
+                                                            const Center(
+                                                              child:
+                                                                  CircularProgressIndicator(
+                                                                color: Palette
+                                                                    .cuiPurple,
+                                                              ),
+                                                            );
+                                                          }
                                                           return Row(
                                                             children: [
                                                               Text(
@@ -320,6 +348,16 @@ class _CommentBoxState extends State<CommentBox> {
                                                                   builder: (context,
                                                                       AsyncSnapshot
                                                                           iconSnapshot) {
+                                                                    if (!iconSnapshot
+                                                                        .hasData) {
+                                                                      const Center(
+                                                                        child:
+                                                                            CircularProgressIndicator(
+                                                                          color:
+                                                                              Palette.cuiPurple,
+                                                                        ),
+                                                                      );
+                                                                    }
                                                                     return IconButton(
                                                                       splashRadius:
                                                                           5,
@@ -429,7 +467,7 @@ class _CommentBoxState extends State<CommentBox> {
                             ),
                           )
                         ]),
-                    SizedBox(height: 10)
+                    const SizedBox(height: 10)
                   ],
                 );
               } else {

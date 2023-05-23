@@ -128,7 +128,7 @@ class _ChatContactsListScreenState extends State<ChatContactsListScreen> {
                                   return Column(
                                     children: [
                                       if (!isShown)
-                                        getDateWithLines(dateInList),
+                                        showDateWithLines(dateInList),
                                       getMessageCard(model, context)
                                     ],
                                   );
@@ -137,7 +137,7 @@ class _ChatContactsListScreenState extends State<ChatContactsListScreen> {
                                   return Column(
                                     children: [
                                       if (!isShown)
-                                        getDateWithLines(dateInList),
+                                        showDateWithLines(dateInList),
                                       getMessageCard(group, context,
                                           isGroupChat: true)
                                     ],

@@ -95,6 +95,7 @@ dependencies:
   folder_file_saver: ^2.0.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  # open_file: ^3.3.1
   
   # flowder: ^0.2.0
   # open_file: ^3.3.1
