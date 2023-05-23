@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cui_messenger/authentication/bloc/auth_provider.dart';
-import 'package:cui_messenger/authentication/model/user.dart';
+
 import 'package:cui_messenger/authentication/model/user_model.dart';
+import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/settings/bloc/settings_bloc.dart';
 import 'package:cui_messenger/settings/bloc/settings_event.dart';
 import 'package:cui_messenger/settings/bloc/settings_state.dart';
@@ -12,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '/authentication/bloc/auth_bloc.dart';
 import '/authentication/bloc/auth_event.dart';
 import '/helpers/routes/routegenerator.dart';
-import '/helpers/routes/routenames.dart';
+
 import '/helpers/style/colors.dart';
 // import 'package:safepall/screens/maps/bloc/map_bloc.dart';
 // import 'package:safepall/screens/settings/bloc/settings_bloc.dart';
@@ -161,11 +160,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       createInformationTile(
                         mediaQuery: mediaQuery,
                         color: Palette.help,
-                        tileText: "Help",
-                        icon: Icons.help,
+                        tileText: "Change Password",
+                        icon: Icons.key,
                         onTap: () {
-                          // RouteGenerator.navigatorKey.currentState!
-                          //     .pushNamed(helpPageRoute);
+                          RouteGenerator.navigatorKey.currentState!
+                              .pushNamed(changePasswordRoute);
                         },
                       ),
                       createInformationTile(
@@ -435,7 +434,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget createAccountRow(MediaQueryData mediaQuery) {
     return GestureDetector(
       onTap: () {
-        // RouteGenerator.navigatorKey.currentState!.pushNamed(editProfileRoute);
+        RouteGenerator.navigatorKey.currentState!.pushNamed(editProfileRoute);
         // BlocProvider.of<NavBarBloc>(context)
         //     .add(NavBarShowEditProfileEvent(4, editProfileRoute));
       },

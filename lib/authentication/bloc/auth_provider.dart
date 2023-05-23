@@ -1,7 +1,9 @@
 import 'dart:io' as io;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
+import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,7 +45,8 @@ class AuthProvider {
     //});
   }
 
-  getUserData({required fb.UserCredential userCredential}) async {
+  Future<UserModel?> getUserData(
+      {required fb.UserCredential userCredential}) async {
     if (userCredential.user != null) {
       // return userCredential.user;
       await FirebaseFirestore.instance
@@ -61,22 +64,8 @@ class AuthProvider {
       });
       return userData;
     }
+    return null;
   }
-  // Future<String?> imageUrl() async {
-  //   FirebaseFirestore.instance
-  //       .collection('registered-users')
-  //       // .where('username', isEqualTo: searchController.text)
-  //       .get()
-  //       .then((value) {
-  //     value.docs.forEach((users) {
-  //       if (users.data()["uid"] == fb.FirebaseAuth.instance.currentUser!.uid) {
-  //         userImageUrl = users.data()['imageUrl'];
-  //         print("userImageUrl ${userImageUrl}");
-  //       }
-  //     });
-  //   });
-  //   return userImageUrl;
-  // }
 
   Future<UserModel?> studentLogin({
     required String email,
@@ -202,12 +191,12 @@ class AuthProvider {
   }
 
   Future<UserModel?> registerStudentWithEmail(
-      Map<String, dynamic> userData, XFile? file) async {
+      UserModel userData, XFile? file, String password) async {
     try {
       final auth = fb.FirebaseAuth.instance;
       fb.UserCredential userCredential =
           await auth.createUserWithEmailAndPassword(
-              email: userData['email'], password: userData['password']);
+              email: userData.email, password: password);
 
       final ref = FirebaseStorage.instance
           .ref()
@@ -216,13 +205,13 @@ class AuthProvider {
       await ref.putFile(io.File(file!.path));
 
       final url = await ref.getDownloadURL();
-      userData['imageUrl'] = url;
-      userData["uid"] = userCredential.user!.uid;
+      userData.profilePicture = url;
+      userData.uid = userCredential.user!.uid;
 
       await FirebaseFirestore.instance
           .collection('registered-users')
           .doc(userCredential.user!.uid)
-          .set(userData);
+          .set(userData.toJson());
 
       if (userCredential.user != null) {
         final userData = getUserData(userCredential: userCredential);
@@ -272,14 +261,14 @@ class AuthProvider {
   }
 
   Future<UserModel?> registerFacultyWithEmail(
-      Map<String, dynamic> userData, XFile? file) async {
+      UserModel userData, XFile? file, String password) async {
     try {
       bool isRegistered = false;
 
       final auth = fb.FirebaseAuth.instance;
       final userRef = FirebaseFirestore.instance
           .collection("registeredFacultyEmails")
-          .doc(userData["email"]);
+          .doc(userData.email);
 
       await userRef.get().then((docSnapshot) => {
             if (docSnapshot.exists)
@@ -292,7 +281,7 @@ class AuthProvider {
       if (isRegistered == true) {
         fb.UserCredential userCredential =
             await auth.createUserWithEmailAndPassword(
-                email: userData['email'], password: userData['password']);
+                email: userData.email, password: password);
 
         final ref = FirebaseStorage.instance
             .ref()
@@ -302,13 +291,13 @@ class AuthProvider {
         await ref.putFile(io.File(file!.path));
 
         final url = await ref.getDownloadURL();
-        userData['imageUrl'] = url;
-        userData["uid"] = userCredential.user!.uid;
+        userData.profilePicture = url;
+        userData.uid = userCredential.user!.uid;
 
         await FirebaseFirestore.instance
             .collection('registered-users')
             .doc(userCredential.user!.uid)
-            .set(userData);
+            .set(userData.toJson());
 
         if (userCredential.user != null) {
           final userData = getUserData(userCredential: userCredential);
@@ -375,81 +364,100 @@ class AuthProvider {
     }
   }
 
-  // Future<bool> updateUserPassword({required String password}) async {
-  //   try {
-  //     bool value = await Api.instance
-  //         .updateUserPassword(password: password, phone: userPhone);
-  //     return value;
-  //   } catch (error) {
-  //     return false;
-  //   }
-  // }
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+    final user = FirebaseAuth.instance.currentUser;
 
-  // Future<bool> updateUserData(
-  //     {required String userid,
-  //     required Map<String, dynamic> dataChanged,
-  //     required XFile? file,
-  //     required String? oldImageKey}) async {
-  //   try {
-  //     Map<String, dynamic> response = await Api.instance.updateUserData(
-  //         userid: userid,
-  //         dataChanged: dataChanged,
-  //         file: file,
-  //         oldImageKey: oldImageKey);
-  //     if (response["success"]) {
-  //       currentUser!.address = dataChanged["address"];
-  //       currentUser!.firstName = dataChanged["first-name"];
-  //       currentUser!.lastName = dataChanged["last-name"];
-  //       currentUser!.phoneNumber = dataChanged["phone"];
-  //       if (response["image-upload"]["success"] != null) {
-  //         if (response['image-upload']['success']) {
-  //           currentUser!.imageKey = response["image-upload"]["key"];
-  //           var res =
-  //               await Api.instance.getImageByKey(currentUser!.imageKey, userid);
-  //           currentUser!.profilePicture = res["url"];
-  //         }
-  //       }
-  //       saveUser();
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     print("Error occured in updating user data:\n$error");
-  //     return false;
-  //   }
-  // }
+    // Create a credential with the user's email and old password
+    final credential = EmailAuthProvider.credential(
+      email: user!.email.toString(),
+      password: oldPassword,
+    );
+    try {
+      // Re-authenticate the user with the credential
+      await user.reauthenticateWithCredential(credential);
 
-  // Future<bool> refreshUser() async {
-  //   try {
-  //     User? res = await Api.instance
-  //         .getUserWithUID(fb.FirebaseAuth.instance.currentUser!.uid);
-  //     if (res != null) {
-  //       currentUser = res;
-  //       String token = await FirebaseMessaging.instance.getToken() as String;
-  //       print("Device Token: $token");
-  //       await Api.instance.addDevice(
-  //         fb.FirebaseAuth.instance.currentUser!.uid,
-  //         token,
-  //       );
-  //       await saveUser();
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     print("error in refreshing user!\n$error");
-  //     return false;
-  //   }
-  // }
+      // Change the user's password
+      updatePassword(newPassword);
+      // Password change successful
+      print('Password updated successfully!');
+      RouteGenerator.navigatorKey.currentState!.pop();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text('The provided password is incorrect.'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
 
-  Future<void> logOut(String deviceId) async {
-    // bool res = await Api.instance.logOut(deviceId);
-    return;
+        // Handle incorrect password error
+      } else {
+        // Handle other errors
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text('Something went wrong'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      showSimpleNotification(
+        slideDismissDirection: DismissDirection.horizontal,
+        const Text('Something went wrong'),
+        background: Palette.red.withOpacity(0.9),
+        duration: const Duration(seconds: 2),
+      );
+    }
   }
 
-  Future<bool> deleteAccount(String email) async {
-    // bool res = await Api.instance.deleteUserAccount(email);
-    return false;
+  void updatePassword(String newPassword) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      await user!.updatePassword(newPassword);
+
+      // print('Password changed successfully');
+
+      showSimpleNotification(
+        slideDismissDirection: DismissDirection.horizontal,
+        const Text('Password changed successfully'),
+        background: Palette.green.withOpacity(0.9),
+        duration: const Duration(seconds: 2),
+      );
+      // _currentPasswordController.text = '';
+      // _newPasswordController.text = '';
+      // _repeatPasswordController.text = '';
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text('The password provided is too weak.'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (e.code == 'requires-recent-login') {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text(
+              'This operation is sensitive and requires recent authentication. Log in again before retrying this request.'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        showSimpleNotification(
+          slideDismissDirection: DismissDirection.horizontal,
+          const Text('Something went wrong'),
+          background: Palette.red.withOpacity(0.9),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      showSimpleNotification(
+        slideDismissDirection: DismissDirection.horizontal,
+        const Text('Something went wrong'),
+        background: Palette.red.withOpacity(0.9),
+        duration: const Duration(seconds: 2),
+      );
+    }
   }
 }

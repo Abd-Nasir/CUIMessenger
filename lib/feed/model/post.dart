@@ -1,5 +1,3 @@
-import 'package:cui_messenger/feed/model/comment.dart';
-
 class Post {
   late String postId;
   // late String title;

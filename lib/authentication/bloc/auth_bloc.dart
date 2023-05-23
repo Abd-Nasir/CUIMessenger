@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -149,8 +151,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (event, emit) async {
         emit(const AuthStateLoading(null));
 
-        final user =
-            await provider.registerStudentWithEmail(event.userData, event.file);
+        final user = await provider.registerStudentWithEmail(
+            event.userData, event.file, event.password);
         if (user != null) {
           if (FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateLoggedIn(user));
@@ -169,8 +171,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (event, emit) async {
         emit(const AuthStateLoading(null));
 
-        final user =
-            await provider.registerFacultyWithEmail(event.userData, event.file);
+        final user = await provider.registerFacultyWithEmail(
+            event.userData, event.file, event.password);
         if (user != null) {
           if (FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateLoggedIn(user));
@@ -195,74 +197,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
     );
 
-    // on<AuthForgotPasswordVerifyOTPEvent>((event, emit) async {
-    //   emit(const AuthStateLoading(null));
-
-    //   try {
-    //     await provider.verifyPhone(code: event.code).then((value) {
-    //       if (value) {
-    //         RouteGenerator.navigatorKey.currentState!
-    //             .pushNamed(resetPasswordRoute);
-    //       }
-    //     });
-    //   } catch (error) {
-    //     print(error);
-    //   }
-    // });
-
-    // on<UpdateUserPasswordEvent>((event, emit) async {
-    //   emit(const AuthStateLoading(null));
-    //   try {
-    //     await provider
-    //         .updateUserPassword(password: event.password)
-    //         .then((value) async {
-    //       if (value) {
-    //         await provider.loginWithPhone().then((value) {
-    //           if (value) {
-    //             emit(AuthStateLoggedIn(provider.currentUser));
-    //             showSimpleNotification(
-    //               Text(AppLocalizations.instance.tr('password_update_success')),
-    //               background: Palette.green.withOpacity(0.9),
-    //               duration: const Duration(seconds: 2),
-    //               slideDismissDirection: DismissDirection.horizontal,
-    //             );
-
-    //             RouteGenerator.navigatorKey.currentState!
-    //                 .pushNamedAndRemoveUntil(rootRoute, (route) => false);
-    //           }
-    //         });
-    //       }
-    //     });
-    //   } catch (error) {
-    //     print(error);
-    //   }
-    // });
-
-    // on<AuthUpdateUserDataEvent>(
-    //   (event, emit) async {
-    //     var response = await provider.updateUserData(
-    //         userid: event.userid,
-    //         dataChanged: event.dataChanged,
-    //         file: event.file,
-    //         oldImageKey: event.oldImageKey);
-    //     if (response) {
-    //       showSimpleNotification(
-    //         Text(AppLocalizations.instance.tr('user_update_success')),
-    //         background: Palette.green.withOpacity(0.9),
-    //         duration: const Duration(seconds: 2),
-    //         slideDismissDirection: DismissDirection.horizontal,
-    //       );
-    //     } else {
-    //       showSimpleNotification(
-    //         Text(AppLocalizations.instance.tr('update_user_failed')),
-    //         background: Palette.red.withOpacity(0.9),
-    //         duration: const Duration(seconds: 2),
-    //         slideDismissDirection: DismissDirection.horizontal,
-    //       );
-    //     }
-    //   },
-    // );
-
     on<CheckEmailVerified>((event, emit) async {
       await FirebaseAuth.instance.currentUser!.reload();
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
@@ -279,32 +213,51 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
     });
 
-    on<OnAuthNavigateAppEvent>(
-      (event, emit) async {
-        emit(const AuthStateLoading(null));
-        await provider.initialize().then((value) {
-          final user = provider.userData;
+    // on<OnAuthNavigateAppEvent>(
+    //   (event, emit) async {
+    //     emit(const AuthStateLoading(null));
+    //     await provider.initialize().then((value) {
+    //       final user = provider.userData;
 
-          if (FirebaseAuth.instance.currentUser != null) {
-            if (FirebaseAuth.instance.currentUser!.emailVerified) {
-              emit(AuthStateLoggedIn(user));
-            } else if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-              emit(AuthStateNeedsVerification(user));
-            }
-          } else {
-            emit(const AuthStateLoggedOut(null));
-          }
-        });
+    //       if (FirebaseAuth.instance.currentUser != null) {
+    //         if (FirebaseAuth.instance.currentUser!.emailVerified) {
+    //           emit(AuthStateLoggedIn(user));
+    //         } else if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+    //           emit(AuthStateNeedsVerification(user));
+    //         }
+    //       } else {
+    //         emit(const AuthStateLoggedOut(null));
+    //       }
+    //     });
+    //   },
+    // );
+
+    on<AuthDeleteAccountEvent>((event, emit) async {
+      print("in delete account");
+      final userRef = FirebaseFirestore.instance
+          .collection("registered-users")
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+      userRef.get().then((user) {
+        UserModel userModel = UserModel.fromJson(user.data()!);
+        print(userModel.firstName);
+        print(userModel.email);
+        FirebaseStorage.instance.refFromURL(userModel.profilePicture).delete();
+      });
+      userRef.delete();
+      // userRef.collection("chats").get().then((value) {
+      //   value.docs.forEach((element) {
+      //     element;
+      //   });
+      // });
+      FirebaseAuth.instance.currentUser!.delete().then((_) {
+        emit(const AuthStateLoggedOut(null));
+      });
+    });
+    on<UpdateUserPasswordEvent>(
+      (event, emit) {
+        provider.changePassword(event.oldPassword, event.updatedPassword);
       },
     );
-
-    // on<AuthDeleteAccountEvent>((event, emit) async {
-    //   bool res = await provider.deleteAccount(event.email);
-    //   if (res) {
-    //     emit(const AuthStateLoggedOut(null));
-    //   }
-    // });
-
     // on<AuthForgotPasswordEvent>(
     //   (event, emit) async {
     //     try {

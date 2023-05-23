@@ -10,3 +10,6 @@ const String facultySignupPageRoute = "/faculty-signup-route";
 const String verifyMailRoute = "/verifymail-route";
 const String commentScreenRoute = "/comment-screen-route";
 const String newPostScreenRoute = "/newpost-screen-route";
+const String editProfileRoute = '/edit-profile-screen-route';
+const String changePasswordRoute = "/change-password-route";
+const String newPostRoute = "/new-post-route";

@@ -2,10 +2,8 @@
 import 'package:cui_messenger/settings/model/setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:hive/hive.dart';
-import 'package:overlay_support/overlay_support.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class SettingsProvider {
   late Box<dynamic> settingBox;

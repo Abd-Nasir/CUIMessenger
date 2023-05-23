@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:cui_messenger/chat/constants/colors.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';

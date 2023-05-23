@@ -12,28 +12,9 @@ import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'new_post_screen.dart';
+// import 'new_post_screen.dart';
 
-enum postOptions { editPost, deletePost }
-
-Route _createRoute() {
-  return PageRouteBuilder(
-    transitionDuration: const Duration(seconds: 1),
-    pageBuilder: (context, animation, secondaryAnimation) => const NewPost(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var curve = Curves.easeOutCirc;
-      var curveTween = CurveTween(curve: curve);
-      const begin = Offset(0.0, 2.0);
-      const end = Offset.zero;
-      var tween = Tween(begin: begin, end: end).chain(curveTween);
-      final offsetAnimation = animation.drive(tween);
-      return SlideTransition(
-        position: offsetAnimation,
-        child: child,
-      );
-    },
-  );
-}
+enum PostOptions { editPost, deletePost }
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -43,12 +24,12 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  postOptions? selectedMenu;
+  PostOptions? selectedMenu;
 
   bool isLoading = true;
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 1)).then((value) {
+    Future.delayed(const Duration(seconds: 1)).then((value) {
       isLoading = false;
       setState(() {});
     });
@@ -63,14 +44,17 @@ class _FeedScreenState extends State<FeedScreen> {
       bottom: false,
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
-        backgroundColor: Palette.cuiOffWhite,
+        backgroundColor: Palette.white,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Palette.cuiOffWhite,
+          backgroundColor: Palette.white,
           centerTitle: true,
           title: const Text(
             'Feed',
-            style: TextStyle(fontSize: 20, color: Colors.black),
+            style: TextStyle(
+                fontSize: 22,
+                color: Palette.cuiPurple,
+                fontWeight: FontWeight.w400),
           ),
           automaticallyImplyLeading: false,
           actions: [
@@ -78,7 +62,8 @@ class _FeedScreenState extends State<FeedScreen> {
               padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(_createRoute());
+                  RouteGenerator.navigatorKey.currentState!
+                      .pushNamed(newPostRoute);
                 },
                 child: const Icon(
                   Icons.post_add_sharp,
@@ -105,10 +90,22 @@ class _FeedScreenState extends State<FeedScreen> {
                     reverse: true,
                     itemCount: state.postProvider.posts.length,
                     itemBuilder: (BuildContext context, index) {
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        elevation: 4,
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Palette.white,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Palette.cuiPurple.withOpacity(0.25),
+                              spreadRadius: 2,
+                              blurRadius: 9,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        // elevation: 3,
                         margin: const EdgeInsets.only(
                           top: 20,
                           left: 20,
@@ -178,7 +175,7 @@ class _FeedScreenState extends State<FeedScreen> {
               ],
             ),
           ),
-          PopupMenuButton<postOptions>(
+          PopupMenuButton<PostOptions>(
             iconSize: 20,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -186,24 +183,24 @@ class _FeedScreenState extends State<FeedScreen> {
             position: PopupMenuPosition.under,
             initialValue: selectedMenu,
             // Callback that sets the selected popup menu item.
-            onSelected: (postOptions item) {
+            onSelected: (PostOptions item) {
               setState(() {
                 selectedMenu = item;
               });
             },
             itemBuilder: (BuildContext context) =>
-                <PopupMenuEntry<postOptions>>[
-              PopupMenuItem<postOptions>(
+                <PopupMenuEntry<PostOptions>>[
+              PopupMenuItem<PostOptions>(
                 height: mediaQuery.size.height * 0.035,
                 padding: EdgeInsets.zero,
-                value: postOptions.editPost,
+                value: PostOptions.editPost,
                 child: Container(
                   color: Colors.white,
                   height: mediaQuery.size.height * 0.035,
                   width: mediaQuery.size.width * 0.28,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: const [
+                    children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Icon(Icons.edit_note,
@@ -218,17 +215,17 @@ class _FeedScreenState extends State<FeedScreen> {
                 ),
               ),
               const PopupMenuDivider(),
-              PopupMenuItem<postOptions>(
+              PopupMenuItem<PostOptions>(
                 height: mediaQuery.size.height * 0.035,
                 padding: EdgeInsets.zero,
-                value: postOptions.deletePost,
+                value: PostOptions.deletePost,
                 child: Container(
                   color: Colors.white,
                   height: mediaQuery.size.height * 0.035,
                   width: mediaQuery.size.width * 0.28,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: const [
+                    children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Icon(Icons.delete,

@@ -1,3 +1,5 @@
+import 'package:cui_messenger/authentication/login/view/change_password.dart';
+import 'package:cui_messenger/authentication/login/view/edit_profile.dart';
 import 'package:cui_messenger/authentication/login/view/select_user_screen.dart';
 import 'package:cui_messenger/authentication/login/view/faculty_login.dart';
 import 'package:cui_messenger/authentication/signup/view/faculty_signup.dart';
@@ -54,11 +56,38 @@ class RouteGenerator {
             ),
           );
         }
+
         return _errorRoute();
 
       case newPostScreenRoute:
         return MaterialPageRoute(
           builder: (_) => const NewPost(),
+        );
+      case editProfileRoute:
+        return MaterialPageRoute(
+          builder: (_) => const EditProfilePage(),
+        );
+      case changePasswordRoute:
+        return MaterialPageRoute(
+          builder: (_) => ChangePassword(),
+        );
+      case newPostRoute:
+        return PageRouteBuilder(
+          transitionDuration: const Duration(seconds: 1),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const NewPost(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var curve = Curves.easeOutCirc;
+            var curveTween = CurveTween(curve: curve);
+            const begin = Offset(0.0, 2.0);
+            const end = Offset.zero;
+            var tween = Tween(begin: begin, end: end).chain(curveTween);
+            final offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
         );
       default:
         return _errorRoute();

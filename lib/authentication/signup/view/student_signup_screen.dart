@@ -2,11 +2,12 @@ import 'dart:io' as io;
 
 import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/authentication/bloc/auth_event.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
-import 'package:date_time_picker/date_time_picker.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,7 +32,7 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController dateOfBirthController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypePasswordController = TextEditingController();
   TextEditingController countryCodeController =
@@ -76,19 +77,30 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
           });
           BlocProvider.of<AuthBloc>(context).add(
             AuthStudentRegisterEvent(
-              userData: {
-                "uid": "",
-                "first-name": firstNameController.text,
-                "last-name": lastNameController.text,
-                "reg-no": emailController.text.split("@").first.toUpperCase(),
-                "role": "student",
-                "email": emailController.text.trim(),
-                "phone": countryCodeController.text + phoneController.text,
-                "date-of-birth": dateTime.toIso8601String(),
-                "password": passwordController.text.trim(),
-                "imageUrl": "",
-              },
-              file: pickedImage!,
+              // userData: {
+              //   "uid": "",
+              //   "first-name": firstNameController.text,
+              //   "last-name": lastNameController.text,
+              //   "reg-no": emailController.text.split("@").first.toUpperCase(),
+              //   "role": "student",
+              //   "email": emailController.text.trim(),
+              //   "phone": countryCodeController.text + phoneController.text,
+              //   "password": passwordController.text.trim(),
+              //   "imageUrl": "",
+              // },
+              userData: UserModel(
+                  uid: "",
+                  firstName: firstNameController.text,
+                  lastName: lastNameController.text,
+                  email: emailController.text.trim(),
+                  profilePicture: "",
+                  token: "",
+                  isOnline: false,
+                  blockList: [],
+                  role: "student",
+                  regNo: emailController.text.split("@").first.toUpperCase(),
+                  phoneNo: countryCodeController.text + phoneController.text),
+              file: pickedImage!, password: passwordController.text.trim(),
             ),
           );
           setState(() {
@@ -302,45 +314,45 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
                     ],
                   ),
                   SizedBox(height: mediaQuery.size.height * 0.03),
-                  Container(
-                    decoration: CustomWidgets.textInputDecoration,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: mediaQuery.size.width * 0.04,
-                        vertical: 0.01),
-                    child: TextFormField(
-                      controller: dateOfBirthController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Date of Birth",
-                        hintStyle: TextStyle(
-                          color: Palette.hintGrey,
-                        ),
-                      ),
-                      keyboardType: TextInputType.datetime,
-                      readOnly: true,
-                      onTap: () {
-                        DateTimePicker(
-                          type: DateTimePickerType.date,
-                        );
-                        // DatePicker.showDatePicker(context,
-                        //     showTitleActions: true,
-                        //     minTime: DateTime(1900, 1, 1),
-                        //     maxTime: DateTime.now(),
-                        //     currentTime: dateTime, onConfirm: (date) {
-                        //   dateTime = date;
-                        //   dateOfBirthController.text =
-                        //       "${date.day}-${date.month}-${date.year}";
-                        // });
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Select a date";
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  SizedBox(height: mediaQuery.size.height * 0.03),
+                  // Container(
+                  //   decoration: CustomWidgets.textInputDecoration,
+                  //   padding: EdgeInsets.symmetric(
+                  //       horizontal: mediaQuery.size.width * 0.04,
+                  //       vertical: 0.01),
+                  //   child: TextFormField(
+                  //     controller: dateOfBirthController,
+                  //     decoration: const InputDecoration(
+                  //       border: InputBorder.none,
+                  //       hintText: "Date of Birth",
+                  //       hintStyle: TextStyle(
+                  //         color: Palette.hintGrey,
+                  //       ),
+                  //     ),
+                  //     keyboardType: TextInputType.datetime,
+                  //     readOnly: true,
+                  //     onTap: () {
+                  //       DateTimePicker(
+                  //         type: DateTimePickerType.date,
+                  //       );
+                  //       // DatePicker.showDatePicker(context,
+                  //       //     showTitleActions: true,
+                  //       //     minTime: DateTime(1900, 1, 1),
+                  //       //     maxTime: DateTime.now(),
+                  //       //     currentTime: dateTime, onConfirm: (date) {
+                  //       //   dateTime = date;
+                  //       //   dateOfBirthController.text =
+                  //       //       "${date.day}-${date.month}-${date.year}";
+                  //       // });
+                  //     },
+                  //     validator: (value) {
+                  //       if (value!.isEmpty) {
+                  //         return "Select a date";
+                  //       }
+                  //       return null;
+                  //     },
+                  //   ),
+                  // ),
+                  // SizedBox(height: mediaQuery.size.height * 0.03),
                   Container(
                     decoration: CustomWidgets.textInputDecoration,
                     padding: EdgeInsets.symmetric(

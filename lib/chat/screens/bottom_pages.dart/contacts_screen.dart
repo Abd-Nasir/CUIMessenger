@@ -3,6 +3,7 @@ import 'package:cui_messenger/chat/methods/chat_methods.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ContactsScreen extends StatefulWidget {
   final bool isChat;
   String? value;

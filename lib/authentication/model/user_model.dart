@@ -55,7 +55,7 @@ class UserModel {
     data["profile-picture"] = profilePicture;
     data['token'] = token;
     data['isOnline'] = isOnline;
-    data['bloackList'] = blockList;
+    data['blockList'] = blockList;
     data["role"] = role;
     data['reg-no'] = regNo;
     data['phone'] = phoneNo;

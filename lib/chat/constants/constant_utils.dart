@@ -1478,31 +1478,42 @@ getPeopleCard(UserModel model, context, bool isSelected) {
 //returs a widget that acts as a prompt
 getNewChatPrompt(context) {
   return Center(
-    child: Padding(
+    child: Container(
       padding: const EdgeInsets.all(10.0),
-      child: SizedBox(
-        height: 150,
-        child: Card(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  "You dont have any chats\nstart a chat",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+      decoration: BoxDecoration(
+          color: Palette.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Palette.cuiPurple.withOpacity(0.25),
+              blurRadius: 3.0,
+              spreadRadius: 2,
+              offset: const Offset(0.0, 2.0),
+            ),
+          ]),
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Text(
+              "You dont have any chats\nstart a chat",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    showNewMessage(context);
-                  },
-                  child: const Text('Start a chat')),
-            ],
+            ),
           ),
-        ),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Palette.cuiPurple,
+              ),
+              onPressed: () {
+                showNewMessage(context);
+              },
+              child: const Text('Start a chat')),
+        ],
       ),
     ),
   );

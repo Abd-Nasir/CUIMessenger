@@ -6,17 +6,10 @@ import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:image_picker/image_picker.dart';
-// // import 'package:safepall/helpers/routes/routegenerator.dart';
-// import 'package:safepall/helpers/style/colors.dart';
-// import 'package:safepall/helpers/style/custom_widgets.dart';
-// import 'package:safepall/screens/authentication/bloc/auth_bloc.dart';
-// import 'package:safepall/screens/authentication/model/user.dart' as my_user;
+
 import 'dart:io' as io;
-// import 'package:file_picker/file_picker.dart';
-// import 'package:safepall/screens/chat/model/chat.dart';
-// import 'package:safepall/screens/chat/model/chat_list.dart';
 
 class ChatBox extends StatefulWidget {
   const ChatBox({

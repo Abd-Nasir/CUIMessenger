@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ChatContactsListScreen extends StatefulWidget {
-  String value;
-  ChatContactsListScreen({required this.value, super.key});
+  final String value;
+  const ChatContactsListScreen({required this.value, super.key});
 
   @override
   State<ChatContactsListScreen> createState() => _ChatContactsListScreenState();

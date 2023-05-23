@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:folder_file_saver/folder_file_saver.dart';
+
 // import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 // import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
@@ -61,12 +62,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   IconButton(
                       onPressed: () {
                         BlocProvider.of<NotificationBloc>(context)
-                            .add(InitializeNotificationEvent());
+                            .add(const InitializeNotificationEvent());
                       },
                       icon: const Icon(
                         Icons.refresh,
                         size: 20,
-                        color: Palette.cuiBlue,
+                        color: Palette.cuiPurple,
                       )),
                   // Text(
                   //   AppLocalizations.of(context).translate('notifications'),
@@ -82,7 +83,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               "Notifications",
               style: TextStyle(
                   fontSize: 30,
-                  color: Palette.cuiBlue,
+                  color: Palette.cuiPurple,
                   fontFamily: "assets/fonts/SulphurPoint-Regular.ttf"),
             ),
             Expanded(
@@ -124,15 +125,17 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                     top: mediaQuery.size.height * 0.02,
                                     bottom: mediaQuery.size.height * 0.02),
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    color: Palette.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Palette.black.withOpacity(0.10),
-                                        offset: const Offset(0.0, 0.0),
-                                        blurRadius: 4.0,
-                                      ),
-                                    ]),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  color: Palette.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: const Offset(0.0, 2.0),
+                                      blurRadius: 16.0,
+                                      color:
+                                          Palette.cuiPurple.withOpacity(0.15),
+                                    )
+                                  ],
+                                ),
                                 child: ListTile(
                                   //Display the user image
                                   tileColor: Palette.white,
@@ -148,7 +151,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                           .notifications[index].title,
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
-                                          color: Palette.cuiBlue,
+                                          color: Palette.cuiPurple,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -167,13 +170,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                           ),
                                         ),
                                         const TextSpan(text: "\n"),
-                                        const TextSpan(
-                                            text: "Tap to open document",
-                                            style: TextStyle(
-                                                height: 1.5,
-                                                color: Palette.cuiBlue,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500)),
+                                        if (state
+                                                .notificationProvider
+                                                .notifications[index]
+                                                .fileName ==
+                                            "")
+                                          const TextSpan(
+                                              text: "Tap to open document",
+                                              style: TextStyle(
+                                                  height: 1.5,
+                                                  color: Palette.cuiPurple,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500)),
                                         const TextSpan(
                                           text: " - ",
                                           style: TextStyle(
@@ -187,7 +195,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                   onTap: () async {
                                     print("ontap");
                                     File checkFile = File(
-                                        "/storage/emulated/0/Documents/CUI Messenger /Documents/loremIpsum");
+                                        "/storage/emulated/0/Documents/CUI Messenger /Documents/${state.notificationProvider.notifications[index].fileName}");
 
                                     if (await checkFile.exists()) {
                                       print("exists");
@@ -218,9 +226,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                           ? await getApplicationSupportDirectory()
                                           : await getApplicationDocumentsDirectory();
                                       print(dir.path);
-                                      File savedFile =
-                                          await File("${dir.path}/nothingIpsum")
-                                              .writeAsBytes(response.data);
+                                      File savedFile = await File(
+                                              "${dir.path}/${state.notificationProvider.notifications[index].fileName}")
+                                          .writeAsBytes(response.data);
 
                                       if (Platform.isAndroid) {
                                         final result1 = await FolderFileSaver

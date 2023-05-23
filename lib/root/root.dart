@@ -43,7 +43,7 @@ class _RootPageState extends State<RootPage> {
       floatingActionButton:
           selectedIndex == 1 ? _getFloatingButton() : const SizedBox(),
       resizeToAvoidBottomInset: false,
-      backgroundColor: Palette.aliceBlue,
+      backgroundColor: Palette.white,
       bottomNavigationBar: FlashyTabBar(
         height: (mediaQuery.size.height * 0.1 > 100)
             ? 100

@@ -79,7 +79,7 @@ class _NewPostState extends State<NewPost> {
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
     return Scaffold(
-        backgroundColor: Palette.cuiOffWhite,
+        backgroundColor: Palette.white,
         appBar: AppBar(
           actions: [
             IconButton(
@@ -94,7 +94,7 @@ class _NewPostState extends State<NewPost> {
             'Create Post',
             style: TextStyle(fontSize: 20, color: Colors.black),
           ),
-          backgroundColor: Palette.cuiOffWhite,
+          backgroundColor: Palette.white,
           centerTitle: true,
         ),
         // bottomSheet: bottomSheet(context),

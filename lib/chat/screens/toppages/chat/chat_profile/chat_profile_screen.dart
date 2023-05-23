@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/models/chat_model.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
-
 import 'package:flutter/material.dart';
 
 class ChatProfileScreen extends StatefulWidget {
@@ -35,7 +32,6 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log("Value = " + controlValue.value.toString());
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Palette.cuiOffWhite,

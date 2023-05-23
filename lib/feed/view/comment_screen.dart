@@ -18,14 +18,13 @@ class CommentBox extends StatefulWidget {
 class _CommentBoxState extends State<CommentBox> {
   final TextEditingController commentController = TextEditingController();
 
-  int _counter = 0;
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
     var currentUser = BlocProvider.of<AuthBloc>(context).state.user!;
 
     return Scaffold(
-        backgroundColor: Palette.cuiOffWhite,
+        backgroundColor: Palette.white,
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.black),
           elevation: 0,
@@ -33,7 +32,7 @@ class _CommentBoxState extends State<CommentBox> {
             'Suggestions',
             style: TextStyle(fontSize: 20, color: Colors.black),
           ),
-          backgroundColor: Palette.cuiOffWhite,
+          backgroundColor: Palette.white,
           centerTitle: true,
         ),
         body: StreamBuilder(
