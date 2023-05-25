@@ -7,6 +7,7 @@ import 'package:cui_messenger/chat/methods/storage_methods.dart';
 import 'package:cui_messenger/chat/models/group.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
+import 'package:cui_messenger/helpers/style/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:uuid/uuid.dart';
@@ -95,7 +96,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             .collection('groups')
             .doc(groupId)
             .set(group.toMap());
-        Navigator.pop(context);
+        Navigator.of(context).pop();
       } catch (e) {
         showToastMessage(e.toString());
       }
@@ -113,13 +114,17 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     // print('ss');
     // refresh();
     return Scaffold(
+        backgroundColor: Palette.white,
         appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Palette.white,
+          foregroundColor: Palette.cuiPurple,
           actions: [
             IconButton(
               onPressed: people.isNotEmpty ? createGroup : null,
               icon: Icon(
                 Icons.done,
-                color: people.isEmpty ? Colors.grey : Colors.white,
+                color: people.isEmpty ? Colors.grey : Palette.cuiPurple,
               ),
             )
           ],
@@ -134,6 +139,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   image == null
                       ? CircleAvatar(
                           backgroundImage: CachedNetworkImageProvider(
+                            // maxHeight: 5,
                             staticPhotoUrl,
                           ),
                           radius: 64,
@@ -156,13 +162,24 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
+              Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.06,
+                    vertical: MediaQuery.of(context).size.height * 0.05),
+                decoration: CustomWidgets.textInputDecoration,
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.04,
+                    vertical: 4),
+                child: TextFormField(
                   controller: groupNameController,
                   decoration: const InputDecoration(
-                    hintText: 'Enter Group Name',
+                    border: InputBorder.none,
+                    hintText: "Group Name",
+                    hintStyle: TextStyle(
+                      color: Palette.hintGrey,
+                    ),
                   ),
+                  keyboardType: TextInputType.text,
                 ),
               ),
               Container(
@@ -197,7 +214,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             //     MaterialPageRoute(
             //         builder: (context) =>
             //             AddPeople(context, peopleUid, refresh)));
-            showPeopleForTask(context, peopleUid, refresh);
+            showPeopleForTask(context, peopleUid, refresh, groupId: null);
           },
           label: const Text('Add People'),
           icon: const Icon(Icons.people),

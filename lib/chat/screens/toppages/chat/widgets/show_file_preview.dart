@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';

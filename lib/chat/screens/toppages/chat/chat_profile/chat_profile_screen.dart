@@ -18,7 +18,7 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
   ValueNotifier<int> controlValue = ValueNotifier(0);
   Future<UserModel> getUserInfo() async {
     return firebaseFirestore
-        .collection('users')
+        .collection('registered-users')
         .doc(widget.chatContactModel.contactId)
         .get()
         .then((value) {

@@ -388,10 +388,11 @@ class _ChatScreenState extends State<ChatScreen>
             //     }),
             Expanded(
               child: Scaffold(
+                  backgroundColor: Palette.white,
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
                     backgroundColor: Colors.white,
-                    elevation: 2,
+                    elevation: 0,
                     toolbarHeight: 65,
                     title: Row(
                       children: [
@@ -1884,78 +1885,6 @@ class _MyTextFieldState extends State<MyTextField> {
           }
           return getTextField();
         });
-  }
-}
-
-class _TabSwitch extends StatefulWidget {
-  int value;
-  VoidCallback callBack;
-  _TabSwitch({Key? key, required this.value, required this.callBack})
-      : super(key: key);
-
-  @override
-  State<_TabSwitch> createState() => _TabSwitchState();
-}
-
-class _TabSwitchState extends State<_TabSwitch> {
-  bool isChat = true;
-
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    if (widget.value == 0) {
-      isChat = true;
-    } else {
-      isChat = false;
-    }
-    return GestureDetector(
-      onTap: widget.callBack,
-      child: Container(
-        height: 50,
-        width: size.width / 1.2,
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(35)),
-        child: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 200),
-              left: isChat ? 0 : size.width / 1.2 * 0.5,
-              child: Container(
-                height: 50,
-                width: size.width / 1.2 * 0.5,
-                decoration: BoxDecoration(
-                    color: Palette.cuiPurple,
-                    borderRadius: BorderRadius.circular(35)),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      "Chats",
-                      style: TextStyle(
-                          color: isChat ? Colors.white : Palette.cuiPurple,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      "To Do's",
-                      style: TextStyle(
-                          color: isChat ? Palette.cuiPurple : Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 

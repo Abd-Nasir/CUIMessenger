@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
+
 import 'package:folder_file_saver/folder_file_saver.dart';
 
 // import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
@@ -51,23 +51,24 @@ class _NotificationsPageState extends State<NotificationsPage> {
     MediaQueryData mediaQuery = MediaQuery.of(context);
 
     return Scaffold(
+        backgroundColor: Palette.white,
         body: SafeArea(
-      bottom: false,
-      child: SingleChildScrollView(
-        child: Container(
-            color: Palette.white,
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                buildHeader(mediaQuery, context),
-                const SizedBox(height: 15),
-                selectedIndex == 0
-                    ? notification(mediaQuery, context)
-                    : noticeboard(mediaQuery, context),
-              ],
-            )),
-      ),
-    ));
+          bottom: false,
+          child: SingleChildScrollView(
+            child: Container(
+                color: Palette.white,
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    buildHeader(mediaQuery, context),
+                    const SizedBox(height: 15),
+                    selectedIndex == 0
+                        ? notification(mediaQuery, context)
+                        : noticeboard(mediaQuery, context),
+                  ],
+                )),
+          ),
+        ));
   }
 
   Widget noticeboard(MediaQueryData mediaQuery, BuildContext context) {

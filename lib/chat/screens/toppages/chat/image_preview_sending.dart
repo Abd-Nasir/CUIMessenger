@@ -38,6 +38,7 @@ class _ImagePreviewSendingState extends State<ImagePreviewSending> {
     return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
+          backgroundColor: Colors.black,
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);

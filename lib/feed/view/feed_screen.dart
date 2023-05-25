@@ -101,8 +101,8 @@ class _FeedScreenState extends State<FeedScreen> {
                               color: Palette.cuiPurple.withOpacity(0.25),
                               spreadRadius: 2,
                               blurRadius: 9,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
+                              offset: const Offset(
+                                  0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -176,72 +176,99 @@ class _FeedScreenState extends State<FeedScreen> {
               ],
             ),
           ),
-          PopupMenuButton<PostOptions>(
-            iconSize: 20,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            splashRadius: 24,
-            position: PopupMenuPosition.under,
-            initialValue: selectedMenu,
-            // Callback that sets the selected popup menu item.
-            onSelected: (PostOptions item) {
-              setState(() {
-                selectedMenu = item;
-              });
-            },
-            itemBuilder: (BuildContext context) =>
-                <PopupMenuEntry<PostOptions>>[
-              PopupMenuItem<PostOptions>(
-                height: mediaQuery.size.height * 0.035,
-                padding: EdgeInsets.zero,
-                value: PostOptions.editPost,
-                child: Container(
-                  color: Colors.white,
+          if (post.uId == currentUser.uid)
+            PopupMenuButton<PostOptions>(
+              iconSize: 20,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              splashRadius: 24,
+              position: PopupMenuPosition.under,
+              initialValue: selectedMenu,
+              // Callback that sets the selected popup menu item.
+              onSelected: (PostOptions item) {
+                setState(() {
+                  selectedMenu = item;
+                });
+              },
+              itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<PostOptions>>[
+                PopupMenuItem<PostOptions>(
                   height: mediaQuery.size.height * 0.035,
-                  width: mediaQuery.size.width * 0.28,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.edit_note,
-                            size: 20, color: Palette.cuiPurple),
-                      ),
-                      Text(
-                        'Edit Post',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
+                  padding: EdgeInsets.zero,
+                  value: PostOptions.editPost,
+                  child: Container(
+                    color: Colors.white,
+                    height: mediaQuery.size.height * 0.035,
+                    width: mediaQuery.size.width * 0.28,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.edit_note,
+                              size: 20, color: Palette.cuiPurple),
+                        ),
+                        Text(
+                          'Edit Post',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const PopupMenuDivider(),
-              PopupMenuItem<PostOptions>(
-                height: mediaQuery.size.height * 0.035,
-                padding: EdgeInsets.zero,
-                value: PostOptions.deletePost,
-                child: Container(
-                  color: Colors.white,
+                const PopupMenuDivider(),
+                PopupMenuItem<PostOptions>(
                   height: mediaQuery.size.height * 0.035,
-                  width: mediaQuery.size.width * 0.28,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.delete,
-                            size: 20, color: Palette.cuiPurple),
-                      ),
-                      Text(
-                        'Delete Post',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
+                  padding: EdgeInsets.zero,
+                  value: PostOptions.deletePost,
+                  child: Container(
+                    color: Colors.white,
+                    height: mediaQuery.size.height * 0.035,
+                    width: mediaQuery.size.width * 0.28,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.delete,
+                              size: 20, color: Palette.cuiPurple),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // PopupMenuButtonState().deactivate();
+                            // Navigator.of(context, rootNavigator: true)
+                            //     .pop('dialog');
+                            print("tapped");
+                            // setState(() {
+                            //   isLoading = true;
+                            // });
+                            FirebaseFirestore.instance
+                                .collection('posts')
+                                .doc(post.postId)
+                                .delete()
+                                .then((value) {
+                              BlocProvider.of<PostBloc>(context)
+                                  .add(const LoadPostsFromDatabase());
+
+                              // Future.delayed(const Duration(seconds: 1))
+                              //     .then((_) {
+                              //   setState(() {
+                              //     isLoading = false;
+                              //   });
+                              // });
+                            });
+                          },
+                          child: const Text(
+                            'Delete Post',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
+                )
+              ],
+            ),
         ]),
         Align(
           alignment: Alignment.topLeft,
