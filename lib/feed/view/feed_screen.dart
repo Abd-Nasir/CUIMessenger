@@ -313,8 +313,8 @@ class _FeedScreenState extends State<FeedScreen> {
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(
-                  sigmaX: 20,
-                  sigmaY: 50,
+                  sigmaX: 10,
+                  sigmaY: 40,
                 ),
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance

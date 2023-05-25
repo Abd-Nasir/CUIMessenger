@@ -139,7 +139,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             readOnly: true,
                             onTap: () {
                               showSimpleNotification(
-                                const Text("Sorry email is cannot be changed"),
+                                const Text("Sorry email cannot be changed"),
                                 background: Palette.yellow.withOpacity(0.9),
                                 duration: const Duration(seconds: 2),
                               );

@@ -17,29 +17,6 @@ import '/helpers/routes/routenames.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthProvider provider) : super(const AuthStateLoading(null)) {
     on<AuthEventInitialize>((event, emit) async {
-      // print("Auth Bloc Event Initialized");
-      // Check Notifications and Exit App
-      // if (await Permission.notification.isDenied) {
-      //   // print("Permission is denied");
-      //   // Request Notification Access again
-      //   PermissionStatus status = await Permission.notification.request();
-      //   // print("This is status $status");
-      //   // await openAppSettings();
-      //   // if (await Permission.notification.isDenied) {
-      //   //   emit(const AuthStateNotificationError(null));
-      //   // }
-      // }
-      // if (await Permission.notification.isPermanentlyDenied) {
-      //   await openAppSettings().then((value) {
-      //     print(value);
-      //   });
-      //   if (await Permission.notification.isPermanentlyDenied) {
-      //     print("Permanently denied");
-      //     emit(const AuthStateNotificationError(null));
-      //   }
-      // }
-      // if (await Permission.notification.isGranted) {
-
       emit(const AuthStateLoading(null));
       await provider.initialize().then((value) async {
         // final fbuser = provider.currentUser;
@@ -253,6 +230,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const AuthStateLoggedOut(null));
       });
     });
+
+    //update password
     on<UpdateUserPasswordEvent>(
       (event, emit) {
         provider.changePassword(event.oldPassword, event.updatedPassword);

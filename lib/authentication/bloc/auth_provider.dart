@@ -138,7 +138,6 @@ class AuthProvider {
         // return userCredential.user;
         await FirebaseFirestore.instance
             .collection('registered-users')
-            // .where('username', isEqualTo: searchController.text)
             .get()
             .then((value) {
           for (var user in value.docs) {

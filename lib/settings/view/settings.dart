@@ -115,9 +115,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       // ),
                       createSettingTile(
                         mediaQuery: mediaQuery,
-                        color: Palette.location,
+                        color: Palette.cuiPurple,
                         tileText: "Chat Notification",
-                        icon: Icons.location_on_outlined,
+                        icon: Icons.chat_sharp,
                         switchValue: state.settings.chatNotifications,
                         switchOnChaged: (value) {
                           setState(() {
@@ -130,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         mediaQuery: mediaQuery,
                         color: Palette.faceid,
                         tileText: "Disable Notifices Notifications",
-                        icon: Icons.face_unlock_outlined,
+                        icon: Icons.notifications_off,
                         switchValue: false,
                         switchOnChaged: (value) {},
                       ),
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         mediaQuery: mediaQuery,
                         color: Palette.help,
                         tileText: "Change Password",
-                        icon: Icons.key,
+                        icon: Icons.key_sharp,
                         onTap: () {
                           RouteGenerator.navigatorKey.currentState!
                               .pushNamed(changePasswordRoute);
@@ -148,13 +148,13 @@ class _SettingsPageState extends State<SettingsPage> {
                         mediaQuery: mediaQuery,
                         color: Palette.blueInformation,
                         tileText: "About App",
-                        icon: Icons.info,
+                        icon: Icons.info_sharp,
                       ),
                       createInformationTile(
                         mediaQuery: mediaQuery,
                         color: Palette.logOut,
-                        tileText: "Logout",
-                        icon: Icons.logout,
+                        tileText: "Log Out",
+                        icon: Icons.logout_sharp,
                         onTap: () => showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
@@ -163,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 horizontal: mediaQuery.size.width * 0.06,
                                 vertical: mediaQuery.size.height * 0.02),
                             title: const Text(
-                              "Log out",
+                              "Log Out",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Palette.textColor,
@@ -172,7 +172,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             content: const Text(
-                              "Are you sure you want to log out?",
+                              "Are you sure you want to log Out?",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Palette.textColor,
@@ -227,7 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                           ],
                                         ),
                                         child: const Text(
-                                          "Logout",
+                                          "Log Out",
                                           style: TextStyle(
                                               color: Palette.white,
                                               fontSize: 12.0),
@@ -418,7 +418,7 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Row(
         children: [
           Container(
-            height: mediaQuery.size.width * 0.16,
+            height: mediaQuery.size.width * 0.18,
             width: mediaQuery.size.width * 0.16,
             decoration: BoxDecoration(
                 color: Palette.white,
@@ -452,8 +452,8 @@ class _SettingsPageState extends State<SettingsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  BlocProvider.of<AuthBloc>(context).state.user!.firstName,
-                  style: TextStyle(
+                  '${BlocProvider.of<AuthBloc>(context).state.user!.firstName}${BlocProvider.of<AuthBloc>(context).state.user!.lastName}',
+                  style: const TextStyle(
                     color: Palette.textColor,
                     fontSize: 14.0,
                     fontWeight: FontWeight.w500,
@@ -461,7 +461,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SizedBox(height: mediaQuery.size.height * 0.01),
                 const Text(
-                  "Personal Info",
+                  "Personal Information",
                   style: TextStyle(
                     color: Palette.grey,
                     fontSize: 12.0,

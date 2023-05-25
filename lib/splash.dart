@@ -107,7 +107,7 @@ class _SplashPageState extends State<SplashPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
-                    "Safe Pall App",
+                    "CUI Messenger",
                     style: TextStyle(
                       color: Palette.frenchBlue,
                       fontSize: 34.0,
