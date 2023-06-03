@@ -44,7 +44,6 @@ class _NewPostState extends State<NewPost> {
   void addPost(String description, XFile? file) {
     var user = BlocProvider.of<AuthBloc>(context).state.user!;
     if (file != null) {
-      print(" add post !=null");
       BlocProvider.of<PostBloc>(context).add(AddPostEvent(
           post: Post(
             uId: user.uid,
@@ -58,7 +57,6 @@ class _NewPostState extends State<NewPost> {
           ),
           file: file));
     } else {
-      print(" add post null");
       BlocProvider.of<PostBloc>(context).add(AddPostEvent(
           post: Post(
             uId: user.uid,
@@ -66,7 +64,7 @@ class _NewPostState extends State<NewPost> {
             description: description,
             userImage: user.profilePicture,
             imageUrl: "",
-            fullName: user.firstName + user.lastName,
+            fullName: "${user.firstName} ${user.lastName}",
             createdAt: DateTime.now().toIso8601String(),
             // comments: [],
           ),

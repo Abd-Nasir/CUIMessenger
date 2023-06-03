@@ -16,15 +16,21 @@ class PostProvider {
   List<Post> posts = List.empty(growable: true);
 
   Future<void> loadData() async {
+    List<Post> tempPosts = List.empty(growable: true);
     try {
-      // posts.clear();
       await FirebaseFirestore.instance.collection('posts').get().then((value) {
-        // value.docs.first;
-        // print(value.docs.first);
-        posts.clear();
-        value.docs.forEach((value) {
-          posts.add(Post.fromJson(value.data()));
+        for (var value in value.docs) {
+          tempPosts.add(Post.fromJson(value.data()));
+          print(tempPosts.first.postId);
+        }
+
+        tempPosts.sort((a, b) {
+          var adate = a.createdAt; //before -> var adate = a.expiry;
+          var bdate = b.createdAt; //var bdate = b.expiry;
+          return -adate.compareTo(bdate);
         });
+        posts = tempPosts;
+        print(posts.first.postId);
       });
     } catch (error) {
       debugPrint("error loading Reports from database.\nError:\n$error");
@@ -33,20 +39,15 @@ class PostProvider {
 
   Future<bool> saveReport(Post post, XFile? file) async {
     try {
-      print("In save report");
       if (file != null) {
-        print("In if of save report");
         final ref = FirebaseStorage.instance
             .ref()
             .child('feed-images')
             .child('${post.postId}.jpg');
-        // print("Reference of storage $ref");
         await ref.putFile(io.File(file.path));
-
         final url = await ref.getDownloadURL();
         post.imageUrl = url;
       }
-      print("here 1");
       var docref = FirebaseFirestore.instance.collection('posts').doc();
       post.postId = docref.id;
       docref.set(post.toJson()).then((_) {
@@ -57,19 +58,18 @@ class PostProvider {
           slideDismissDirection: DismissDirection.horizontal,
         );
       });
-      print("here2");
       return true;
     } catch (error) {
       if (error is FirebaseException) {
         showSimpleNotification(
-          Text('Error'),
+          const Text('Error'),
           background: Palette.red.withOpacity(0.9),
           duration: const Duration(seconds: 2),
           slideDismissDirection: DismissDirection.horizontal,
         );
       } else {
         showSimpleNotification(
-          Text("Unknown Error"),
+          const Text("Unknown Error"),
           background: Palette.red.withOpacity(0.9),
           duration: const Duration(seconds: 2),
           slideDismissDirection: DismissDirection.horizontal,

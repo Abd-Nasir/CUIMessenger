@@ -2,7 +2,7 @@ class NoticesModel {
   late String noticeId;
   late String noticeTitle;
   late String noticeText;
-
+  late String? fileType;
   late String? fileUrl;
   late String? fileName;
   late DateTime createdAt;
@@ -13,6 +13,7 @@ class NoticesModel {
     required this.noticeText,
     required this.fileUrl,
     required this.fileName,
+    required this.fileType,
     required this.createdAt,
   });
 
@@ -22,6 +23,7 @@ class NoticesModel {
     noticeText = json['noticeText'];
     fileUrl = json['fileUrl'] ?? "";
     fileName = json['fileName'] ?? "";
+    fileType = json['file-type'] ?? "";
     createdAt = DateTime.parse(json['createdAt']);
   }
 
@@ -33,6 +35,7 @@ class NoticesModel {
     data['noticeText'] = noticeText;
     data['fileUrl'] = fileUrl ?? "";
     data['fileName'] = fileName ?? "";
+    data['file-type'] = fileType ?? "";
     data['createdAt'] = createdAt.toIso8601String();
 
     return data;

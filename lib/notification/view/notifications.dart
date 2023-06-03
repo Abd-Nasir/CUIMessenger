@@ -1,5 +1,10 @@
 import 'dart:io';
+import 'package:cui_messenger/helpers/routes/routegenerator.dart';
+import 'package:cui_messenger/helpers/routes/routenames.dart';
+import 'package:cui_messenger/helpers/style/custom_widgets.dart';
+import 'package:cui_messenger/notification/model/pdf_viewer_page.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:folder_file_saver/folder_file_saver.dart';
 
@@ -12,6 +17,7 @@ import 'package:cui_messenger/notification/bloc/notifications_state.dart';
 // import 'package:flowder/flowder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:open_filex/open_filex.dart';
 // import 'package:open_file/open_file.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -144,6 +150,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                 itemCount:
                                     state.notificationProvider.notices.length,
                                 itemBuilder: ((context, index) {
+                                  final notice =
+                                      state.notificationProvider.notices[index];
                                   return Column(
                                     // mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -165,77 +173,31 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                             color: Palette.white),
                                       ),
                                       const SizedBox(height: 5),
-                                      if (state.notificationProvider
-                                              .notices[index].fileName !=
-                                          "")
+                                      if (notice.fileName != "")
                                         GestureDetector(
-                                          onTap: () async {
-                                            print("ontap");
-                                            File checkFile = File(
-                                                "/storage/emulated/0/Documents/CUI Messenger /Documents/${state.notificationProvider.notices[index].fileName}");
-
-                                            if (await checkFile.exists()) {
-                                              print("exists");
-                                              showSimpleNotification(
-                                                const Text(
-                                                  "document-already-saved",
-                                                  style: TextStyle(
-                                                    color: Palette.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                background: Palette.orange
-                                                    .withOpacity(0.9),
-                                                slideDismissDirection:
-                                                    DismissDirection.startToEnd,
+                                          onTap: () {
+                                            if (notice.fileType == 'pdf') {
+                                              RouteGenerator
+                                                  .navigatorKey.currentState!
+                                                  .pushNamed(
+                                                pdfViewerRoute,
+                                                arguments: PDFViewerPage(
+                                                    fileName: notice.fileName!,
+                                                    url: notice.fileUrl!),
                                               );
+                                            } else if (notice.fileType ==
+                                                    'png' ||
+                                                notice.fileType == "jpg" ||
+                                                notice.fileType == "jpeg") {
+                                              previewImage(
+                                                  context,
+                                                  mediaQuery,
+                                                  notice.fileUrl!,
+                                                  notice.fileName!);
                                             } else {
-                                              var response = await Dio().get(
-                                                  state.notificationProvider
-                                                      .notices[index].fileUrl!,
-                                                  options: Options(
-                                                      responseType:
-                                                          ResponseType.bytes));
-                                              print("Response: $response");
-                                              // final iosDirectory =
-                                              //     await getApplicationSupportDirectory();
-                                              final dir = Platform.isIOS
-                                                  ? await getApplicationSupportDirectory()
-                                                  : await getApplicationDocumentsDirectory();
-                                              print(dir.path);
-                                              File savedFile = await File(
-                                                      "${dir.path}/${state.notificationProvider.notices[index].fileName}")
-                                                  .writeAsBytes(response.data);
-
-                                              if (Platform.isAndroid) {
-                                                final result1 =
-                                                    await FolderFileSaver
-                                                        .saveFileIntoCustomDir(
-                                                            dirNamed:
-                                                                "/Documents",
-                                                            filePath:
-                                                                savedFile.path,
-                                                            removeOriginFile:
-                                                                true);
-                                                print(result1);
-                                                if (result1 != null) {
-                                                  showSimpleNotification(
-                                                    const Text(
-                                                      "Document already saved in app directory!",
-                                                      style: TextStyle(
-                                                        color: Palette.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    background: Palette.green
-                                                        .withOpacity(0.9),
-                                                    slideDismissDirection:
-                                                        DismissDirection
-                                                            .startToEnd,
-                                                  );
-                                                }
-                                              }
+                                              CustomWidgets.saveFile(
+                                                  fileUrl: notice.fileUrl!,
+                                                  fileName: notice.fileName!);
                                             }
                                           },
                                           child: Row(
@@ -309,6 +271,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     ),
                     itemCount: state.notificationProvider.notifications.length,
                     itemBuilder: (context, index) {
+                      final notification =
+                          state.notificationProvider.notifications[index];
                       return Container(
                         margin: EdgeInsets.only(
                             top: mediaQuery.size.height * 0.02,
@@ -335,8 +299,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           title: Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: Text(
-                              state.notificationProvider.notifications[index]
-                                  .title,
+                              notification.title,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                   color: Palette.cuiPurple,
@@ -350,100 +313,57 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: state.notificationProvider
-                                      .notifications[index].message,
+                                  text: notification.message,
                                   style: const TextStyle(
                                     color: Palette.textColor,
                                     fontSize: 12.0,
                                   ),
                                 ),
                                 const TextSpan(text: "\n"),
-                                if (state.notificationProvider
-                                        .notifications[index].fileName !=
-                                    "")
-                                  const TextSpan(
-                                      text: "Tap to save document",
-                                      style: TextStyle(
+                                if (notification.fileName != "")
+                                  TextSpan(
+                                      text: notification.fileName,
+                                      style: const TextStyle(
                                           height: 1.5,
                                           color: Palette.cuiPurple,
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500)),
-                                const TextSpan(
-                                  text: " - ",
-                                  style: TextStyle(
-                                    color: Palette.hintGrey,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
+                                if (notification.fileName != "")
+                                  const TextSpan(text: "\n"),
+                                if (notification.fileName != "")
+                                  TextSpan(
+                                      text: notification.fileType != "docx"
+                                          ? "Tap to open document"
+                                          : "Tap to save document",
+                                      style: const TextStyle(
+                                          height: 1.5,
+                                          color: Palette.cuiPurple,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500)),
                               ],
                             ),
                           ),
-                          onTap: () async {
-                            // var file = await DioCacheManager.instance
-                            //     .getSingleFile(state.notificationProvider
-                            //         .notifications[index].fileUrl!);
-                            // // file = changeFileNameOnly(file,fileName)
-                            // OpenFilex.open(file.path);
-                            print("ontap");
-                            File checkFile = File(
-                                "/storage/emulated/0/Documents/CUI Messenger /Documents/${state.notificationProvider.notifications[index].fileName}");
-
-                            if (await checkFile.exists()) {
-                              print("exists");
-                              showSimpleNotification(
-                                const Text(
-                                  "document-already-saved",
-                                  style: TextStyle(
-                                    color: Palette.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                background: Palette.orange.withOpacity(0.9),
-                                slideDismissDirection:
-                                    DismissDirection.startToEnd,
+                          onTap: () {
+                            if (notification.fileType == 'pdf') {
+                              RouteGenerator.navigatorKey.currentState!
+                                  .pushNamed(
+                                pdfViewerRoute,
+                                arguments: PDFViewerPage(
+                                    fileName: notification.fileName!,
+                                    url: notification.fileUrl!),
                               );
+                            } else if (notification.fileType == 'png' ||
+                                notification.fileType == "jpg" ||
+                                notification.fileType == "jpeg") {
+                              previewImage(
+                                  context,
+                                  mediaQuery,
+                                  notification.fileUrl!,
+                                  notification.fileName!);
                             } else {
-                              var response = await Dio().get(
-                                  state.notificationProvider
-                                      .notifications[index].fileUrl!,
-                                  options: Options(
-                                      responseType: ResponseType.bytes));
-                              print("Response: $response");
-                              // final iosDirectory =
-                              //     await getApplicationSupportDirectory();
-                              final dir = Platform.isIOS
-                                  ? await getApplicationSupportDirectory()
-                                  : await getApplicationDocumentsDirectory();
-                              print(dir.path);
-                              File savedFile = await File(
-                                      "${dir.path}/${state.notificationProvider.notifications[index].fileName}")
-                                  .writeAsBytes(response.data);
-
-                              if (Platform.isAndroid) {
-                                final result1 =
-                                    await FolderFileSaver.saveFileIntoCustomDir(
-                                        dirNamed: "/Documents",
-                                        filePath: savedFile.path,
-                                        removeOriginFile: true);
-                                print(result1);
-                                if (result1 != null) {
-                                  showSimpleNotification(
-                                    const Text(
-                                      "Document already saved in app directory!",
-                                      style: TextStyle(
-                                        color: Palette.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    background: Palette.green.withOpacity(0.9),
-                                    slideDismissDirection:
-                                        DismissDirection.startToEnd,
-                                  );
-                                }
-                                OpenFilex.open(savedFile.path);
-                                // final open = OpenFile.open(savedFile.path);
-                                // print(open.toString());
-                              }
+                              CustomWidgets.saveFile(
+                                  fileUrl: notification.fileUrl!,
+                                  fileName: notification.fileName!);
                             }
                           },
                         ),
@@ -560,5 +480,104 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ],
       ),
     );
+  }
+
+  void previewImage(BuildContext context, MediaQueryData mediaQuery,
+      String imageLink, String fileName) {
+    showModalBottomSheet(
+        enableDrag: false,
+        isScrollControlled: true,
+        isDismissible: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.only(top: 30),
+            // height: MediaQuery.of(context).size.height * 0.64,
+            child: Stack(
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  decoration: CustomWidgets.textInputDecoration,
+                  child: InteractiveViewer(
+                    panEnabled: false, // Set it to false
+                    boundaryMargin: const EdgeInsets.all(100),
+                    minScale: 0.5,
+                    maxScale: 2,
+
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        imageLink,
+                        // height: 300,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 25, left: 10),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Palette.privacyPolicy.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(400),
+                  ),
+                  child: GestureDetector(
+                    child: Icon(
+                      Icons.close_outlined,
+                      color: Palette.white,
+                      size: MediaQuery.of(context).size.width * 0.04,
+                    ),
+                    onTap: () {
+                      RouteGenerator.navigatorKey.currentState!.pop(context);
+                    },
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: mediaQuery.size.height * 0.03,
+                    right: mediaQuery.size.width * 0.03,
+                    bottom: mediaQuery.size.height * 0.03,
+                  ),
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton(
+                    backgroundColor: Palette.cuiPurple,
+                    onPressed: () async {
+                      var response = await Dio().get(imageLink,
+                          options: Options(responseType: ResponseType.bytes));
+                      final result = await ImageGallerySaver.saveImage(
+                          Uint8List.fromList(response.data),
+                          quality: 80,
+                          name: "${fileName}_${DateTime.now().toString()}");
+                      // debugPrint(result);
+                      if (result['isSuccess'] != null) {
+                        if (result['isSuccess']) {
+                          showSimpleNotification(
+                            const Text(
+                              "Image saved to gallery",
+                              style: TextStyle(
+                                color: Palette.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            background: Palette.green.withOpacity(0.9),
+                            slideDismissDirection: DismissDirection.startToEnd,
+                          );
+                        }
+                      }
+                      if (mounted) {
+                        RouteGenerator.navigatorKey.currentState!.pop(context);
+                      }
+                    },
+                    child: const Icon(Icons.download_outlined),
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 }

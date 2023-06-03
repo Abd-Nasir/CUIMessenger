@@ -13,6 +13,8 @@ import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
 import 'package:cui_messenger/authentication/login/view/student_login.dart';
+import 'package:cui_messenger/notification/model/pdf_viewer_page.dart';
+import 'package:cui_messenger/notification/view/pdf_viewer.dart';
 import 'package:cui_messenger/splash.dart';
 import 'package:flutter/material.dart';
 
@@ -99,6 +101,12 @@ class RouteGenerator {
           );
         }
         return _errorRoute();
+      case pdfViewerRoute:
+        if (args is PDFViewerPage) {
+          return MaterialPageRoute(builder: (_) => PdfViewerOnline(pdf: args));
+        }
+        return _errorRoute();
+
       default:
         return _errorRoute();
     }

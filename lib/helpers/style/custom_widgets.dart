@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:cui_messenger/helpers/style/colors.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:folder_file_saver/folder_file_saver.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CustomWidgets {
   static BoxDecoration textInputDecoration = BoxDecoration(
@@ -111,6 +117,63 @@ class CustomWidgets {
             ],
           );
         });
+  }
+
+  static void saveFile(
+      {required String fileUrl, required String fileName}) async {
+    //  onTap: () async {
+    print("ontap");
+    File checkFile = File(
+        "/storage/emulated/0/Documents/CUI Messenger /Documents/${fileName}");
+
+    if (await checkFile.exists()) {
+      print("exists");
+      showSimpleNotification(
+        const Text(
+          "document-already-saved",
+          style: TextStyle(
+            color: Palette.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        background: Palette.orange.withOpacity(0.9),
+        slideDismissDirection: DismissDirection.startToEnd,
+      );
+    } else {
+      var response = await Dio()
+          .get(fileUrl, options: Options(responseType: ResponseType.bytes));
+      print("Response: $response");
+      // final iosDirectory =
+      //     await getApplicationSupportDirectory();
+      final dir = Platform.isIOS
+          ? await getApplicationSupportDirectory()
+          : await getApplicationDocumentsDirectory();
+      print(dir.path);
+      File savedFile =
+          await File("${dir.path}/${fileName}").writeAsBytes(response.data);
+
+      if (Platform.isAndroid) {
+        final result1 = await FolderFileSaver.saveFileIntoCustomDir(
+            dirNamed: "/Documents",
+            filePath: savedFile.path,
+            removeOriginFile: true);
+        print(result1);
+        if (result1 != null) {
+          showSimpleNotification(
+            const Text(
+              "Document already saved in app directory!",
+              style: TextStyle(
+                color: Palette.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            background: Palette.green.withOpacity(0.9),
+            slideDismissDirection: DismissDirection.startToEnd,
+          );
+        }
+      }
+    }
+    // },
   }
 
   static GestureDetector iconButton(

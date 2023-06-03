@@ -5,6 +5,7 @@ class NotificationModel {
   // late String userImage;
   late String? fileUrl;
   late String? fileName;
+  late String? fileType;
   late DateTime createdAt;
 
   NotificationModel({
@@ -13,6 +14,7 @@ class NotificationModel {
     required this.message,
     required this.fileUrl,
     required this.fileName,
+    required this.fileType,
     required this.createdAt,
   });
 
@@ -22,6 +24,7 @@ class NotificationModel {
     message = json['notificationText'];
     fileUrl = json['fileUrl'] ?? "";
     fileName = json['fileName'] ?? "";
+    fileType = json['file-type'] ?? "";
     createdAt = DateTime.parse(json['createdAt']);
   }
 
@@ -33,6 +36,7 @@ class NotificationModel {
     data['notificationText'] = message;
     data['fileUrl'] = fileUrl ?? "";
     data['fileName'] = fileName ?? "";
+    data['file-type'] = fileType ?? "";
     data['createdAt'] = createdAt.toIso8601String();
 
     return data;
