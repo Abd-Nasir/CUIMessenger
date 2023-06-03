@@ -3,11 +3,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/constants/utils.dart';
+import 'package:cui_messenger/chat/methods/chat_methods.dart';
 import 'package:cui_messenger/chat/methods/storage_methods.dart';
 import 'package:cui_messenger/chat/models/group.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:uuid/uuid.dart';
@@ -56,23 +58,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   void createGroup() async {
     if (groupNameController.text.trim().isNotEmpty) {
       try {
-        // List<String> uids = [];
-        // for (int i = 0; i < selectedContact.length; i++) {
-        //   var userCollection = await firebaseFirestore
-        //       .collection('users')
-        //       .where(
-        //         'phoneNumber',
-        //         isEqualTo: selectedContact[i].phones[0].number.replaceAll(
-        //               ' ',
-        //               '',
-        //             ),
-        //       )
-        //       .get();
-
-        //   if (userCollection.docs.isNotEmpty && userCollection.docs[0].exists) {
-        //     uids.add(userCollection.docs[0].data()['uid']);
-        //   }
-        // }
         var groupId = const Uuid().v1();
         String profileUrl = "";
 
@@ -82,6 +67,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         }
 
         Group group = Group(
+          createdBy: FirebaseAuth.instance.currentUser!.uid,
           lastMessageBy: firebaseAuth.currentUser!.uid,
           name: groupNameController.text.trim(),
           groupId: groupId,
@@ -214,11 +200,93 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             //     MaterialPageRoute(
             //         builder: (context) =>
             //             AddPeople(context, peopleUid, refresh)));
-            showPeopleForTask(context, peopleUid, refresh, groupId: null);
+            // showPeopleForTask(context, peopleUid, refresh, groupId: null);
+            addPeopleBottomSheet(context, peopleUid, refresh);
           },
           label: const Text('Add People'),
           icon: const Icon(Icons.people),
           backgroundColor: Palette.cuiPurple,
         ));
+  }
+
+  addPeopleBottomSheet(
+    BuildContext context,
+    List usersList,
+    VoidCallback refresh,
+  ) async {
+    var size = MediaQuery.of(context).size;
+    return await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: ((context) => SimpleDialog(
+                title: Row(
+                  children: [
+                    const Expanded(child: Center(child: Text("Add People"))),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          refresh();
+                        },
+                        icon: const Icon(Icons.close))
+                  ],
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)),
+                contentPadding: const EdgeInsets.all(8),
+                children: [
+                  StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                    return SizedBox(
+                      height: size.height / 2,
+                      width: size.width,
+                      child: Scaffold(
+                          body: Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: FutureBuilder<List<UserModel>>(
+                            future: ChatMethods().getContacts(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (snapshot.data == null) {
+                                return const Center(
+                                  child: Text("Nothing to show you"),
+                                );
+                              }
+                              return Column(
+                                children: [
+                                  Expanded(
+                                    child: ListView.builder(
+                                        itemCount: snapshot.data!.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: ((context, index) {
+                                          var data = snapshot.data![index];
+                                          return InkWell(
+                                              onTap: () {
+                                                if (peopleUid
+                                                    .contains(data.uid)) {
+                                                  peopleUid.remove(data.uid);
+                                                } else {
+                                                  peopleUid.add(data.uid);
+                                                }
+                                                setState(() {});
+                                              },
+                                              child: getPeopleCard(
+                                                  data,
+                                                  context,
+                                                  usersList
+                                                      .contains(data.uid)));
+                                        })),
+                                  ),
+                                ],
+                              );
+                            }),
+                      )),
+                    );
+                  }),
+                ])));
   }
 }

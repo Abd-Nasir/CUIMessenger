@@ -73,6 +73,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
     if (groupNameController.text.trim().isNotEmpty) {
       try {
         model.Group group = model.Group(
+          createdBy: groupInfo!.createdBy,
           lastMessageBy: groupInfo!.lastMessageBy,
           name: groupNameController.text.trim(),
           groupId: groupInfo!.groupId,
@@ -118,7 +119,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      // backgroundColor: scaffoldBackgroundColor,
+      backgroundColor: Palette.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
@@ -146,22 +147,7 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
       ),
     );
   }
-  // FutureBuilder<Group>(
-  //           future: getInfo(),
-  //           builder: (context, snapshot) {
-  //             if (snapshot.connectionState == ConnectionState.waiting) {
-  //               return const Center(
-  //                 child: CircularProgressIndicator(),
-  //               );
-  //             }
-  //             if (snapshot.data == null) {
-  //               return const Center(
-  //                 child: Text("Nothing to show you"),
-  //               );
-  //             }
-  //             var data = snapshot.data!;
 
-  //           }),
   getWidget(size, data) {
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -274,15 +260,6 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                       ),
                     ],
                   ),
-                  // Center(
-                  //   child: Text(
-                  //     data.bio == "" ? "Nothing to show" : data.bio,
-                  //     textAlign: TextAlign.center,
-                  //     overflow: TextOverflow.visible,
-                  //     style:
-                  //         const TextStyle(fontWeight: FontWeight.w500),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -298,18 +275,20 @@ class _ChatProfileGroupState extends State<ChatProfileGroup> {
                 style: TextStyle(
                     color: Palette.black, fontWeight: FontWeight.bold),
               ),
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                  foregroundColor: Palette.cuiPurple,
-                  padding: const EdgeInsets.all(0),
-                ),
-                onPressed: () {
-                  showPeopleForTask(context, peopleUid, refresh,
-                      groupId: widget.id);
-                },
-                label: const Text("Add Members"),
-                icon: const Icon(Icons.add),
-              ),
+              firebaseAuth.currentUser!.uid == groupInfo!.createdBy
+                  ? TextButton.icon(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Palette.cuiPurple,
+                        padding: const EdgeInsets.all(0),
+                      ),
+                      onPressed: () {
+                        showPeopleForTask(context, peopleUid, refresh,
+                            groupId: widget.id);
+                      },
+                      label: const Text("Add Members"),
+                      icon: const Icon(Icons.add),
+                    )
+                  : const SizedBox(height: 50),
             ],
           ),
           Padding(

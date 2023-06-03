@@ -8,6 +8,7 @@ import 'package:cui_messenger/authentication/verification/user_verification.dart
 import 'package:cui_messenger/feed/view/comment_screen.dart';
 
 import 'package:cui_messenger/feed/view/new_post_screen.dart';
+import 'package:cui_messenger/feed/view/preview_image.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
@@ -89,6 +90,15 @@ class RouteGenerator {
             );
           },
         );
+      case imagePreviewRoute:
+        if (args != null) {
+          return MaterialPageRoute(
+            builder: (_) => PreviewImage(
+              imageUrl: args as String,
+            ),
+          );
+        }
+        return _errorRoute();
       default:
         return _errorRoute();
     }

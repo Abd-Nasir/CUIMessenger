@@ -235,13 +235,6 @@ class _FeedScreenState extends State<FeedScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // PopupMenuButtonState().deactivate();
-                            // Navigator.of(context, rootNavigator: true)
-                            //     .pop('dialog');
-                            print("tapped");
-                            // setState(() {
-                            //   isLoading = true;
-                            // });
                             FirebaseFirestore.instance
                                 .collection('posts')
                                 .doc(post.postId)
@@ -249,13 +242,6 @@ class _FeedScreenState extends State<FeedScreen> {
                                 .then((value) {
                               BlocProvider.of<PostBloc>(context)
                                   .add(const LoadPostsFromDatabase());
-
-                              // Future.delayed(const Duration(seconds: 1))
-                              //     .then((_) {
-                              //   setState(() {
-                              //     isLoading = false;
-                              //   });
-                              // });
                             });
                           },
                           child: const Text(
@@ -287,18 +273,24 @@ class _FeedScreenState extends State<FeedScreen> {
         ),
         Column(children: [
           post.imageUrl != ''
-              ? Container(
-                  // borderRadius: BorderRadius.circular(200.0),
-                  child: CachedNetworkImage(
-                    imageUrl: post.imageUrl!,
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) => Center(
-                            child: CircularProgressIndicator(
-                                value: downloadProgress.progress)),
-                    // placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+              ? GestureDetector(
+                  onTap: () {
+                    RouteGenerator.navigatorKey.currentState!
+                        .pushNamed(imagePreviewRoute, arguments: post.imageUrl);
+                  },
+                  child: Container(
+                    // borderRadius: BorderRadius.circular(200.0),
+                    child: CachedNetworkImage(
+                      imageUrl: post.imageUrl!,
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: CircularProgressIndicator(
+                                  value: downloadProgress.progress)),
+                      // placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
                   ),
                 )
               : Container(
@@ -319,15 +311,7 @@ class _FeedScreenState extends State<FeedScreen> {
               image: post.imageUrl != ""
                   ? DecorationImage(
                       image: CachedNetworkImageProvider(
-                        // imageUrl:
                         post.imageUrl!,
-                        // fit: BoxFit.cover,
-                        // progressIndicatorBuilder:
-                        //     (context, url, downloadProgress) => Center(
-                        //         child: CircularProgressIndicator(
-                        //             value: downloadProgress.progress)),
-                        // errorWidget: (context, url, error) =>
-                        //     const Icon(Icons.error),
                       ),
                       fit: BoxFit.cover,
                     )
@@ -351,7 +335,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         .snapshots(),
                     builder: (context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

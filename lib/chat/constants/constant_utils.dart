@@ -401,21 +401,18 @@ showPeopleForTask(BuildContext context, List usersList, VoidCallback refresh,
                                                           .collection("groups")
                                                           .doc(groupId);
                                                   setState(() {
-                                                    // if (usersList
-                                                    //     .contains(data.uid)) {
                                                     groupRef
                                                         .get()
                                                         .then((value) {
-                                                      print(value.data());
                                                       Group group =
                                                           Group.fromMap(
                                                               value.data()!);
-                                                      print(group.membersUid);
+
                                                       if (group.membersUid
                                                           .contains(data.uid)) {
                                                         group.membersUid
                                                             .remove(data.uid);
-                                                        print(group.membersUid);
+
                                                         groupRef.update(
                                                             group.toMap());
                                                         usersList
@@ -423,7 +420,6 @@ showPeopleForTask(BuildContext context, List usersList, VoidCallback refresh,
                                                       } else {
                                                         group.membersUid
                                                             .add(data.uid);
-                                                        print(group.membersUid);
                                                         groupRef.update(
                                                             group.toMap());
                                                         usersList.add(data.uid);

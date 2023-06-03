@@ -220,7 +220,7 @@ class _CommentBoxState extends State<CommentBox> {
                                                                     iconSnapshot) {
                                                               if (!iconSnapshot
                                                                   .hasData) {
-                                                                Center(
+                                                                const Center(
                                                                   child:
                                                                       CircularProgressIndicator(
                                                                     color: Palette
@@ -471,8 +471,62 @@ class _CommentBoxState extends State<CommentBox> {
                   ],
                 );
               } else {
-                return const Center(
-                  child: Text("No Comments Available !"),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Center(
+                      child: Text("No Comments Available !"),
+                    ),
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.only(left: 15, bottom: 8),
+                              color: Palette.white,
+                              child: TextFormField(
+                                autocorrect: false,
+                                controller: commentController,
+                                decoration: const InputDecoration(
+                                    isDense: true,
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(20, 25, 10, 0),
+                                    hintText: 'Add a comment',
+                                    filled: true,
+                                    fillColor: Palette.cuiOffWhite,
+                                    border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(50)),
+                                    )),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              var docref = FirebaseFirestore.instance
+                                  .collection("posts")
+                                  .doc(widget.postId)
+                                  .collection('comments')
+                                  .doc();
+                              var comment = Comment(
+                                  uid: currentUser.uid,
+                                  commentId: docref.id,
+                                  regNo: currentUser.regNo,
+                                  name: currentUser.firstName +
+                                      currentUser.lastName,
+                                  text: commentController.text,
+                                  userImage: currentUser.profilePicture,
+                                  commentImage: "",
+                                  createdAt: DateTime.now().toIso8601String());
+                              docref.set(comment.toJson());
+                            },
+                            icon: const Icon(
+                              Icons.send,
+                            ),
+                          )
+                        ]),
+                  ],
                 );
               }
             }));

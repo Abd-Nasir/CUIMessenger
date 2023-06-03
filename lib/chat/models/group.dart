@@ -1,4 +1,5 @@
 class Group {
+  final String createdBy;
   final String lastMessageBy;
   final String name;
   final String groupId;
@@ -7,7 +8,9 @@ class Group {
   final List<String> membersUid;
   final List<String> isSeen;
   final DateTime timeSent;
+
   Group({
+    required this.createdBy,
     required this.lastMessageBy,
     required this.name,
     required this.groupId,
@@ -20,6 +23,7 @@ class Group {
 
   Map<String, dynamic> toMap() {
     return {
+      "createdBy": createdBy,
       'lastMessageBy': lastMessageBy,
       'name': name,
       'groupId': groupId,
@@ -33,6 +37,7 @@ class Group {
 
   factory Group.fromMap(Map<String, dynamic> map) {
     return Group(
+      createdBy: map['createdBy'],
       lastMessageBy: map['lastMessageBy'] ?? '',
       name: map['name'] ?? '',
       groupId: map['groupId'] ?? '',
