@@ -23,12 +23,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final user = provider.userData;
 
         if (FirebaseAuth.instance.currentUser != null) {
-          if (FirebaseAuth.instance.currentUser!.emailVerified) {
+          if (FirebaseAuth.instance.currentUser!.emailVerified &&
+              !user!.isRestricted) {
+            print(user.isRestricted);
             final token = await FirebaseMessaging.instance.getToken();
             // print("token");
             FirebaseFirestore.instance
                 .collection('registered-users')
-                .doc(user!.uid)
+                .doc(user.uid)
                 .update({
               'token': token,
               // 'timestamp': FieldValue.serverTimestamp(),
@@ -36,6 +38,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(AuthStateLoggedIn(user));
           } else if (!FirebaseAuth.instance.currentUser!.emailVerified) {
             emit(AuthStateNeedsVerification(user));
+          } else if (user!.isRestricted) {
+            emit(AuthStateAccountRestricted(user));
           }
         } else {
           emit(const AuthStateLoggedOut(null));
@@ -64,21 +68,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               .then((user) async {
             // print(user);
             if (user != null) {
-              if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                // print("\nEmitting Logged in user!\n");
+              if (FirebaseAuth.instance.currentUser!.emailVerified &&
+                  !user.isRestricted) {
+                print("\nEmitting Logged in user!\n");
                 final token = await FirebaseMessaging.instance.getToken();
                 FirebaseFirestore.instance
                     .collection('registered-users')
                     .doc(user.uid)
                     .update({
                   'token': token,
-                  // 'timestamp': FieldValue.serverTimestamp(),
                 });
                 emit(AuthStateLoggedIn(user));
-              } else {
+              } else if (!FirebaseAuth.instance.currentUser!.emailVerified) {
                 emit(AuthStateNeedsVerification(user));
                 // RouteGenerator.navigatorKey.currentState!
                 //     .pushNamedAndRemoveUntil(verifyMailRoute, (route) => false);
+              } else if (user.isRestricted) {
+                emit(AuthStateAccountRestricted(user));
               }
             } else {
               emit(AuthStateStudentLoginFailure(

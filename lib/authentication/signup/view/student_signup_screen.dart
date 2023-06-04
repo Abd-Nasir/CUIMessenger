@@ -99,7 +99,8 @@ class _StudentSignupPageState extends State<StudentSignupPage> {
                   blockList: [],
                   role: "student",
                   regNo: emailController.text.split("@").first.toUpperCase(),
-                  phoneNo: countryCodeController.text + phoneController.text),
+                  phoneNo: countryCodeController.text + phoneController.text,
+                  isRestricted: false),
               file: pickedImage!, password: passwordController.text.trim(),
             ),
           );

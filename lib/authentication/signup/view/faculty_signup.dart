@@ -101,7 +101,8 @@ class _FacultySignupPageState extends State<FacultySignupPage> {
                   blockList: [],
                   role: "faculty",
                   regNo: "Faculty member",
-                  phoneNo: countryCodeController.text + phoneController.text),
+                  phoneNo: countryCodeController.text + phoneController.text,
+                  isRestricted: false),
               file: pickedImage!, password: passwordController.text.trim(),
             ),
           );

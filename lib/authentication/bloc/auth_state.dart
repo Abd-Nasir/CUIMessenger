@@ -40,6 +40,10 @@ class AuthStateStudentLoginFailure extends AuthState {
       : super(user);
 }
 
+class AuthStateAccountRestricted extends AuthState {
+  const AuthStateAccountRestricted(UserModel? user) : super(user);
+}
+
 class AuthStateFacultyLoginFailure extends AuthState {
   final Exception exception;
   const AuthStateFacultyLoginFailure(this.exception, UserModel? user)

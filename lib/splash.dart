@@ -1,5 +1,6 @@
 import 'package:cui_messenger/authentication/login/view/select_user_screen.dart';
 import 'package:cui_messenger/authentication/login/view/faculty_login.dart';
+import 'package:cui_messenger/authentication/verification/restricted_user.dart';
 import 'package:cui_messenger/authentication/verification/user_verification.dart';
 import 'package:cui_messenger/root/root.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,8 @@ class _SplashPageState extends State<SplashPage> {
         print("authState naeed verification");
         RouteGenerator.navigatorKey.currentState!
             .popUntil((route) => route.isFirst);
+        setState(() {});
+      } else if (state is AuthStateAccountRestricted) {
         setState(() {});
       } else if (state is AuthStateStudentLogin) {
         print("user selected");
@@ -164,6 +167,8 @@ class _SplashPageState extends State<SplashPage> {
         return const StudentLoginScreen();
       } else if (state is AuthStateFacultyLoginFailure) {
         return const FacultyLoginScreen();
+      } else if (state is AuthStateAccountRestricted) {
+        return const RestrictUser();
       } else {
         print("To login screen");
         return const SelectUserScreen();
