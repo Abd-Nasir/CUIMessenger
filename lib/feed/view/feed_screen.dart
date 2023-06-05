@@ -87,7 +87,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     ),
                   )
                 : ListView.builder(
-
+                    // shrinkWrap: true,
                     // reverse: true,
                     itemCount: state.postProvider.posts.length,
                     itemBuilder: (BuildContext context, index) {

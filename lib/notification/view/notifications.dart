@@ -1,27 +1,18 @@
-import 'dart:io';
+// import 'dart:io';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
 import 'package:cui_messenger/notification/model/pdf_viewer_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:folder_file_saver/folder_file_saver.dart';
-
-// import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
-// import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:cui_messenger/notification/bloc/notifications_bloc.dart';
 import 'package:cui_messenger/notification/bloc/notifications_event.dart';
 import 'package:cui_messenger/notification/bloc/notifications_state.dart';
-// import 'package:flowder/flowder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:open_filex/open_filex.dart';
-// import 'package:open_file/open_file.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:path_provider/path_provider.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -36,12 +27,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
   bool isLoading = true;
   String? path;
   int selectedIndex = 0;
-  // var dio = Dio();
 
   @override
   void initState() {
-    // dio.interceptors.add(LogInterceptor(responseBody: false));
-    // DioCacheManager.initialize(dio);
     Future.delayed(const Duration(seconds: 1)).then((_) {
       setState(() {
         isLoading = false;
@@ -50,6 +38,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
     // initPlatformState();
 
     super.initState();
+  }
+
+  void refresh() {
+    setState(() {
+      isLoading = true;
+    });
+
+    BlocProvider.of<NotificationBloc>(context)
+        .add(const InitializeNotificationEvent());
+    Future.delayed(const Duration(seconds: 1)).then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   @override
@@ -232,147 +234,156 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Widget notification(MediaQueryData mediaQuery, BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          "Notifications",
-          style: TextStyle(
-              fontSize: 30,
-              color: Palette.cuiPurple,
-              fontFamily: "assets/fonts/SulphurPoint-Regular.ttf"),
-        ),
-        Container(
-          color: Palette.white,
-          margin: EdgeInsets.only(
-            top: mediaQuery.size.height * 0.01,
+    return Container(
+      height: mediaQuery.size.height * 0.73,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            "Notifications",
+            style: TextStyle(
+                fontSize: 30,
+                color: Palette.cuiPurple,
+                fontFamily: "assets/fonts/SulphurPoint-Regular.ttf"),
           ),
-          width: mediaQuery.size.width,
-          // height: mediaQuery.size.height * 0.82,
-          child: BlocBuilder<NotificationBloc, NotificationState>(
-              builder: (context, state) {
-            if (NotificationState is NotificationStateLoading) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Palette.cuiPurple,
-                ),
-              );
-            }
-            return isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(
-                      color: Palette.cuiPurple,
-                    ),
-                  )
-                : ListView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.only(
-                      left: mediaQuery.size.width * 0.06,
-                      right: mediaQuery.size.width * 0.06,
-                    ),
-                    itemCount: state.notificationProvider.notifications.length,
-                    itemBuilder: (context, index) {
-                      final notification =
-                          state.notificationProvider.notifications[index];
-                      return Container(
-                        margin: EdgeInsets.only(
-                            top: mediaQuery.size.height * 0.02,
-                            bottom: mediaQuery.size.height * 0.02),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                          color: Palette.white,
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(0.0, 2.0),
-                              blurRadius: 16.0,
-                              color: Palette.cuiPurple.withOpacity(0.15),
-                            )
-                          ],
+          Container(
+            // color: Palette.white,
+            // margin: EdgeInsets.only(
+            //   top: mediaQuery.size.height * 0.01,
+            // ),
+            // width: mediaQuery.size.width,
+            // height: mediaQuery.size.height * 0.82,
+            child: BlocBuilder<NotificationBloc, NotificationState>(
+                builder: (context, state) {
+              if (NotificationState is NotificationStateLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Palette.cuiPurple,
+                  ),
+                );
+              }
+              return isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Palette.cuiPurple,
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        // shrinkWrap: true,
+                        padding: EdgeInsets.only(
+                          left: mediaQuery.size.width * 0.06,
+                          right: mediaQuery.size.width * 0.06,
                         ),
-                        child: ListTile(
-                          //Display the user image
-                          tileColor: Palette.white,
-                          minVerticalPadding: 12.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-
-                          title: Padding(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: Text(
-                              notification.title,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Palette.cuiPurple,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          // Display the last message presented
-                          subtitle: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: notification.message,
-                                  style: const TextStyle(
-                                    color: Palette.textColor,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                const TextSpan(text: "\n"),
-                                if (notification.fileName != "")
-                                  TextSpan(
-                                      text: notification.fileName,
-                                      style: const TextStyle(
-                                          height: 1.5,
-                                          color: Palette.cuiPurple,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w500)),
-                                if (notification.fileName != "")
-                                  const TextSpan(text: "\n"),
-                                if (notification.fileName != "")
-                                  TextSpan(
-                                      text: notification.fileType != "docx"
-                                          ? "Tap to open document"
-                                          : "Tap to save document",
-                                      style: const TextStyle(
-                                          height: 1.5,
-                                          color: Palette.cuiPurple,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w500)),
+                        itemCount:
+                            state.notificationProvider.notifications.length,
+                        itemBuilder: (context, index) {
+                          final notification =
+                              state.notificationProvider.notifications[index];
+                          return Container(
+                            margin: EdgeInsets.only(
+                                top: mediaQuery.size.height * 0.02,
+                                bottom: mediaQuery.size.height * 0.02),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Palette.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: const Offset(0.0, 2.0),
+                                  blurRadius: 16.0,
+                                  color: Palette.cuiPurple.withOpacity(0.15),
+                                )
                               ],
                             ),
-                          ),
-                          onTap: () {
-                            if (notification.fileType == 'pdf') {
-                              RouteGenerator.navigatorKey.currentState!
-                                  .pushNamed(
-                                pdfViewerRoute,
-                                arguments: PDFViewerPage(
-                                    fileName: notification.fileName!,
-                                    url: notification.fileUrl!),
-                              );
-                            } else if (notification.fileType == 'png' ||
-                                notification.fileType == "jpg" ||
-                                notification.fileType == "jpeg") {
-                              previewImage(
-                                  context,
-                                  mediaQuery,
-                                  notification.fileUrl!,
-                                  notification.fileName!);
-                            } else {
-                              CustomWidgets.saveFile(
-                                  fileUrl: notification.fileUrl!,
-                                  fileName: notification.fileName!);
-                            }
-                          },
-                        ),
-                      );
-                    },
-                  );
-          }),
-        ),
-      ],
+                            child: ListTile(
+                              //Display the user image
+                              tileColor: Palette.white,
+                              minVerticalPadding: 12.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+
+                              title: Padding(
+                                padding: const EdgeInsets.only(bottom: 5.0),
+                                child: Text(
+                                  notification.title,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Palette.cuiPurple,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              // Display the last message presented
+                              subtitle: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: notification.message,
+                                      style: const TextStyle(
+                                        color: Palette.textColor,
+                                        fontSize: 12.0,
+                                      ),
+                                    ),
+                                    const TextSpan(text: "\n"),
+                                    if (notification.fileName != "")
+                                      TextSpan(
+                                          text: notification.fileName,
+                                          style: const TextStyle(
+                                              height: 1.5,
+                                              color: Palette.cuiPurple,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500)),
+                                    if (notification.fileName != "")
+                                      const TextSpan(text: "\n"),
+                                    if (notification.fileName != "")
+                                      TextSpan(
+                                          text: notification.fileType != "docx"
+                                              ? "Tap to open document"
+                                              : "Tap to save document",
+                                          style: const TextStyle(
+                                              height: 1.5,
+                                              color: Palette.cuiPurple,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500)),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                if (notification.fileName != "") {
+                                  if (notification.fileType == 'pdf') {
+                                    RouteGenerator.navigatorKey.currentState!
+                                        .pushNamed(
+                                      pdfViewerRoute,
+                                      arguments: PDFViewerPage(
+                                          fileName: notification.fileName!,
+                                          url: notification.fileUrl!),
+                                    );
+                                  } else if (notification.fileType == 'png' ||
+                                      notification.fileType == "jpg" ||
+                                      notification.fileType == "jpeg") {
+                                    previewImage(
+                                        context,
+                                        mediaQuery,
+                                        notification.fileUrl!,
+                                        notification.fileName!);
+                                  } else {
+                                    CustomWidgets.saveFile(
+                                        fileUrl: notification.fileUrl!,
+                                        fileName: notification.fileName!);
+                                  }
+                                }
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    );
+            }),
+          ),
+        ],
+      ),
     );
   }
 
@@ -388,8 +399,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         children: [
           IconButton(
               onPressed: () {
-                BlocProvider.of<NotificationBloc>(context)
-                    .add(const InitializeNotificationEvent());
+                refresh();
               },
               icon: const Icon(
                 Icons.refresh,

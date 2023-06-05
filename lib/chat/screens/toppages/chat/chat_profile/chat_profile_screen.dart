@@ -344,6 +344,7 @@ class _ChatProfileScreenState extends State<ChatProfileScreen> {
   }
 }
 
+// ignore: must_be_immutable
 class TopWidget extends StatelessWidget {
   final ChatContactModel chatContactModel;
   final Size size;
