@@ -8,41 +8,43 @@ import 'package:cui_messenger/notification/model/notices.dart';
 import 'package:cui_messenger/notification/model/notification.dart';
 import 'package:http/http.dart' as http;
 
-// import 'package:overlay_support/overlay_support.dart';
-// import 'package:safepall/screens/authentication/model/user.dart' as user_model;
-// import 'package:sendbird_sdk/sendbird_sdk.dart';
-
 class NotificationProvider {
-  // final sendBird = SendbirdSdk(appId: "5063F43D-4021-44AC-9331-DADE6A5A2130");
-  // User? user;
-  // GroupChannel? currentChannel;
   List<NotificationModel> notifications = [];
   List<NoticesModel> notices = [];
 
-  // List<BaseMessage> messages = List.empty(growable: true);
-
   Future<void> loadNotifications() async {
+    List<NotificationModel> tempNotifications = [];
     await FirebaseFirestore.instance
         .collection('notifications')
         .get()
         .then((value) {
-      notifications.clear();
       for (var value in value.docs) {
-        notifications.add(NotificationModel.fromJson(value.data()));
+        tempNotifications.add(NotificationModel.fromJson(value.data()));
       }
+      tempNotifications.sort((a, b) {
+        var adate = a.createdAt; //before -> var adate = a.expiry;
+        var bdate = b.createdAt; //var bdate = b.expiry;
+        return -adate.compareTo(bdate);
+      });
+      notifications = tempNotifications;
     });
   }
 
   Future<void> loadNotices() async {
+    List<NoticesModel> tempNotices = [];
     await FirebaseFirestore.instance
         .collection('public-noticeboard')
         .get()
         .then((value) {
-      print(value.docs.first.data());
-      notices.clear();
       for (var value in value.docs) {
-        notices.add(NoticesModel.fromJson(value.data()));
+        tempNotices.add(NoticesModel.fromJson(value.data()));
       }
+      tempNotices.sort((a, b) {
+        var adate = a.createdAt; //before -> var adate = a.expiry;
+        var bdate = b.createdAt; //var bdate = b.expiry;
+        return -adate.compareTo(bdate);
+      });
+      notices = tempNotices;
     });
   }
 

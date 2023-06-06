@@ -6,7 +6,7 @@ class Post {
   late String? imageUrl;
   late String fullName;
   // bool like;
-  late String createdAt;
+  late DateTime createdAt;
   late String uId;
   // late List<Comment> comments;
 
@@ -24,17 +24,15 @@ class Post {
   });
 
   Post.fromJson(Map<String, dynamic> json) {
-    // List<dynamic> commentJson = json['comments'];
-    // List<Comment>=
     uId = json['uid'];
     postId = json['post-id'];
-    // title = json['title'];
+
     description = json['description'];
     imageUrl = json['image-url'] ?? "";
     fullName = json['full-name'];
     userImage = json['user-image'];
     // message = json['message'];
-    createdAt = json['createdAt'];
+    createdAt = DateTime.parse(json['createdAt']);
   }
 
   Map<String, dynamic> toJson() {
@@ -46,7 +44,7 @@ class Post {
     data['description'] = description;
     data['full-name'] = fullName;
     data['image-url'] = imageUrl ?? "";
-    data['createdAt'] = createdAt;
+    data['createdAt'] = createdAt.toIso8601String();
 
     return data;
   }

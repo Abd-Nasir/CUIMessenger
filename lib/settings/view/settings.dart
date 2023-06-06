@@ -419,7 +419,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           Container(
             height: mediaQuery.size.width * 0.18,
-            width: mediaQuery.size.width * 0.16,
+            width: mediaQuery.size.width * 0.18,
             decoration: BoxDecoration(
                 color: Palette.white,
                 borderRadius: BorderRadius.circular(200.0),

@@ -52,7 +52,7 @@ class _NewPostState extends State<NewPost> {
             userImage: user.profilePicture,
             imageUrl: "",
             fullName: user.firstName + user.lastName,
-            createdAt: DateTime.now().toIso8601String(),
+            createdAt: DateTime.now(),
             // comments: [],
           ),
           file: file));
@@ -65,7 +65,7 @@ class _NewPostState extends State<NewPost> {
             userImage: user.profilePicture,
             imageUrl: "",
             fullName: "${user.firstName} ${user.lastName}",
-            createdAt: DateTime.now().toIso8601String(),
+            createdAt: DateTime.now(),
             // comments: [],
           ),
           file: null));

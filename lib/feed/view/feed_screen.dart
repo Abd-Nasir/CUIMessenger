@@ -11,6 +11,7 @@ import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 // import 'new_post_screen.dart';
 
@@ -169,9 +170,24 @@ class _FeedScreenState extends State<FeedScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  post.fullName,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      post.fullName,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 1),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(
+                          DateFormat.MMMMEEEEd().format(post.createdAt) ==
+                                  DateFormat.MMMMEEEEd().format(DateTime.now())
+                              ? "  Today"
+                              : DateFormat.MMMMEEEEd().format(post.createdAt),
+                          style: const TextStyle(
+                              fontSize: 10, color: Colors.grey)),
+                    ]),
+                  ],
                 ),
               ],
             ),

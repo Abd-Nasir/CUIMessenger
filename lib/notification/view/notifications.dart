@@ -1,4 +1,5 @@
 // import 'dart:io';
+import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';
@@ -12,6 +13,7 @@ import 'package:cui_messenger/notification/bloc/notifications_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -159,9 +161,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                                DateFormat.MMMMEEEEd().format(
+                                                            notice.createdAt) ==
+                                                        DateFormat.MMMMEEEEd()
+                                                            .format(
+                                                                DateTime.now())
+                                                    ? "  Today"
+                                                    : DateFormat.MMMMEEEEd()
+                                                        .format(
+                                                            notice.createdAt),
+                                                style: const TextStyle(
+                                                    fontSize: 10,
+                                                    color: Palette.white)),
+                                          ]),
                                       Text(
-                                        state.notificationProvider
-                                            .notices[index].noticeTitle,
+                                        notice.noticeTitle,
                                         style: const TextStyle(
                                             fontSize: 18,
                                             color: Palette.yellow,
@@ -234,7 +253,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Widget notification(MediaQueryData mediaQuery, BuildContext context) {
-    return Container(
+    return SizedBox(
       height: mediaQuery.size.height * 0.73,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -246,142 +265,151 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 color: Palette.cuiPurple,
                 fontFamily: "assets/fonts/SulphurPoint-Regular.ttf"),
           ),
-          Container(
-            // color: Palette.white,
-            // margin: EdgeInsets.only(
-            //   top: mediaQuery.size.height * 0.01,
-            // ),
-            // width: mediaQuery.size.width,
-            // height: mediaQuery.size.height * 0.82,
-            child: BlocBuilder<NotificationBloc, NotificationState>(
-                builder: (context, state) {
-              if (NotificationState is NotificationStateLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: Palette.cuiPurple,
-                  ),
-                );
-              }
-              return isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: Palette.cuiPurple,
+          BlocBuilder<NotificationBloc, NotificationState>(
+              builder: (context, state) {
+            if (NotificationState is NotificationStateLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Palette.cuiPurple,
+                ),
+              );
+            }
+            return isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: Palette.cuiPurple,
+                    ),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      // shrinkWrap: true,
+                      padding: EdgeInsets.only(
+                        left: mediaQuery.size.width * 0.06,
+                        right: mediaQuery.size.width * 0.06,
                       ),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        // shrinkWrap: true,
-                        padding: EdgeInsets.only(
-                          left: mediaQuery.size.width * 0.06,
-                          right: mediaQuery.size.width * 0.06,
-                        ),
-                        itemCount:
-                            state.notificationProvider.notifications.length,
-                        itemBuilder: (context, index) {
-                          final notification =
-                              state.notificationProvider.notifications[index];
-                          return Container(
-                            margin: EdgeInsets.only(
-                                top: mediaQuery.size.height * 0.02,
-                                bottom: mediaQuery.size.height * 0.02),
-                            decoration: BoxDecoration(
+                      itemCount:
+                          state.notificationProvider.notifications.length,
+                      itemBuilder: (context, index) {
+                        final notification =
+                            state.notificationProvider.notifications[index];
+                        return Container(
+                          margin: EdgeInsets.only(
+                              top: mediaQuery.size.height * 0.02,
+                              bottom: mediaQuery.size.height * 0.02),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Palette.white,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: const Offset(0.0, 2.0),
+                                blurRadius: 16.0,
+                                color: Palette.cuiPurple.withOpacity(0.15),
+                              )
+                            ],
+                          ),
+                          child: ListTile(
+                            //Display the user image
+                            tileColor: Palette.white,
+                            minVerticalPadding: 12.0,
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
-                              color: Palette.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: const Offset(0.0, 2.0),
-                                  blurRadius: 16.0,
-                                  color: Palette.cuiPurple.withOpacity(0.15),
-                                )
-                              ],
                             ),
-                            child: ListTile(
-                              //Display the user image
-                              tileColor: Palette.white,
-                              minVerticalPadding: 12.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
 
-                              title: Padding(
-                                padding: const EdgeInsets.only(bottom: 5.0),
-                                child: Text(
-                                  notification.title,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Palette.cuiPurple,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              // Display the last message presented
-                              subtitle: RichText(
+                            title: Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Text(
+                                notification.title,
                                 textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: notification.message,
-                                      style: const TextStyle(
-                                        color: Palette.textColor,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    const TextSpan(text: "\n"),
-                                    if (notification.fileName != "")
-                                      TextSpan(
-                                          text: notification.fileName,
-                                          style: const TextStyle(
-                                              height: 1.5,
-                                              color: Palette.cuiPurple,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w500)),
-                                    if (notification.fileName != "")
-                                      const TextSpan(text: "\n"),
-                                    if (notification.fileName != "")
-                                      TextSpan(
-                                          text: notification.fileType != "docx"
-                                              ? "Tap to open document"
-                                              : "Tap to save document",
-                                          style: const TextStyle(
-                                              height: 1.5,
-                                              color: Palette.cuiPurple,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w500)),
-                                  ],
-                                ),
+                                style: const TextStyle(
+                                    color: Palette.cuiPurple,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              onTap: () {
-                                if (notification.fileName != "") {
-                                  if (notification.fileType == 'pdf') {
-                                    RouteGenerator.navigatorKey.currentState!
-                                        .pushNamed(
-                                      pdfViewerRoute,
-                                      arguments: PDFViewerPage(
-                                          fileName: notification.fileName!,
-                                          url: notification.fileUrl!),
-                                    );
-                                  } else if (notification.fileType == 'png' ||
-                                      notification.fileType == "jpg" ||
-                                      notification.fileType == "jpeg") {
-                                    previewImage(
-                                        context,
-                                        mediaQuery,
-                                        notification.fileUrl!,
-                                        notification.fileName!);
-                                  } else {
-                                    CustomWidgets.saveFile(
-                                        fileUrl: notification.fileUrl!,
-                                        fileName: notification.fileName!);
-                                  }
-                                }
-                              },
                             ),
-                          );
-                        },
-                      ),
-                    );
-            }),
-          ),
+                            // trailing:
+                            //     Text(notification.createdAt.toIso8601String()),
+                            // Display the last message presented
+                            subtitle: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: notification.message,
+                                    style: const TextStyle(
+                                      color: Palette.textColor,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                  if (notification.fileName != "")
+                                    const TextSpan(text: "\n"),
+                                  if (notification.fileName != "")
+                                    TextSpan(
+                                        text: notification.fileName,
+                                        style: const TextStyle(
+                                            height: 1.5,
+                                            color: Palette.cuiPurple,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500)),
+                                  if (notification.fileName != "")
+                                    const TextSpan(text: "\n"),
+                                  if (notification.fileName != "")
+                                    TextSpan(
+                                        text: notification.fileType != "docx"
+                                            ? "Tap to open document"
+                                            : "Tap to save document",
+                                        style: const TextStyle(
+                                            height: 1.5,
+                                            color: Palette.cuiPurple,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500)),
+                                  const TextSpan(text: "\n"),
+                                  TextSpan(
+                                      text: DateFormat.MMMMEEEEd().format(
+                                                  notification.createdAt) ==
+                                              DateFormat.MMMMEEEEd()
+                                                  .format(DateTime.now())
+                                          ? "Today"
+                                          : DateFormat.MMMMEEEEd()
+                                              .format(notification.createdAt),
+                                      style: const TextStyle(
+                                          height: 1.5,
+                                          color: Palette.hintGrey,
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              if (notification.fileName != "") {
+                                if (notification.fileType == 'pdf') {
+                                  RouteGenerator.navigatorKey.currentState!
+                                      .pushNamed(
+                                    pdfViewerRoute,
+                                    arguments: PDFViewerPage(
+                                        fileName: notification.fileName!,
+                                        url: notification.fileUrl!),
+                                  );
+                                } else if (notification.fileType == 'png' ||
+                                    notification.fileType == "jpg" ||
+                                    notification.fileType == "jpeg") {
+                                  previewImage(
+                                      context,
+                                      mediaQuery,
+                                      notification.fileUrl!,
+                                      notification.fileName!);
+                                } else {
+                                  CustomWidgets.saveFile(
+                                      fileUrl: notification.fileUrl!,
+                                      fileName: notification.fileName!);
+                                }
+                              }
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  );
+          }),
         ],
       ),
     );
