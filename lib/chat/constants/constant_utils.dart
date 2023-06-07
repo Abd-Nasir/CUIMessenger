@@ -846,10 +846,10 @@ Future<String> getImage(String id, bool isGroup) async {
 }
 
 Widget returnNothingToShow() {
-  return Center(
+  return const Center(
       child: Column(
     mainAxisAlignment: MainAxisAlignment.center,
-    children: const [
+    children: [
       Icon(
         Icons.sentiment_neutral_rounded,
         size: 50,

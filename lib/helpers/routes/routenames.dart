@@ -15,3 +15,4 @@ const String changePasswordRoute = "/change-password-route";
 const String newPostRoute = "/new-post-route";
 const String imagePreviewRoute = "/image-preview-route";
 const String pdfViewerRoute = "/pdf-veiwer-route";
+const String aboutAppRoute = "/about-app-route";

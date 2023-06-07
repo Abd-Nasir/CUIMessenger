@@ -248,7 +248,7 @@ class AuthProvider {
       } else {
         showSimpleNotification(
           slideDismissDirection: DismissDirection.horizontal,
-          Text("Auth Error + ${e}"),
+          Text("Auth Error + $e"),
           background: Palette.red.withOpacity(0.9),
           duration: const Duration(seconds: 2),
         );

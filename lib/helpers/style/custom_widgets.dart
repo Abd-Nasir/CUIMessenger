@@ -124,7 +124,7 @@ class CustomWidgets {
     //  onTap: () async {
     print("ontap");
     File checkFile = File(
-        "/storage/emulated/0/Documents/CUI Messenger /Documents/${fileName}");
+        "/storage/emulated/0/Documents/CUI Messenger /Documents/$fileName");
 
     if (await checkFile.exists()) {
       print("exists");
@@ -150,7 +150,7 @@ class CustomWidgets {
           : await getApplicationDocumentsDirectory();
       print(dir.path);
       File savedFile =
-          await File("${dir.path}/${fileName}").writeAsBytes(response.data);
+          await File("${dir.path}/$fileName").writeAsBytes(response.data);
 
       if (Platform.isAndroid) {
         final result1 = await FolderFileSaver.saveFileIntoCustomDir(

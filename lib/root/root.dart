@@ -117,7 +117,7 @@ class _RootPageState extends State<RootPage> {
       // print("\n\nCustomer info: ${customerInfo.toJson()}");
       return const NotificationsPage();
     } else if (selectedIndex == 1) {
-      return ChatContactsListScreen(value: '');
+      return const ChatContactsListScreen(value: '');
     } else if (selectedIndex == 2) {
       return const FeedScreen();
     } else if (selectedIndex == 3) {
@@ -128,7 +128,7 @@ class _RootPageState extends State<RootPage> {
   _getFloatingButton() {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
-        menuItemStyleData: MenuItemStyleData(height: 30),
+        menuItemStyleData: const MenuItemStyleData(height: 30),
         isExpanded: true,
         customButton: Card(
           elevation: 8,

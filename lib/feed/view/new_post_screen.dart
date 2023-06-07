@@ -84,7 +84,7 @@ class _NewPostState extends State<NewPost> {
                 onPressed: () {
                   addPost(descriptionController.text, pickedImage);
                 },
-                icon: Icon(Icons.done_rounded))
+                icon: const Icon(Icons.done_rounded))
           ],
           iconTheme: const IconThemeData(color: Colors.black),
           elevation: 0,

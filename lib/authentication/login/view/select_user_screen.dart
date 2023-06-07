@@ -298,7 +298,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                                                   },
                                                   child: Row(
                                                     children: [
-                                                      Icon(
+                                                      const Icon(
                                                         Icons.download_outlined,
                                                         color: Palette.yellow,
                                                         size: 18,
@@ -450,9 +450,9 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                         //     .pushNamed(teacherLoginScreenRoute);
                       }
                     }),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
                           'Continue',
                           style: TextStyle(

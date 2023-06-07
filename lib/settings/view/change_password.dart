@@ -36,7 +36,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const SizedBox(width: 10),
+                    SizedBox(width: mediaQuery.size.width * 0.05),
                     IconButton(
                         onPressed: () {
                           RouteGenerator.navigatorKey.currentState!.pop();

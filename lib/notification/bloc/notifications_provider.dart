@@ -55,11 +55,11 @@ class NotificationProvider {
         .collection('registered-users')
         .get()
         .then((value) {
-      value.docs.forEach((element) {
+      for (var element in value.docs) {
         UserModel userModel = UserModel.fromJson(element.data());
         token = userModel.token;
         sendNotification(token, "Hey there", "Notification Body");
-      });
+      }
     });
 
     // token = snapshot.docs.first.id;
