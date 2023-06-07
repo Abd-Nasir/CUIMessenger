@@ -18,6 +18,17 @@ class CommentBox extends StatefulWidget {
 
 class _CommentBoxState extends State<CommentBox> {
   final TextEditingController commentController = TextEditingController();
+  bool isLoading = true;
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 1)).then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +54,16 @@ class _CommentBoxState extends State<CommentBox> {
                 .collection('comments')
                 .snapshots(),
             builder: (context, AsyncSnapshot snapshot) {
-              var data = snapshot.data.docs;
+              // if (isLoading) {
+              //   return Center(
+              //     child: CircularProgressIndicator(),
+              //   );
+              // }
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.data.docs.length > 0) {
+                var data = snapshot.data.docs;
                 return Column(
                   children: [
                     Expanded(
@@ -471,6 +487,9 @@ class _CommentBoxState extends State<CommentBox> {
                   ],
                 );
               } else {
+                // return Center(
+                //   child: CircularProgressIndicator(),
+                // );
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

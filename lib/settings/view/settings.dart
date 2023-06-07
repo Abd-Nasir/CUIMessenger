@@ -456,7 +456,7 @@ class _SettingsPageState extends State<SettingsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${BlocProvider.of<AuthBloc>(context).state.user!.firstName}${BlocProvider.of<AuthBloc>(context).state.user!.lastName}',
+                  '${BlocProvider.of<AuthBloc>(context).state.user!.firstName} ${BlocProvider.of<AuthBloc>(context).state.user!.lastName}',
                   style: const TextStyle(
                     color: Palette.textColor,
                     fontSize: 14.0,
