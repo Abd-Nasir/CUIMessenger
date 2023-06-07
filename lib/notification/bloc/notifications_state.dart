@@ -8,8 +8,9 @@ abstract class NotificationState {
   const NotificationState({required this.notificationProvider});
 }
 
-class ChatInitialState extends NotificationState {
-  const ChatInitialState({required NotificationProvider notificationProvider})
+class NotificationInitialState extends NotificationState {
+  const NotificationInitialState(
+      {required NotificationProvider notificationProvider})
       : super(notificationProvider: notificationProvider);
 }
 

@@ -6,7 +6,8 @@ import 'package:cui_messenger/notification/bloc/notifications_state.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationBloc(NotificationProvider notificationProvider)
-      : super(ChatInitialState(notificationProvider: notificationProvider)) {
+      : super(NotificationInitialState(
+            notificationProvider: notificationProvider)) {
     on<InitializeNotificationEvent>((event, emit) async {
       emit(
           NotificationStateLoading(notificationProvider: notificationProvider));

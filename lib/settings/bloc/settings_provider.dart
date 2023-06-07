@@ -1,88 +1,43 @@
-// import 'package:background_fetch/background_fetch.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/settings/model/setting.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/scheduler.dart';
-
-import 'package:hive/hive.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SettingsProvider {
-  late Box<dynamic> settingBox;
-  late Setting settings;
-  bool initialized = false;
+  Setting? settings;
+  final user = FirebaseAuth.instance.currentUser;
 
-  int count = 0;
   SettingsProvider();
+  // Static instance to access api without initialization
+  static SettingsProvider instance = SettingsProvider();
 
-  bool? isDarkMode;
-
-  void themeinfo() {
-    var brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    if (brightness == Brightness.dark) {
-      isDarkMode = true;
-    } else {
-      isDarkMode = false;
-    }
-    // isDarkMode = brightness == Brightness.dark;
-  }
-
-  // void onClickEnable(bool enabled) {
-  //   if (enabled) {
-  //     BackgroundFetch.start().then((int status) {
-  //       debugPrint('[BackgroundFetch] start success: $status');
-  //     }).catchError((e) {
-  //       debugPrint('[BackgroundFetch] start FAILURE: $e');
-  //     });
-  //   } else {
-  //     BackgroundFetch.stop().then((int status) {
-  //       debugPrint('[BackgroundFetch] stop success: $status');
-  //     });
-  //   }
-  // }
-
-  // void _onClickStatus() async {
-  //   int status = await BackgroundFetch.status;
-  //   debugPrint('[BackgroundFetch] status: $status');
-  // }
-
-  Future<void> loadFromDB() async {
-    await Hive.openBox("settings").then((value) {
-      settings = value.get('settings');
-      settingBox = value;
-      initialized = true;
+  Future<bool> loadNotificationStatus() async {
+    FirebaseFirestore.instance
+        .collection("registered-users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      UserModel userModel = UserModel.fromJson(value.data()!);
+      Setting tempSetting = Setting(
+          chatNotifications: userModel.chatNotification,
+          noticeNotification: userModel.noticeNotification);
+      settings = tempSetting;
     });
+
+    return true;
   }
 
-  void changeNotificationAlert() {
-    debugPrint("Pressed chat Notification Alert");
-    settings.chatNotifications = !settings.chatNotifications;
-    settingBox.put('settings', settings);
+  void changeNoticeNotificationAlert({required Setting setting}) {
+    FirebaseFirestore.instance
+        .collection("registered-users")
+        .doc(user!.uid)
+        .update({"noticeNotification": setting.noticeNotification});
   }
 
-  // void changeNotifications() async {
-  //   debugPrint("pressed me!");
-  //   if (!settings.noticeNotification) {
-  //     if (await Permission.notification.isPermanentlyDenied) {
-  //       await openAppSettings();
-  //       settings.notifications = await Permission.notification.isGranted ||
-  //           await Permission.notification.isLimited;
-  //       settingBox.put('settings', settings);
-  //       onClickEnable(settings.notifications);
-  //     } else {
-  //       await openAppSettings();
-  //       settings.notifications =
-  //           await Permission.notification.isPermanentlyDenied ||
-  //               await Permission.notification.isDenied;
-  //       settingBox.put('settings', settings);
-  //       onClickEnable(settings.notifications);
-  //     }
-  //   } else {
-  //     await openAppSettings();
-  //     settings.notifications =
-  //         await Permission.notification.isPermanentlyDenied ||
-  //             await Permission.notification.isDenied;
-  //     settingBox.put('settings', settings);
-  //     onClickEnable(settings.notifications);
-  //   }
-  // }
+  void changeChatNotificationAlert({required Setting setting}) {
+    FirebaseFirestore.instance
+        .collection("registered-users")
+        .doc(user!.uid)
+        .update({"chatNotification": setting.chatNotifications});
+  }
 }

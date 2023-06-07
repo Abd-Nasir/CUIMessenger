@@ -1,45 +1,33 @@
 import 'package:cui_messenger/settings/bloc/settings_provider.dart';
-import 'package:cui_messenger/settings/model/setting.dart';
 import 'package:equatable/equatable.dart';
-import 'package:hive/hive.dart';
+
+// import 'package:hive/hive.dart';
 
 class SettingsState extends Equatable {
-  final Setting settings;
-  final SettingsProvider provider;
+  final SettingsProvider settingsProvider;
 
-  const SettingsState({required this.settings, required this.provider});
+  const SettingsState({required this.settingsProvider});
 
-  factory SettingsState.initial(SettingsProvider provider) {
-    var settingBox = Hive.box("settings");
-    Setting settings = settingBox.get('settings');
-
-    return SettingsState(
-      settings: settings,
-      provider: provider,
-    );
-  }
-
-  SettingsState copyWith(
-          {Setting? settings, SettingsProvider? provider, int? count}) =>
-      SettingsState(
-        settings: settings ?? this.settings,
-        provider: provider ?? this.provider,
-      );
+  SettingsState copyWith({SettingsProvider? settingsProvider}) => SettingsState(
+      settingsProvider: settingsProvider ?? this.settingsProvider);
 
   @override
-  List<Object?> get props => [settings, provider];
+  List<Object?> get props => [settingsProvider];
 }
+
+// class SettingsInitialState extends SettingsState {
+//   const SettingsInitialState({required SettingsProvider settingsProvider})
+//       : super(settingsProvider: settingsProvider,settings: this.settings);
+// }
 
 class SettingStateLoading extends SettingsState {
-  const SettingStateLoading({required super.settings, required super.provider});
+  const SettingStateLoading({required super.settingsProvider});
 }
 
-class SettingStateMessageStateLoading extends SettingsState {
-  const SettingStateMessageStateLoading(
-      {required super.settings, required super.provider});
-}
+// class SettingStateMessageStateLoading extends SettingsState {
+//   const SettingStateMessageStateLoading({required super.settingsProvider});
+// }
 
 class SettingStateNotificationUpdated extends SettingsState {
-  const SettingStateNotificationUpdated(
-      {required super.settings, required super.provider});
+  const SettingStateNotificationUpdated({required super.settingsProvider});
 }

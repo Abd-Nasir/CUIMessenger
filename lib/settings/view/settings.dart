@@ -5,6 +5,7 @@ import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/settings/bloc/settings_bloc.dart';
 import 'package:cui_messenger/settings/bloc/settings_event.dart';
 import 'package:cui_messenger/settings/bloc/settings_state.dart';
+import 'package:cui_messenger/settings/model/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -95,158 +96,198 @@ class _SettingsPageState extends State<SettingsPage> {
             BlocConsumer<SettingsBloc, SettingsState>(
                 listener: (context, state) {
               if (state is SettingStateNotificationUpdated) {
+                print("notification updated");
+                setState(() {});
+              }
+              if (state is SettingStateLoading) {
+                print("state loading");
                 setState(() {});
               }
             }, builder: (context, state) {
-              return Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // createInformationTile(
-                      //   mediaQuery: mediaQuery,
-                      //   color: Palette.privacyPolicy,
-                      //   tileText: AppLocalizations.of(context)
-                      //       .translate('payment_details'),
-                      //   icon: Icons.payment,
-                      //   onTap: () {
-                      //     RouteGenerator.navigatorKey.currentState!
-                      //         .pushNamed(paymentDetailsRoute);
-                      //   },
-                      // ),
-                      createSettingTile(
-                        mediaQuery: mediaQuery,
-                        color: Palette.cuiPurple,
-                        tileText: "Chat Notification",
-                        icon: Icons.chat_sharp,
-                        switchValue: state.settings.chatNotifications,
-                        switchOnChaged: (value) {
-                          setState(() {
+              if (state is SettingStateLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is SettingStateNotificationUpdated) {
+                return Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // createInformationTile(
+                        //   mediaQuery: mediaQuery,
+                        //   color: Palette.privacyPolicy,
+                        //   tileText: AppLocalizations.of(context)
+                        //       .translate('payment_details'),
+                        //   icon: Icons.payment,
+                        //   onTap: () {
+                        //     RouteGenerator.navigatorKey.currentState!
+                        //         .pushNamed(paymentDetailsRoute);
+                        //   },
+                        // ),
+                        createSettingTile(
+                          mediaQuery: mediaQuery,
+                          color: Palette.cuiPurple,
+                          tileText: "Chat Notification",
+                          icon: Icons.chat_sharp,
+                          // switchValue: false,
+                          switchValue: state
+                              .settingsProvider.settings!.chatNotifications,
+                          // state.settings.chatNotifications,
+                          switchOnChaged: (value) {
                             BlocProvider.of<SettingsBloc>(context)
-                                .add(const ChangeNotificationsEvent());
-                          });
-                        },
-                      ),
-                      createSettingTile(
-                        mediaQuery: mediaQuery,
-                        color: Palette.faceid,
-                        tileText: "Disable Notifices Notifications",
-                        icon: Icons.notifications_off,
-                        switchValue: false,
-                        switchOnChaged: (value) {},
-                      ),
-                      createInformationTile(
-                        mediaQuery: mediaQuery,
-                        color: Palette.help,
-                        tileText: "Change Password",
-                        icon: Icons.key_sharp,
-                        onTap: () {
-                          RouteGenerator.navigatorKey.currentState!
-                              .pushNamed(changePasswordRoute);
-                        },
-                      ),
-                      createInformationTile(
-                        mediaQuery: mediaQuery,
-                        color: Palette.blueInformation,
-                        tileText: "About App",
-                        icon: Icons.info_sharp,
-                        onTap: () {
-                          RouteGenerator.navigatorKey.currentState!
-                              .pushNamed(aboutAppRoute);
-                        },
-                      ),
-                      createInformationTile(
-                        mediaQuery: mediaQuery,
-                        color: Palette.logOut,
-                        tileText: "Log Out",
-                        icon: Icons.logout_sharp,
-                        onTap: () => showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            backgroundColor: Palette.white,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: mediaQuery.size.width * 0.06,
-                                vertical: mediaQuery.size.height * 0.02),
-                            title: const Text(
-                              "Log Out",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Palette.textColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
+                                .add(ChangeNoticeNotificationsEvent(
+                              setting: Setting(
+                                  chatNotifications: value,
+                                  noticeNotification: state.settingsProvider
+                                      .settings!.noticeNotification),
+                            ));
+                            setState(() {
+                              state.settingsProvider.settings!
+                                  .chatNotifications = value;
+                            });
+                          },
+                        ),
+                        createSettingTile(
+                          mediaQuery: mediaQuery,
+                          color: Palette.faceid,
+                          tileText: "Disable Notifices Notifications",
+                          icon: Icons.notifications_off,
+                          switchValue: state
+                              .settingsProvider.settings!.noticeNotification,
+                          switchOnChaged: (value) {
+                            // print(value);
+                            BlocProvider.of<SettingsBloc>(context).add(
+                                ChangeNoticeNotificationsEvent(
+                                    setting: Setting(
+                                        chatNotifications: state
+                                            .settingsProvider
+                                            .settings!
+                                            .noticeNotification,
+                                        noticeNotification: value)));
+                            setState(() {
+                              state.settingsProvider.settings!
+                                  .noticeNotification = value;
+                            });
+                          },
+                        ),
+                        createInformationTile(
+                          mediaQuery: mediaQuery,
+                          color: Palette.help,
+                          tileText: "Change Password",
+                          icon: Icons.key_sharp,
+                          onTap: () {
+                            RouteGenerator.navigatorKey.currentState!
+                                .pushNamed(changePasswordRoute);
+                          },
+                        ),
+                        createInformationTile(
+                          mediaQuery: mediaQuery,
+                          color: Palette.blueInformation,
+                          tileText: "About App",
+                          icon: Icons.info_sharp,
+                          onTap: () {
+                            RouteGenerator.navigatorKey.currentState!
+                                .pushNamed(aboutAppRoute);
+                          },
+                        ),
+                        createInformationTile(
+                          mediaQuery: mediaQuery,
+                          color: Palette.logOut,
+                          tileText: "Log Out",
+                          icon: Icons.logout_sharp,
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              backgroundColor: Palette.white,
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: mediaQuery.size.width * 0.06,
+                                  vertical: mediaQuery.size.height * 0.02),
+                              title: const Text(
+                                "Log Out",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Palette.textColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.0,
+                                ),
                               ),
-                            ),
-                            content: const Text(
-                              "Are you sure you want to log Out?",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Palette.textColor,
-                                fontSize: 14.0,
+                              content: const Text(
+                                "Are you sure you want to log Out?",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Palette.textColor,
+                                  fontSize: 14.0,
+                                ),
                               ),
-                            ),
-                            actions: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      RouteGenerator.navigatorKey.currentState!
-                                          .pop('dialog');
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0, horizontal: 12.0),
-                                      child: const Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                            color: Palette.textColor,
-                                            fontSize: 12.0),
+                              actions: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        RouteGenerator
+                                            .navigatorKey.currentState!
+                                            .pop('dialog');
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0, horizontal: 12.0),
+                                        child: const Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                              color: Palette.textColor,
+                                              fontSize: 12.0),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      RouteGenerator.navigatorKey.currentState!
-                                          .pop('dialog');
-                                      // RouteGenerator.navigatorKey.currentState!
-                                      //     .pushNamedAndRemoveUntil(
-                                      //         logInRoute, (route) => false);
-                                      BlocProvider.of<AuthBloc>(context)
-                                          .add(const AuthLogoutEvent());
-                                    },
-                                    child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 8.0, horizontal: 16.0),
-                                        decoration: BoxDecoration(
-                                          color: Palette.red,
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              offset: const Offset(0.0, 0.0),
-                                              blurRadius: 16.0,
-                                              color:
-                                                  Palette.red.withOpacity(0.25),
-                                            ),
-                                          ],
-                                        ),
-                                        child: const Text(
-                                          "Log Out",
-                                          style: TextStyle(
-                                              color: Palette.white,
-                                              fontSize: 12.0),
-                                        )),
-                                  ),
-                                ],
-                              )
-                            ],
+                                    GestureDetector(
+                                      onTap: () {
+                                        RouteGenerator
+                                            .navigatorKey.currentState!
+                                            .pop('dialog');
+                                        // RouteGenerator.navigatorKey.currentState!
+                                        //     .pushNamedAndRemoveUntil(
+                                        //         logInRoute, (route) => false);
+                                        BlocProvider.of<AuthBloc>(context)
+                                            .add(const AuthLogoutEvent());
+                                      },
+                                      child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0, horizontal: 16.0),
+                                          decoration: BoxDecoration(
+                                            color: Palette.red,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                offset: const Offset(0.0, 0.0),
+                                                blurRadius: 16.0,
+                                                color: Palette.red
+                                                    .withOpacity(0.25),
+                                              ),
+                                            ],
+                                          ),
+                                          child: const Text(
+                                            "Log Out",
+                                            style: TextStyle(
+                                                color: Palette.white,
+                                                fontSize: 12.0),
+                                          )),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
+                );
+              } else {
+                return CircularProgressIndicator();
+              }
             }),
           ],
         ),

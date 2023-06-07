@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/chat/constants/constants.dart';
 import 'package:cui_messenger/chat/constants/message_enum.dart';
@@ -14,6 +15,7 @@ import 'package:cui_messenger/authentication/model/user_model.dart';
 import 'package:cui_messenger/notification/bloc/notifications_provider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
@@ -170,17 +172,29 @@ class ChatMethods {
           .get();
       Group group = Group.fromMap(snapshot.data()!);
       List users = group.membersUid;
+
       for (var element in users) {
         if (element != firebaseAuth.currentUser!.uid) {
           log(element);
           // getting token of all the people in the group
-          String token = await getUserNotificationToken(element);
-          NotificationProvider().sendNotification(
-              token,
-              group.name,
-              messageType.type == "text"
-                  ? text
-                  : "${message.senderUsername} sent an ${StringUtils.capitalize(messageType.type)}");
+          FirebaseFirestore.instance
+              .collection("registered-users")
+              .doc(recieverUserId)
+              .get()
+              .then((value) async {
+            UserModel user = UserModel.fromJson(value.data()!);
+            print("chat noti ${user.chatNotification}");
+            if (user.chatNotification == true) {
+              String token = await getUserNotificationToken(element);
+              NotificationProvider().sendNotification(
+                  token,
+                  group.name,
+                  messageType.type == "text"
+                      ? text
+                      : "${message.senderUsername} sent an ${StringUtils.capitalize(messageType.type)}");
+            }
+          });
+
           //adding the message to the collection of infos
           if (message.type == MessageEnum.link) {
             InfoStorage().storeLink(timeSent, text, element, isGroupChat);
@@ -230,14 +244,30 @@ class ChatMethods {
             .set(
               message.toMap(),
             );
-
-        String token = await getUserNotificationToken(recieverUserId);
-        NotificationProvider().sendNotification(
-            token,
-            senderUsername,
-            messageType.type == "text"
-                ? text
-                : "sent an ${StringUtils.capitalize(messageType.type)}");
+        FirebaseFirestore.instance
+            .collection("registered-users")
+            .doc(recieverUserId)
+            .get()
+            .then((value) async {
+          UserModel user = UserModel.fromJson(value.data()!);
+          print("Notification is ${user.chatNotification}");
+          if (user.chatNotification == true) {
+            String token = await getUserNotificationToken(recieverUserId);
+            NotificationProvider().sendNotification(
+                token,
+                senderUsername,
+                messageType.type == "text"
+                    ? text
+                    : "${message.senderUsername} sent an ${StringUtils.capitalize(messageType.type)}");
+          }
+        });
+        // String token = await getUserNotificationToken(recieverUserId);
+        // NotificationProvider().sendNotification(
+        //     token,
+        //     senderUsername,
+        //     messageType.type == "text"
+        //         ? text
+        //         : "sent an ${StringUtils.capitalize(messageType.type)}");
         //adding the message to the collection of infos
         if (message.type == MessageEnum.link) {
           InfoStorage().storeLink(timeSent, text, recieverUserId, isGroupChat);

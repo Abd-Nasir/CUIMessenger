@@ -17,16 +17,16 @@ import 'package:cui_messenger/settings/bloc/settings_event.dart';
 import 'package:cui_messenger/settings/bloc/settings_provider.dart';
 
 import 'package:cui_messenger/splash.dart';
-import './settings/model/setting.dart';
+// import './settings/model/setting.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+// import 'package:hive_flutter/hive_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -44,37 +44,37 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  Directory appPath = await getApplicationDocumentsDirectory();
-  await Hive.initFlutter(appPath.path);
-  Hive.registerAdapter(SettingAdapter());
+  // Directory appPath = await getApplicationDocumentsDirectory();
+  // await Hive.initFlutter(appPath.path);
+  // Hive.registerAdapter(SettingAdapter());
   // Hive
   //   ..init(appPath.path.toString())
   //   ..registerAdapter(SettingsAdapter());
 
-  await Hive.openBox('settingsBox');
-  late Setting setting;
-  try {
-    Box myBox = await Hive.openBox("settings");
-    // writing data if the app is new and just created the db
-    var settingMap = myBox.get('settings');
-    if (settingMap == null) {
-      myBox.put(
-        'settings',
-        Setting(
-          chatNotifications: false,
-          noticeNotification: false,
-        ),
-      );
-      setting = Setting(
-        chatNotifications: false,
-        noticeNotification: false,
-      );
-    } else {
-      setting = settingMap;
-    }
-  } catch (error) {
-    debugPrint("Error occured in offline database:\n$error");
-  }
+  // await Hive.openBox('settingsBox');
+  // late Setting setting;
+  // try {
+  //   Box myBox = await Hive.openBox("settings");
+  //   // writing data if the app is new and just created the db
+  //   var settingMap = myBox.get('settings');
+  //   if (settingMap == null) {
+  //     myBox.put(
+  //       'settings',
+  //       Setting(
+  //         chatNotifications: false,
+  //         noticeNotification: false,
+  //       ),
+  //     );
+  //     setting = Setting(
+  //       chatNotifications: false,
+  //       noticeNotification: false,
+  //     );
+  //   } else {
+  //     setting = settingMap;
+  //   }
+  // } catch (error) {
+  //   debugPrint("Error occured in offline database:\n$error");
+  // }
   await FirebaseMessaging.instance.requestPermission(
     alert: true,
     announcement: false,
@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    settingsProvider.loadFromDB();
+    // settingsProvider.loadFromDB();
     super.initState();
   }
 
@@ -144,7 +144,7 @@ class _MyAppState extends State<MyApp> {
               ..add(const InitializeNotificationEvent()),
           ),
           BlocProvider<SettingsBloc>(
-            lazy: true,
+            lazy: false,
             create: (context) => SettingsBloc(settingsProvider)
               ..add(const InitialSettingsEvent()),
           ),
