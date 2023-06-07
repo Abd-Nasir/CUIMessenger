@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:folder_file_saver/folder_file_saver.dart';
+import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -129,7 +130,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                       Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: mediaQuery.size.width * 0.03),
-                          height: mediaQuery.size.height * 0.33,
+                          height: mediaQuery.size.height * 0.36,
                           child: Container(
                             margin: EdgeInsets.only(
                               top: mediaQuery.size.height * 0.01,
@@ -166,6 +167,28 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
+                                              Center(
+                                                child: Text(
+                                                    DateFormat.MMMMEEEEd()
+                                                                .format(state
+                                                                    .notificationProvider
+                                                                    .notices[
+                                                                        index]
+                                                                    .createdAt) ==
+                                                            DateFormat
+                                                                    .MMMMEEEEd()
+                                                                .format(DateTime
+                                                                    .now())
+                                                        ? "  Today"
+                                                        : DateFormat.MMMMEEEEd()
+                                                            .format(state
+                                                                .notificationProvider
+                                                                .notices[index]
+                                                                .createdAt),
+                                                    style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Palette.white)),
+                                              ),
                                               Text(
                                                 state.notificationProvider
                                                     .notices[index].noticeTitle,

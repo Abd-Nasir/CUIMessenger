@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/bloc/auth_bloc.dart';
 import 'package:cui_messenger/feed/model/comment.dart';
+import 'package:cui_messenger/helpers/style/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -418,55 +419,54 @@ class _CommentBoxState extends State<CommentBox> {
                             );
                           }),
                     ),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.only(left: 15, bottom: 8),
-                              color: Palette.cuiOffWhite,
-                              child: TextFormField(
-                                autocorrect: false,
-                                controller: commentController,
-                                decoration: const InputDecoration(
-                                    isDense: true,
-                                    contentPadding:
-                                        EdgeInsets.fromLTRB(20, 25, 10, 0),
-                                    hintText: 'Add a comment',
-                                    filled: true,
-                                    fillColor: Palette.cuiOffWhite,
-                                    border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(50)),
-                                    )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                  left: 15,
+                                ),
+                                decoration: CustomWidgets.textInputDecoration,
+                                //   color: Palette.white,
+                                child: TextFormField(
+                                  autocorrect: false,
+                                  controller: commentController,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Add new comment",
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              var docref = FirebaseFirestore.instance
-                                  .collection("posts")
-                                  .doc(widget.postId)
-                                  .collection('comments')
-                                  .doc();
-                              var comment = Comment(
-                                  uid: currentUser.uid,
-                                  commentId: docref.id,
-                                  regNo: currentUser.regNo,
-                                  name: currentUser.firstName +
-                                      currentUser.lastName,
-                                  text: commentController.text,
-                                  userImage: currentUser.profilePicture,
-                                  commentImage: "",
-                                  createdAt: DateTime.now().toIso8601String());
-                              docref.set(comment.toJson());
-                            },
-                            icon: const Icon(
-                              Icons.send,
-                            ),
-                          )
-                        ]),
+                            IconButton(
+                              onPressed: () {
+                                var docref = FirebaseFirestore.instance
+                                    .collection("posts")
+                                    .doc(widget.postId)
+                                    .collection('comments')
+                                    .doc();
+                                var comment = Comment(
+                                    uid: currentUser.uid,
+                                    commentId: docref.id,
+                                    regNo: currentUser.regNo,
+                                    name: currentUser.firstName +
+                                        currentUser.lastName,
+                                    text: commentController.text,
+                                    userImage: currentUser.profilePicture,
+                                    commentImage: "",
+                                    createdAt:
+                                        DateTime.now().toIso8601String());
+                                docref.set(comment.toJson());
+                              },
+                              icon: const Icon(
+                                Icons.send,
+                              ),
+                            )
+                          ]),
+                    ),
                     const SizedBox(height: 10)
                   ],
                 );
@@ -477,55 +477,54 @@ class _CommentBoxState extends State<CommentBox> {
                     const Center(
                       child: Text("No Comments Available !"),
                     ),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.only(left: 15, bottom: 8),
-                              color: Palette.white,
-                              child: TextFormField(
-                                autocorrect: false,
-                                controller: commentController,
-                                decoration: const InputDecoration(
-                                    isDense: true,
-                                    contentPadding:
-                                        EdgeInsets.fromLTRB(20, 25, 10, 0),
-                                    hintText: 'Add a comment',
-                                    filled: true,
-                                    fillColor: Palette.cuiOffWhite,
-                                    border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(50)),
-                                    )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, bottom: 10),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                  left: 15,
+                                ),
+                                decoration: CustomWidgets.textInputDecoration,
+                                //   color: Palette.white,
+                                child: TextFormField(
+                                  autocorrect: false,
+                                  controller: commentController,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Add new comment",
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              var docref = FirebaseFirestore.instance
-                                  .collection("posts")
-                                  .doc(widget.postId)
-                                  .collection('comments')
-                                  .doc();
-                              var comment = Comment(
-                                  uid: currentUser.uid,
-                                  commentId: docref.id,
-                                  regNo: currentUser.regNo,
-                                  name: currentUser.firstName +
-                                      currentUser.lastName,
-                                  text: commentController.text,
-                                  userImage: currentUser.profilePicture,
-                                  commentImage: "",
-                                  createdAt: DateTime.now().toIso8601String());
-                              docref.set(comment.toJson());
-                            },
-                            icon: const Icon(
-                              Icons.send,
-                            ),
-                          )
-                        ]),
+                            IconButton(
+                              onPressed: () {
+                                var docref = FirebaseFirestore.instance
+                                    .collection("posts")
+                                    .doc(widget.postId)
+                                    .collection('comments')
+                                    .doc();
+                                var comment = Comment(
+                                    uid: currentUser.uid,
+                                    commentId: docref.id,
+                                    regNo: currentUser.regNo,
+                                    name: currentUser.firstName +
+                                        currentUser.lastName,
+                                    text: commentController.text,
+                                    userImage: currentUser.profilePicture,
+                                    commentImage: "",
+                                    createdAt:
+                                        DateTime.now().toIso8601String());
+                                docref.set(comment.toJson());
+                              },
+                              icon: const Icon(
+                                Icons.send,
+                              ),
+                            )
+                          ]),
+                    ),
                   ],
                 );
               }

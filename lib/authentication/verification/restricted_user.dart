@@ -35,7 +35,7 @@ class RestrictUser extends StatelessWidget {
             ),
             SizedBox(height: mediaQuery.size.height * 0.08),
             Text(
-              "Hey ${user.firstName} ${user.lastName}!,",
+              "Hey ${user.firstName}${user.lastName}!",
               style: const TextStyle(fontSize: 22),
             ),
             SizedBox(height: mediaQuery.size.height * 0.01),

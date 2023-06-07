@@ -378,18 +378,11 @@ class _ChatScreenState extends State<ChatScreen>
         },
         child: Column(
           children: [
-            // ValueListenableBuilder(
-            //     valueListenable: appValueNotifier.globalisCallOnGoing,
-            //     builder: (context, value, widget) {
-            //       if (appValueNotifier.globalisCallOnGoing.value) {
-            //         // return getCallNotifierWidget(context);
-            //       }
-            //       return Container();
-            //     }),
             Expanded(
               child: Scaffold(
                   backgroundColor: Palette.white,
                   appBar: AppBar(
+                    centerTitle: true,
                     automaticallyImplyLeading: false,
                     backgroundColor: Colors.white,
                     elevation: 0,
@@ -431,7 +424,6 @@ class _ChatScreenState extends State<ChatScreen>
                       ],
                     ),
                   ),
-                  // floatingActionButton: _getFloatingButton(),
                   body: Column(
                     children: [
                       const SizedBox(
