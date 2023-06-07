@@ -77,19 +77,6 @@ class _FacultySignupPageState extends State<FacultySignupPage> {
           });
           BlocProvider.of<AuthBloc>(context).add(
             AuthFacultyRegisterEvent(
-              // userData: {
-              //   "uid": "",
-              //   "first-name": firstNameController.text,
-              //   "last-name": lastNameController.text,
-              //   "reg-no": "Faculty member",
-              //   "role": "faculty",
-              //   "email": emailController.text.trim(),
-              //   "phone": countryCodeController.text + phoneController.text,
-              //   "password": passwordController.text.trim(),
-              //   "profile-picture": "",
-              //   "token": "",
-              //   "isOnline": false,
-              // },
               userData: UserModel(
                   uid: "",
                   firstName: firstNameController.text,
