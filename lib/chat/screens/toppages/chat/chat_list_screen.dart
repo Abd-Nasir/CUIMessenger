@@ -86,8 +86,8 @@ class _ChatContactsListScreenState extends State<ChatContactsListScreen> {
 
                           // sorting the chats list
                           temp.sort((a, b) {
-                            var adate;
-                            var bdate;
+                            DateTime adate;
+                            DateTime bdate;
                             try {
                               ChatContactModel model1 = a;
                               adate = model1.timeSent;

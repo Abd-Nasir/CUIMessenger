@@ -74,7 +74,7 @@ class _VoiceSearchTextFieldState extends State<VoiceSearchTextField> {
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
               labelText: 'Search',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               suffixIcon: IconButton(
                 icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
                 onPressed: () {

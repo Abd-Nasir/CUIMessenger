@@ -12,7 +12,7 @@ class MyNotification {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['to'] = to;
     if (notification != null) {
       data['notification'] = notification!.toJson();
@@ -33,7 +33,7 @@ class NotificationBody {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['body'] = body;
     data['title'] = title;
     return data;

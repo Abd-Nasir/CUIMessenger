@@ -269,7 +269,7 @@ class InfoStorage {
 
             contactUsers.add(userInfo);
           } catch (e) {
-            log('Error' + e.toString());
+            log('Error$e');
           }
         }
         return contactUsers;
@@ -372,7 +372,7 @@ class InfoStorage {
 
             contactUsers.add(userInfo);
           } catch (e) {
-            log('Error' + e.toString());
+            log('Error$e');
           }
         }
         return contactUsers;

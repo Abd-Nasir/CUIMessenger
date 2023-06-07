@@ -149,6 +149,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         color: Palette.blueInformation,
                         tileText: "About App",
                         icon: Icons.info_sharp,
+                        onTap: () {
+                          RouteGenerator.navigatorKey.currentState!
+                              .pushNamed(aboutAppRoute);
+                        },
                       ),
                       createInformationTile(
                         mediaQuery: mediaQuery,

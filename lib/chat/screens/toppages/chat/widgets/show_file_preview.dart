@@ -59,7 +59,7 @@ class _ShowFilePreviewState extends State<ShowFilePreview> {
         // file = changeFileNameOnly(file,fileName)
         OpenFilex.open(file.path);
       },
-      child: Container(
+      child: SizedBox(
           // color: Palette.aliceBlue,
           height: 50,
           // width: ,

@@ -18,6 +18,8 @@ import 'package:cui_messenger/notification/view/pdf_viewer.dart';
 import 'package:cui_messenger/splash.dart';
 import 'package:flutter/material.dart';
 
+import '../../settings/view/about_app.dart';
+
 class RouteGenerator {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -47,6 +49,10 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => const StudentSignupPage(),
         );
+      case aboutAppRoute:
+        return MaterialPageRoute(
+          builder: (_) => const AboutApp(),
+        );
       case verifyMailRoute:
         return MaterialPageRoute(
           builder: (_) => const VerifyMail(),
@@ -54,10 +60,9 @@ class RouteGenerator {
       case commentScreenRoute:
         if (args != null) {
           return MaterialPageRoute(
-            builder: (_) => CommentBox(
-              postId: args as String,
-            ),
-          );
+              builder: (_) => CommentBox(
+                    postId: args as String,
+                  ));
         }
 
         return _errorRoute();
@@ -72,7 +77,7 @@ class RouteGenerator {
         );
       case changePasswordRoute:
         return MaterialPageRoute(
-          builder: (_) => ChangePassword(),
+          builder: (_) => const ChangePassword(),
         );
       case newPostRoute:
         return PageRouteBuilder(

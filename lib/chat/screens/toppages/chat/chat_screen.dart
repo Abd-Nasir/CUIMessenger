@@ -244,7 +244,7 @@ class _ChatScreenState extends State<ChatScreen>
           if (element.messageId == messageId[0]) {
             if (element.type == MessageEnum.text) {
               taskTitleTemp = element.text;
-              log(element.text + " jdfjasf");
+              log("${element.text} jdfjasf");
               return true;
             }
           }
@@ -541,7 +541,7 @@ class _ChatScreenState extends State<ChatScreen>
                                                   itemBuilder:
                                                       ((context, index) {
                                                     tempMessage = messagesList;
-                                                    var messageData;
+                                                    Message messageData;
                                                     if (index !=
                                                         snapshot.data!.length) {
                                                       messageData =
@@ -1003,7 +1003,7 @@ class __ChatListState extends State<_ChatList> {
                     shrinkWrap: true,
                     itemBuilder: ((context, index) {
                       widget.tempMessage = messagesList;
-                      var messageData;
+                      Message messageData;
                       if (index != snapshot.data!.length) {
                         messageData = messagesList[index];
                         if (messageData.messageId == messageData.recieverid) {
