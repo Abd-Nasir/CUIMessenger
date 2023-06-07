@@ -79,9 +79,10 @@ class _AboutAppState extends State<AboutApp> {
                     const Align(
                       alignment: Alignment.center,
                       child: Text(
-                        "The “CUI Messenger” is a mobile app which will fill the gaps of communication through providing a platform where students and teachers can seamlessly chat, post about any query or problems, receive notifications & announcements, Moreover, public announcements on notice board serve as a university information provider.",
+                        "The “CUI Messenger” is a mobile app which will fill the gaps of communication through providing a platform where Students and Faculty can seamlessly chat, post queries, problems and much more! You will receive notifications & announcement. Moreover, public announcements on notice board serve as a university information provider.",
                         textAlign: TextAlign.center,
                         style: TextStyle(
+                          height: 1.4,
                           fontFamily: "assets/fonts/SulphurPoint-Regular.ttf",
                           color: Colors.black54,
                           fontSize: 14,
