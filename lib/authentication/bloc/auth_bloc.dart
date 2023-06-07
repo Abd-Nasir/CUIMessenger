@@ -1,3 +1,4 @@
+import 'dart:io' as io;
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cui_messenger/authentication/model/user_model.dart';
@@ -216,23 +217,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // );
 
     on<AuthDeleteAccountEvent>((event, emit) async {
-      print("in delete account");
+      final user = FirebaseAuth.instance.currentUser;
+      final credential = EmailAuthProvider.credential(
+        email: user!.email.toString(),
+        password: event.password,
+      );
+
+      // Re-authenticate the user with the credential
+      await user.reauthenticateWithCredential(credential);
+
       final userRef = FirebaseFirestore.instance
           .collection("registered-users")
           .doc(FirebaseAuth.instance.currentUser!.uid);
-      userRef.get().then((user) {
-        UserModel userModel = UserModel.fromJson(user.data()!);
-        print(userModel.firstName);
-        print(userModel.email);
+      userRef.get().then((userr) {
+        UserModel userModel = UserModel.fromJson(userr.data()!);
         FirebaseStorage.instance.refFromURL(userModel.profilePicture).delete();
       });
-      userRef.delete();
-      // userRef.collection("chats").get().then((value) {
-      //   value.docs.forEach((element) {
-      //     element;
-      //   });
-      // });
-      FirebaseAuth.instance.currentUser!.delete().then((_) {
+      user.delete().whenComplete(() {
+        RouteGenerator.navigatorKey.currentState!.pop();
+        RouteGenerator.navigatorKey.currentState!.pop();
         emit(const AuthStateLoggedOut(null));
       });
     });
@@ -243,6 +246,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         provider.changePassword(event.oldPassword, event.updatedPassword);
       },
     );
+
+    on<AuthUpdateUserDataEvent>(((event, emit) async {
+      if (event.file != null) {
+        await FirebaseStorage.instance.refFromURL(event.oldImageUrl).delete();
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child('${event.uId}.jpg');
+        print(ref.fullPath);
+        await ref.putFile(io.File(event.file!.path));
+        final url = await ref.getDownloadURL();
+        // print("This is Url ${url}");
+        FirebaseFirestore.instance
+            .collection('registered-users')
+            .doc(event.uId)
+            .update({
+          "profile-picture": url,
+          "phone": event.phoneNo,
+        });
+      } else {
+        FirebaseFirestore.instance
+            .collection('registered-users')
+            .doc(event.uId)
+            .update({
+          "phone": event.phoneNo,
+        });
+      }
+    }));
+
     // on<AuthForgotPasswordEvent>(
     //   (event, emit) async {
     //     try {

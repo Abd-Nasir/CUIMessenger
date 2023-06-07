@@ -210,84 +210,85 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         // SizedBox(height: mediaQuery.size.height * 0.04),
                         GestureDetector(
                           onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                backgroundColor: Palette.white,
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: mediaQuery.size.width * 0.08,
-                                    vertical: mediaQuery.size.height * 0.02),
-                                actionsAlignment: MainAxisAlignment.spaceEvenly,
-                                title: const Text(
-                                  "Are you sure you want to delete your account?",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Palette.textColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                content: const Text(
-                                  "Once done this can't be reverted. Your contacts, messages, notificaions and devices will be removed from our system with immediate effect!",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Palette.textColor,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                actions: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      RouteGenerator.navigatorKey.currentState!
-                                          .pop('dialog');
-                                    },
-                                    child: const Text(
-                                      "Cancel",
-                                      style: TextStyle(
-                                          color: Palette.textColor,
-                                          fontSize: 12.0),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      // Navigator.of(context, rootNavigator: true)
-                                      //     .pop('dialog');
-                                      BlocProvider.of<AuthBloc>(context).add(
-                                        AuthDeleteAccountEvent(
-                                            email: BlocProvider.of<AuthBloc>(
-                                                    context)
-                                                .state
-                                                .user!
-                                                .email),
-                                      );
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6.0, horizontal: 16.0),
-                                      decoration: BoxDecoration(
-                                        color: Palette.red,
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            offset: const Offset(0.0, 0.0),
-                                            blurRadius: 16.0,
-                                            color:
-                                                Palette.red.withOpacity(0.25),
-                                          ),
-                                        ],
-                                      ),
-                                      child: const Text(
-                                        "Delete",
-                                        style: TextStyle(
-                                            color: Palette.white,
-                                            fontSize: 12.0),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
+                            deleteUserBottomSheet(context, mediaQuery);
+                            // showDialog(
+                            //   context: context,
+                            //   builder: (_) => AlertDialog(
+                            //     backgroundColor: Palette.white,
+                            //     contentPadding: EdgeInsets.symmetric(
+                            //         horizontal: mediaQuery.size.width * 0.08,
+                            //         vertical: mediaQuery.size.height * 0.02),
+                            //     actionsAlignment: MainAxisAlignment.spaceEvenly,
+                            //     title: const Text(
+                            //       "Are you sure you want to delete your account?",
+                            //       textAlign: TextAlign.center,
+                            //       style: TextStyle(
+                            //         color: Palette.textColor,
+                            //         fontWeight: FontWeight.bold,
+                            //         fontSize: 14.0,
+                            //       ),
+                            //     ),
+                            //     content: const Text(
+                            //       "Once done this can't be reverted. Your contacts, messages, notificaions and devices will be removed from our system with immediate effect!",
+                            //       textAlign: TextAlign.center,
+                            //       style: TextStyle(
+                            //         color: Palette.textColor,
+                            //         fontSize: 12.0,
+                            //       ),
+                            //     ),
+                            //     actions: [
+                            //       GestureDetector(
+                            //         onTap: () {
+                            //           RouteGenerator.navigatorKey.currentState!
+                            //               .pop('dialog');
+                            //         },
+                            //         child: const Text(
+                            //           "Cancel",
+                            //           style: TextStyle(
+                            //               color: Palette.textColor,
+                            //               fontSize: 12.0),
+                            //         ),
+                            //       ),
+                            //       GestureDetector(
+                            //         onTap: () {
+                            //           // Navigator.of(context, rootNavigator: true)
+                            //           //     .pop('dialog');
+                            //           BlocProvider.of<AuthBloc>(context).add(
+                            //             AuthDeleteAccountEvent(
+                            //                 email: BlocProvider.of<AuthBloc>(
+                            //                         context)
+                            //                     .state
+                            //                     .user!
+                            //                     .email),
+                            //           );
+                            //         },
+                            //         child: Container(
+                            //           padding: const EdgeInsets.symmetric(
+                            //               vertical: 6.0, horizontal: 16.0),
+                            //           decoration: BoxDecoration(
+                            //             color: Palette.red,
+                            //             borderRadius:
+                            //                 BorderRadius.circular(8.0),
+                            //             boxShadow: [
+                            //               BoxShadow(
+                            //                 offset: const Offset(0.0, 0.0),
+                            //                 blurRadius: 16.0,
+                            //                 color:
+                            //                     Palette.red.withOpacity(0.25),
+                            //               ),
+                            //             ],
+                            //           ),
+                            //           child: const Text(
+                            //             "Delete",
+                            //             style: TextStyle(
+                            //                 color: Palette.white,
+                            //                 fontSize: 12.0),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // );
                           },
                           child: Container(
                             width: mediaQuery.size.width,
@@ -511,35 +512,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         GestureDetector(
           onTap: () {
-            // if (pickedImage != null) {
-            //   BlocProvider.of<AuthBloc>(context).add(
-            //     AuthUpdateUserDataEvent(
-            //         userid: BlocProvider.of<AuthBloc>(context).state.user!.uid,
-            //         file: pickedImage,
-            //         oldImageKey:
-            //             BlocProvider.of<AuthBloc>(context).state.user!.imageKey,
-            //         dataChanged: {
-            //           "first-name": firstNameController.text,
-            //           "last-name": lastNameController.text,
-            //           "phone": phoneController.text,
-            //           "address": addressController.text,
-            //         }),
-            //   );
-            // } else {
-            //   BlocProvider.of<AuthBloc>(context).add(
-            //     AuthUpdateUserDataEvent(
-            //         userid: BlocProvider.of<AuthBloc>(context).state.user!.uid,
-            //         file: null,
-            //         oldImageKey: null,
-            //         dataChanged: {
-            //           "first-name": firstNameController.text,
-            //           "last-name": lastNameController.text,
-            //           "phone": phoneController.text,
-            //           "address": addressController.text,
-            //         }),
-            //   );
-            // }
-            RouteGenerator.navigatorKey.currentState!.pop(context);
+            // final _user = BlocProvider.of<AuthBloc>(context).state.user!;
+            if (user.phoneNo != phoneController.text || pickedImage != null) {
+              if (pickedImage != null) {
+                BlocProvider.of<AuthBloc>(context).add(
+                  AuthUpdateUserDataEvent(
+                    uId: user.uid,
+                    file: pickedImage!,
+                    oldImageUrl: BlocProvider.of<AuthBloc>(context)
+                        .state
+                        .user!
+                        .profilePicture,
+                    phoneNo: phoneController.text,
+                  ),
+                );
+              } else {
+                BlocProvider.of<AuthBloc>(context).add(
+                  AuthUpdateUserDataEvent(
+                    oldImageUrl: user.profilePicture,
+                    file: null,
+                    uId: user.uid,
+                    phoneNo: phoneController.text,
+                  ),
+                );
+              }
+              RouteGenerator.navigatorKey.currentState!.pop(context);
+              setState(() {});
+            } else {
+              showSimpleNotification(
+                const Text("No details changed"),
+                background: Palette.yellow.withOpacity(0.9),
+                duration: const Duration(seconds: 2),
+              );
+            }
           },
           child: Container(
             decoration: CustomWidgets.buttonDecoration,
@@ -571,6 +576,123 @@ class _EditProfilePageState extends State<EditProfilePage> {
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
+  }
+
+  void deleteUserBottomSheet(BuildContext context, MediaQueryData mediaQuery) {
+    TextEditingController _emailController = TextEditingController();
+    TextEditingController _passwordController = TextEditingController();
+
+    showModalBottomSheet(
+        backgroundColor: Palette.white,
+        // isDismissible: false,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: mediaQuery.size.width * 0.08,
+              // vertical: mediaQuery.size.height * 0.15
+            ),
+            // height: MediaQuery.of(context).size.height * 0.22,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: mediaQuery.size.height * 0.1),
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          RouteGenerator.navigatorKey.currentState!.pop();
+                        },
+                        icon: const Icon(Icons.close)),
+                  ],
+                ),
+                // const Text(
+                //   "Once done this can't be reverted. Your contacts, messages, notificaions and devices will be removed from our system with immediate effect!",
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     color: Palette.textColor,
+                //     fontSize: 12.0,
+                //   ),
+                // ),
+                SizedBox(height: mediaQuery.size.height * 0.1),
+                const Icon(
+                  Icons.remove_moderator_rounded,
+                  size: 100,
+                  color: Palette.cuiPurple,
+                ),
+                SizedBox(height: mediaQuery.size.height * 0.02),
+                const Text(
+                  "Are you sure you want to delete your account?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Palette.textColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),
+                ),
+
+                SizedBox(height: mediaQuery.size.height * 0.02),
+                const Text(
+                  "Verify by logging in with your Email & Password",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: mediaQuery.size.height * 0.03),
+
+                // Container(
+                //   decoration: CustomWidgets.textInputDecoration,
+                //   padding: EdgeInsets.symmetric(
+                //       horizontal: mediaQuery.size.width * 0.04, vertical: 4),
+                //   child: TextFormField(
+                //     controller: _emailController,
+                //     decoration: const InputDecoration(
+                //       border: InputBorder.none,
+                //       hintText: "Email",
+                //       hintStyle: TextStyle(
+                //         color: Palette.hintGrey,
+                //       ),
+                //     ),
+                //     keyboardType: TextInputType.text,
+                //   ),
+                // ),
+                // SizedBox(height: mediaQuery.size.height * 0.02),
+                Container(
+                  decoration: CustomWidgets.textInputDecoration,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: mediaQuery.size.width * 0.04, vertical: 4),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Password",
+                      hintStyle: TextStyle(
+                        color: Palette.hintGrey,
+                      ),
+                    ),
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+                SizedBox(height: mediaQuery.size.height * 0.03),
+                ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Palette.red),
+                    onPressed: () {
+                      BlocProvider.of<AuthBloc>(context).add(
+                          AuthDeleteAccountEvent(
+                              email: _emailController.text.trim(),
+                              password: _passwordController.text.trim()));
+                    },
+                    child: const Text("Delete Account")),
+              ],
+            ),
+          );
+        });
   }
 
   void bottomSheet(BuildContext context) {

@@ -83,7 +83,8 @@ class AuthUploadUserProfilePictureEvent extends AuthEvent {
 
 class AuthDeleteAccountEvent extends AuthEvent {
   final String email;
-  const AuthDeleteAccountEvent({required this.email});
+  final String password;
+  const AuthDeleteAccountEvent({required this.email, required this.password});
 }
 
 class CheckEmailVerified extends AuthEvent {
@@ -92,4 +93,16 @@ class CheckEmailVerified extends AuthEvent {
 
 class ResendVerificationMail extends AuthEvent {
   const ResendVerificationMail();
+}
+
+class AuthUpdateUserDataEvent extends AuthEvent {
+  final String oldImageUrl;
+  final XFile? file;
+  final String uId;
+  final String phoneNo;
+  const AuthUpdateUserDataEvent(
+      {required this.phoneNo,
+      required this.file,
+      required this.oldImageUrl,
+      required this.uId});
 }

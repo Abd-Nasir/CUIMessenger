@@ -1,5 +1,4 @@
 // import 'dart:io';
-import 'package:cui_messenger/chat/constants/constant_utils.dart';
 import 'package:cui_messenger/helpers/routes/routegenerator.dart';
 import 'package:cui_messenger/helpers/routes/routenames.dart';
 import 'package:cui_messenger/helpers/style/custom_widgets.dart';

@@ -1,5 +1,5 @@
-import 'package:cui_messenger/authentication/login/view/change_password.dart';
-import 'package:cui_messenger/authentication/login/view/edit_profile.dart';
+import 'package:cui_messenger/settings/view/change_password.dart';
+import 'package:cui_messenger/settings/view/edit_profile.dart';
 import 'package:cui_messenger/authentication/login/view/select_user_screen.dart';
 import 'package:cui_messenger/authentication/login/view/faculty_login.dart';
 import 'package:cui_messenger/authentication/signup/view/faculty_signup.dart';
