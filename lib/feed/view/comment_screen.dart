@@ -503,14 +503,15 @@ class _CommentBoxState extends State<CommentBox> {
                                     uid: currentUser.uid,
                                     commentId: docref.id,
                                     regNo: currentUser.regNo,
-                                    name: currentUser.firstName +
-                                        currentUser.lastName,
+                                    name:
+                                        "${currentUser.firstName} ${currentUser.lastName}",
                                     text: commentController.text,
                                     userImage: currentUser.profilePicture,
                                     commentImage: "",
                                     createdAt:
                                         DateTime.now().toIso8601String());
                                 docref.set(comment.toJson());
+                                commentController.clear();
                               },
                               icon: const Icon(
                                 Icons.send,
